@@ -1,0 +1,389 @@
+{
+    "supabase": {
+        "free": {
+            "monthly_cost": 0,
+            "database_size_gb": 0.5,
+            "bandwidth_gb": 5,
+            "storage_gb": 1,
+            "edge_function_invocations": 500000,
+            "realtime_concurrent_connections": 200,
+            "auth_mau": 50000
+        },
+        "pro": {
+            "monthly_cost": 25,
+            "database_size_gb": 8,
+            "bandwidth_gb": 250,
+            "storage_gb": 100,
+            "edge_function_invocations": 2000000,
+            "realtime_concurrent_connections": 500,
+            "auth_mau": 100000,
+            "additional_compute_per_hour": 0.01344,
+            "additional_storage_per_gb": 0.125,
+            "additional_bandwidth_per_gb": 0.09,
+            "additional_edge_per_million": 2.00
+        },
+        "team": {
+            "monthly_cost": 599,
+            "database_size_gb": 8,
+            "bandwidth_gb": 250,
+            "storage_gb": 100,
+            "priority_support": true,
+            "soc2_compliance": true,
+            "sso": true
+        },
+        "enterprise": {
+            "custom_pricing": true,
+            "dedicated_support": true,
+            "sla": true,
+            "custom_contracts": true
+        },
+        "compute_addons": {
+            "small": {
+                "vcpu": 2,
+                "memory_gb": 1,
+                "monthly": 5
+            },
+            "medium": {
+                "vcpu": 2,
+                "memory_gb": 2,
+                "monthly": 50
+            },
+            "large": {
+                "vcpu": 2,
+                "memory_gb": 4,
+                "monthly": 100
+            },
+            "xl": {
+                "vcpu": 4,
+                "memory_gb": 8,
+                "monthly": 200
+            },
+            "2xl": {
+                "vcpu": 8,
+                "memory_gb": 16,
+                "monthly": 400
+            },
+            "4xl": {
+                "vcpu": 16,
+                "memory_gb": 32,
+                "monthly": 950
+            },
+            "8xl": {
+                "vcpu": 32,
+                "memory_gb": 64,
+                "monthly": 1860
+            },
+            "12xl": {
+                "vcpu": 48,
+                "memory_gb": 96,
+                "monthly": 2790
+            },
+            "16xl": {
+                "vcpu": 64,
+                "memory_gb": 128,
+                "monthly": 3720
+            }
+        }
+    },
+    "mongodb_atlas": {
+        "m0_free": {
+            "monthly_cost": 0,
+            "storage_gb": 0.5,
+            "ram_gb": "shared",
+            "shared": true
+        },
+        "m2": {
+            "monthly_cost": 9,
+            "storage_gb": 2,
+            "ram_gb": "shared",
+            "shared": true
+        },
+        "m5": {
+            "monthly_cost": 25,
+            "storage_gb": 5,
+            "ram_gb": "shared",
+            "shared": true
+        },
+        "m10": {
+            "monthly_cost": 57,
+            "storage_gb": 10,
+            "ram_gb": 2,
+            "vcpu": 2,
+            "dedicated": true
+        },
+        "m20": {
+            "monthly_cost": 140,
+            "storage_gb": 20,
+            "ram_gb": 4,
+            "vcpu": 2,
+            "dedicated": true
+        },
+        "m30": {
+            "monthly_cost": 290,
+            "storage_gb": 40,
+            "ram_gb": 8,
+            "vcpu": 2,
+            "dedicated": true
+        },
+        "m40": {
+            "monthly_cost": 540,
+            "storage_gb": 80,
+            "ram_gb": 16,
+            "vcpu": 4,
+            "dedicated": true
+        },
+        "m50": {
+            "monthly_cost": 1000,
+            "storage_gb": 160,
+            "ram_gb": 32,
+            "vcpu": 8,
+            "dedicated": true
+        },
+        "m60": {
+            "monthly_cost": 1900,
+            "storage_gb": 320,
+            "ram_gb": 64,
+            "vcpu": 16,
+            "dedicated": true
+        },
+        "m80": {
+            "monthly_cost": 3100,
+            "storage_gb": 750,
+            "ram_gb": 128,
+            "vcpu": 32,
+            "dedicated": true
+        },
+        "m140": {
+            "monthly_cost": 5200,
+            "storage_gb": 1000,
+            "ram_gb": 192,
+            "vcpu": 48,
+            "dedicated": true
+        },
+        "m200": {
+            "monthly_cost": 7500,
+            "storage_gb": 1500,
+            "ram_gb": 256,
+            "vcpu": 64,
+            "dedicated": true
+        },
+        "serverless": {
+            "read_per_million": 0.10,
+            "write_per_million": 1.00,
+            "storage_per_gb": 0.25
+        },
+        "data_transfer_per_gb": 0.01,
+        "backup_per_gb": 0.025
+    },
+    "neon": {
+        "free": {
+            "monthly_cost": 0,
+            "compute_hours": 191.9,
+            "storage_gb": 0.5,
+            "branches": 10
+        },
+        "launch": {
+            "monthly_cost": 19,
+            "compute_hours": 300,
+            "storage_gb": 10,
+            "branches": "unlimited",
+            "additional_compute_per_hour": 0.16,
+            "additional_storage_per_gb": 0.125
+        },
+        "scale": {
+            "monthly_cost": 69,
+            "compute_hours": 750,
+            "storage_gb": 50,
+            "branches": "unlimited",
+            "additional_compute_per_hour": 0.16,
+            "additional_storage_per_gb": 0.10,
+            "read_replicas": true,
+            "autoscaling": true
+        },
+        "business": {
+            "monthly_cost": 700,
+            "storage_gb": 500,
+            "branches": "unlimited",
+            "additional_storage_per_gb": 0.08,
+            "priority_support": true,
+            "sla": true
+        },
+        "enterprise": {
+            "custom_pricing": true,
+            "dedicated_support": true,
+            "sso": true,
+            "custom_contracts": true
+        }
+    },
+    "planetscale": {
+        "scaler": {
+            "monthly_cost": 39,
+            "storage_gb": 10,
+            "row_reads_billion": 100,
+            "row_writes_million": 50,
+            "additional_storage_per_gb": 1.50,
+            "additional_reads_per_billion": 1.00,
+            "additional_writes_per_million": 1.50
+        },
+        "scaler_pro": {
+            "monthly_cost": 99,
+            "storage_gb": 25,
+            "row_reads_billion": 250,
+            "row_writes_million": 125,
+            "multi_region": true,
+            "additional_storage_per_gb": 1.25,
+            "additional_reads_per_billion": 0.80
+        },
+        "team": {
+            "monthly_cost": 499,
+            "storage_gb": 100,
+            "row_reads_billion": 500,
+            "row_writes_million": 250,
+            "sso": true,
+            "audit_logs": true
+        },
+        "enterprise": {
+            "custom_pricing": true,
+            "dedicated_support": true,
+            "sla": true
+        },
+        "ps_boost_compute_per_hour": {
+            "ps_10": 0.0125,
+            "ps_20": 0.025,
+            "ps_40": 0.05,
+            "ps_80": 0.10,
+            "ps_160": 0.20,
+            "ps_320": 0.40,
+            "ps_640": 0.80,
+            "ps_1280": 1.60
+        }
+    },
+    "cockroachdb": {
+        "serverless": {
+            "free_monthly_rus": 10000000,
+            "storage_free_gb": 10,
+            "per_million_rus": 1.00,
+            "storage_per_gb": 1.00
+        },
+        "dedicated": {
+            "per_vcpu_hour": 0.095,
+            "per_storage_gb": 0.50,
+            "per_data_transfer_gb": 0.12
+        }
+    },
+    "fauna": {
+        "free": {
+            "monthly_cost": 0,
+            "read_ops": 100000,
+            "write_ops": 50000,
+            "compute_ops": 500000,
+            "storage_gb": 1
+        },
+        "pro": {
+            "monthly_minimum": 25,
+            "read_per_million": 0.23,
+            "write_per_million": 2.25,
+            "compute_per_million": 0.23,
+            "storage_per_gb": 0.23
+        }
+    },
+    "upstash": {
+        "redis": {
+            "free": {
+                "monthly_cost": 0,
+                "commands_per_day": 10000,
+                "storage_mb": 256
+            },
+            "pay_as_you_go": {
+                "per_100k_commands": 0.20,
+                "storage_per_gb": 0.25
+            },
+            "pro_2k": {
+                "monthly_cost": 280,
+                "max_commands_per_second": 2000
+            },
+            "pro_10k": {
+                "monthly_cost": 680,
+                "max_commands_per_second": 10000
+            }
+        },
+        "kafka": {
+            "free": {
+                "monthly_cost": 0,
+                "messages_per_day": 10000
+            },
+            "pay_as_you_go": {
+                "per_100k_messages": 0.40,
+                "storage_per_gb": 0.25
+            }
+        },
+        "qstash": {
+            "free": {
+                "messages_per_day": 500
+            },
+            "pay_as_you_go": {
+                "per_100k_messages": 1.00
+            },
+            "pro": {
+                "monthly_cost": 180,
+                "messages_included": 500000
+            }
+        },
+        "vector": {
+            "free": {
+                "queries_per_day": 10000,
+                "vectors": 10000
+            },
+            "pay_as_you_go": {
+                "per_100k_queries": 0.40,
+                "per_100k_vectors_stored": 0.40
+            }
+        }
+    },
+    "redis_cloud": {
+        "essentials": {
+            "starts_at": 5,
+            "ram_mb": 250
+        },
+        "pro": {
+            "starts_at": 100,
+            "multi_az": true,
+            "active_active": true
+        }
+    },
+    "timescale": {
+        "dynamic": {
+            "compute_per_hour": 0.026,
+            "storage_per_gb": 0.125,
+            "storage_cold_per_gb": 0.021
+        }
+    },
+    "turso": {
+        "starter": {
+            "monthly_cost": 0,
+            "rows_read_billion": 9,
+            "rows_written_million": 500,
+            "storage_gb": 9,
+            "databases": 500,
+            "locations": 3
+        },
+        "scaler": {
+            "monthly_cost": 29,
+            "rows_read_billion": 100,
+            "rows_written_million": 4000,
+            "storage_gb": 24,
+            "databases": 10000,
+            "locations": "unlimited",
+            "additional_reads_per_billion": 1.50,
+            "additional_writes_per_million": 3.00,
+            "additional_storage_per_gb": 2.00
+        },
+        "pro": {
+            "monthly_cost": 299,
+            "rows_read_billion": 1000,
+            "rows_written_million": 40000,
+            "storage_gb": 100,
+            "embedded_replicas": true
+        }
+    }
+}

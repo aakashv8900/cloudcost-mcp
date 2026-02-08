@@ -1,0 +1,204 @@
+{
+    "s3": {
+        "standard": {
+            "storage_per_gb": 0.023,
+            "put_per_1000": 0.005,
+            "get_per_1000": 0.0004,
+            "tier": "hot"
+        },
+        "intelligent_tiering": {
+            "storage_per_gb": 0.0225,
+            "monitoring_per_1000": 0.0025,
+            "tier": "auto"
+        },
+        "standard_ia": {
+            "storage_per_gb": 0.0125,
+            "put_per_1000": 0.01,
+            "get_per_1000": 0.001,
+            "retrieval_per_gb": 0.01,
+            "tier": "infrequent"
+        },
+        "one_zone_ia": {
+            "storage_per_gb": 0.01,
+            "put_per_1000": 0.01,
+            "get_per_1000": 0.001,
+            "retrieval_per_gb": 0.01,
+            "tier": "infrequent_single_az"
+        },
+        "glacier_instant": {
+            "storage_per_gb": 0.004,
+            "put_per_1000": 0.02,
+            "get_per_1000": 0.01,
+            "retrieval_per_gb": 0.03,
+            "tier": "archive_instant"
+        },
+        "glacier_flexible": {
+            "storage_per_gb": 0.0036,
+            "put_per_1000": 0.03,
+            "retrieval_standard_per_gb": 0.01,
+            "retrieval_bulk_per_gb": 0.0025,
+            "retrieval_expedited_per_gb": 0.03,
+            "tier": "archive"
+        },
+        "glacier_deep_archive": {
+            "storage_per_gb": 0.00099,
+            "put_per_1000": 0.05,
+            "retrieval_standard_per_gb": 0.02,
+            "retrieval_bulk_per_gb": 0.0025,
+            "tier": "deep_archive"
+        },
+        "express_one_zone": {
+            "storage_per_gb": 0.16,
+            "put_per_1000": 0.0025,
+            "get_per_1000": 0.0002,
+            "tier": "high_performance"
+        }
+    },
+    "ebs": {
+        "gp3": {
+            "per_gb": 0.08,
+            "iops_base": 3000,
+            "iops_per_additional": 0.005,
+            "throughput_base_mbps": 125,
+            "throughput_per_mbps": 0.04,
+            "category": "general_purpose_ssd"
+        },
+        "gp2": {
+            "per_gb": 0.10,
+            "iops_per_gb": 3,
+            "max_iops": 16000,
+            "category": "general_purpose_ssd_legacy"
+        },
+        "io2": {
+            "per_gb": 0.125,
+            "per_iops": 0.065,
+            "max_iops": 64000,
+            "category": "provisioned_iops_ssd"
+        },
+        "io2_block_express": {
+            "per_gb": 0.125,
+            "per_iops": 0.065,
+            "max_iops": 256000,
+            "category": "high_performance_ssd"
+        },
+        "st1": {
+            "per_gb": 0.045,
+            "throughput_base_mbps": 40,
+            "max_throughput_mbps": 500,
+            "category": "throughput_optimized_hdd"
+        },
+        "sc1": {
+            "per_gb": 0.015,
+            "throughput_base_mbps": 12,
+            "max_throughput_mbps": 250,
+            "category": "cold_hdd"
+        },
+        "standard": {
+            "per_gb": 0.05,
+            "per_million_io": 0.05,
+            "category": "magnetic_legacy"
+        }
+    },
+    "efs": {
+        "standard": {
+            "per_gb": 0.30,
+            "category": "regional"
+        },
+        "infrequent_access": {
+            "per_gb": 0.016,
+            "read_per_gb": 0.03,
+            "category": "regional_ia"
+        },
+        "archive": {
+            "per_gb": 0.008,
+            "read_per_gb": 0.06,
+            "category": "archive"
+        },
+        "one_zone": {
+            "per_gb": 0.16,
+            "category": "single_az"
+        },
+        "one_zone_ia": {
+            "per_gb": 0.0133,
+            "read_per_gb": 0.03,
+            "category": "single_az_ia"
+        },
+        "provisioned_throughput_per_mbps": 6.00
+    },
+    "fsx": {
+        "lustre_persistent_ssd": {
+            "per_gb": 0.145,
+            "category": "high_performance_parallel"
+        },
+        "lustre_persistent_hdd": {
+            "per_gb": 0.036,
+            "category": "high_throughput_parallel"
+        },
+        "lustre_scratch": {
+            "per_gb": 0.140,
+            "category": "temporary_parallel"
+        },
+        "windows_ssd": {
+            "per_gb": 0.13,
+            "category": "windows_file_server"
+        },
+        "windows_hdd": {
+            "per_gb": 0.025,
+            "category": "windows_file_server_hdd"
+        },
+        "netapp_ontap_ssd": {
+            "per_gb": 0.125,
+            "category": "enterprise_nas"
+        },
+        "openzfs_ssd": {
+            "per_gb": 0.09,
+            "category": "linux_zfs"
+        }
+    },
+    "data_transfer": {
+        "internet_out": {
+            "first_10tb": 0.09,
+            "next_40tb": 0.085,
+            "next_100tb": 0.07,
+            "over_150tb": 0.05
+        },
+        "internet_in": 0.00,
+        "same_region": 0.00,
+        "cross_region": 0.02,
+        "cross_az": 0.01,
+        "cloudfront_to_s3": 0.00,
+        "s3_transfer_acceleration": 0.04,
+        "direct_connect_out": 0.02,
+        "transit_gateway_per_gb": 0.02,
+        "nat_gateway_per_gb": 0.045,
+        "vpc_endpoint_per_gb": 0.01
+    },
+    "backup": {
+        "warm_storage_per_gb": 0.05,
+        "cold_storage_per_gb": 0.01,
+        "restore_per_gb": 0.02
+    },
+    "snow_family": {
+        "snowcone": {
+            "per_day": 60,
+            "storage_tb": 8
+        },
+        "snowball_edge_storage": {
+            "per_day": 300,
+            "storage_tb": 80
+        },
+        "snowball_edge_compute": {
+            "per_day": 330,
+            "storage_tb": 80
+        },
+        "snowmobile": {
+            "per_month": 200000,
+            "storage_pb": 100
+        }
+    },
+    "storage_gateway": {
+        "file_gateway_per_gb": 0.023,
+        "volume_gateway_per_gb": 0.023,
+        "tape_gateway_per_gb": 0.023
+    }
+}

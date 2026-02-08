@@ -1,0 +1,286 @@
+{
+    "cloud_sql": {
+        "mysql": {
+            "db-f1-micro": {
+                "vcpu": 0.6,
+                "memory_gb": 0.6,
+                "hourly": 0.0105
+            },
+            "db-g1-small": {
+                "vcpu": 0.5,
+                "memory_gb": 1.7,
+                "hourly": 0.025
+            },
+            "db-n1-standard-1": {
+                "vcpu": 1,
+                "memory_gb": 3.75,
+                "hourly": 0.095
+            },
+            "db-n1-standard-2": {
+                "vcpu": 2,
+                "memory_gb": 7.5,
+                "hourly": 0.19
+            },
+            "db-n1-standard-4": {
+                "vcpu": 4,
+                "memory_gb": 15,
+                "hourly": 0.38
+            },
+            "db-n1-standard-8": {
+                "vcpu": 8,
+                "memory_gb": 30,
+                "hourly": 0.76
+            },
+            "db-n1-standard-16": {
+                "vcpu": 16,
+                "memory_gb": 60,
+                "hourly": 1.52
+            },
+            "db-n1-highmem-2": {
+                "vcpu": 2,
+                "memory_gb": 13,
+                "hourly": 0.28
+            },
+            "db-n1-highmem-4": {
+                "vcpu": 4,
+                "memory_gb": 26,
+                "hourly": 0.56
+            },
+            "db-n1-highmem-8": {
+                "vcpu": 8,
+                "memory_gb": 52,
+                "hourly": 1.12
+            }
+        },
+        "postgresql": {
+            "db-f1-micro": {
+                "vcpu": 0.6,
+                "memory_gb": 0.6,
+                "hourly": 0.0125
+            },
+            "db-g1-small": {
+                "vcpu": 0.5,
+                "memory_gb": 1.7,
+                "hourly": 0.0295
+            },
+            "db-n1-standard-1": {
+                "vcpu": 1,
+                "memory_gb": 3.75,
+                "hourly": 0.105
+            },
+            "db-n1-standard-2": {
+                "vcpu": 2,
+                "memory_gb": 7.5,
+                "hourly": 0.21
+            },
+            "db-n1-standard-4": {
+                "vcpu": 4,
+                "memory_gb": 15,
+                "hourly": 0.42
+            },
+            "db-n1-standard-8": {
+                "vcpu": 8,
+                "memory_gb": 30,
+                "hourly": 0.84
+            },
+            "db-n1-standard-16": {
+                "vcpu": 16,
+                "memory_gb": 60,
+                "hourly": 1.68
+            }
+        },
+        "sql_server": {
+            "db-n1-standard-1": {
+                "vcpu": 1,
+                "hourly": 0.20
+            },
+            "db-n1-standard-2": {
+                "vcpu": 2,
+                "hourly": 0.40
+            },
+            "db-n1-standard-4": {
+                "vcpu": 4,
+                "hourly": 0.80
+            }
+        },
+        "storage_per_gb": 0.17,
+        "backup_per_gb": 0.08,
+        "ha_premium": 2.0
+    },
+    "alloydb": {
+        "per_vcpu_hour": 0.127,
+        "storage_per_gb": 0.0004,
+        "networking_per_gb": 0.01
+    },
+    "spanner": {
+        "per_node_hour": 0.90,
+        "storage_per_gb": 0.30,
+        "backup_per_gb": 0.03,
+        "processing_unit_hour": 0.09
+    },
+    "bigtable": {
+        "per_node_hour": 0.65,
+        "ssd_storage_per_gb": 0.17,
+        "hdd_storage_per_gb": 0.026
+    },
+    "firestore": {
+        "document_reads_per_100k": 0.06,
+        "document_writes_per_100k": 0.18,
+        "document_deletes_per_100k": 0.02,
+        "storage_per_gb": 0.18,
+        "network_egress_per_gb": 0.12
+    },
+    "memorystore_redis": {
+        "basic_m1_per_gb_hour": 0.049,
+        "standard_m1_per_gb_hour": 0.068,
+        "basic_m2_per_gb_hour": 0.098,
+        "standard_m2_per_gb_hour": 0.137
+    },
+    "memorystore_cluster": {
+        "per_gb_hour": 0.041,
+        "cross_region_per_gb": 0.01
+    },
+    "cloud_functions": {
+        "invocations_per_million": 0.40,
+        "gb_seconds": 0.0000025,
+        "ghz_seconds": 0.0000100,
+        "networking_per_gb": 0.12,
+        "free_tier": {
+            "invocations": 2000000,
+            "gb_seconds": 400000,
+            "ghz_seconds": 200000,
+            "networking_gb": 5
+        }
+    },
+    "cloud_run": {
+        "vcpu_per_second": 0.00002400,
+        "memory_per_gb_second": 0.00000250,
+        "requests_per_million": 0.40,
+        "jobs_per_job": 0.00001,
+        "network_egress_per_gb": 0.12,
+        "free_tier": {
+            "vcpu_seconds": 180000,
+            "memory_gb_seconds": 360000,
+            "requests": 2000000
+        },
+        "always_on_vcpu_per_second": 0.00001,
+        "always_on_memory_per_gb_second": 0.00000100
+    },
+    "app_engine": {
+        "standard": {
+            "f1_instance_hours": 0.05,
+            "f2_instance_hours": 0.10,
+            "f4_instance_hours": 0.20,
+            "f4_1g_instance_hours": 0.30,
+            "free_tier_instance_hours": 28
+        },
+        "flexible": {
+            "vcpu_per_hour": 0.05,
+            "memory_per_gb_hour": 0.01,
+            "persistent_disk_per_gb": 0.01
+        }
+    },
+    "gke": {
+        "autopilot": {
+            "vcpu_per_second": 0.0000170,
+            "memory_per_gb_second": 0.0000020,
+            "ephemeral_storage_per_gb_second": 0.0000005,
+            "gpu_per_second": "varies"
+        },
+        "standard": {
+            "management_fee_per_hour": 0.10,
+            "node_pricing": "compute_engine"
+        }
+    },
+    "pub_sub": {
+        "message_data_per_tb": 40.00,
+        "snapshot_backlog_per_gb": 0.026,
+        "lite_publishing_per_mib": 0.030,
+        "lite_subscribing_per_mib": 0.035,
+        "lite_storage_per_gb_day": 0.06
+    },
+    "dataflow": {
+        "vcpu_per_hour": 0.069,
+        "memory_per_gb_hour": 0.003557,
+        "pd_per_gb_hour": 0.000054,
+        "ssd_per_gb_hour": 0.000298,
+        "shuffle_per_gb": 0.011,
+        "streaming_engine_per_vcpu_hour": 0.069
+    },
+    "bigquery": {
+        "on_demand": {
+            "per_tb_scanned": 6.25,
+            "free_tier_tb": 1
+        },
+        "editions": {
+            "standard_per_slot_hour": 0.04,
+            "enterprise_per_slot_hour": 0.06,
+            "enterprise_plus_per_slot_hour": 0.10
+        },
+        "storage": {
+            "active_per_gb": 0.02,
+            "long_term_per_gb": 0.01
+        },
+        "streaming_inserts_per_gb": 0.05,
+        "streaming_reads_per_tb": 1.10,
+        "ml_per_tb_processed": 250.00
+    },
+    "vertex_ai": {
+        "prediction": {
+            "per_node_hour": 0.10,
+            "gpu_per_hour": "varies"
+        },
+        "training": {
+            "ml_units_per_hour": 0.49,
+            "gpu_per_hour": "varies"
+        },
+        "notebooks_per_hour": 0.11,
+        "feature_store_per_gb": 0.30,
+        "vector_search": {
+            "per_node_hour": 0.14,
+            "per_shard": 0.0575
+        },
+        "model_garden_llm_hosting": "compute_pricing",
+        "pipelines_per_run": 0.03
+    },
+    "ai_platform": {
+        "gemini_flash_input_per_million": 0.075,
+        "gemini_flash_output_per_million": 0.30,
+        "gemini_pro_input_per_million": 1.25,
+        "gemini_pro_output_per_million": 5.00
+    },
+    "load_balancing": {
+        "global_forwarding_rule_per_hour": 0.025,
+        "regional_forwarding_rule_per_hour": 0.025,
+        "ingress_data_per_gb": 0.008,
+        "outbound_data_per_gb": 0.012
+    },
+    "cloud_armor": {
+        "policy_per_month": 5.00,
+        "rules_per_month": 1.00,
+        "requests_per_million": 0.75,
+        "adaptive_protection_per_million": 10.00
+    },
+    "cloud_cdn": {
+        "cache_fill_per_gb": 0.04,
+        "cache_egress_per_gb": 0.02,
+        "http_requests_per_10000": 0.0075,
+        "https_requests_per_10000": 0.01,
+        "cache_invalidation_per_1000": 0.005
+    },
+    "secret_manager": {
+        "active_versions_per_month": 0.06,
+        "access_per_10000": 0.03,
+        "rotation_per_rotation": 0.05
+    },
+    "logging": {
+        "ingestion_per_gb": 0.50,
+        "storage_per_gb": 0.01,
+        "free_tier_gb": 50
+    },
+    "monitoring": {
+        "metrics_ingestion_per_kb": 0.258,
+        "alerts_per_condition": 0.10,
+        "uptime_checks_per_month": 0.30
+    }
+}

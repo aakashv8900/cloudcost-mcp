@@ -1,0 +1,192 @@
+// AI Model Cost Tools
+import { z } from 'zod';
+import {
+    estimateOpenAICost,
+    estimateAnthropicCost,
+    suggestModel,
+    compareModels,
+} from '../engine/pricing-engine.js';
+import type { TaskType, LatencyRequirement } from '../engine/types.js';
+
+// ============== Schema Definitions ==============
+
+export const EstimateOpenAICostSchema = z.object({
+    model: z.string().describe('OpenAI model name (e.g., gpt-4o, gpt-4o-mini, o1, o3-mini)'),
+    inputTokens: z.number().min(0).describe('Number of input tokens'),
+    outputTokens: z.number().min(0).describe('Number of output tokens'),
+});
+
+export const EstimateAnthropicCostSchema = z.object({
+    model: z.string().describe('Anthropic model name (e.g., claude-3-5-sonnet, claude-3-5-haiku)'),
+    inputTokens: z.number().min(0).describe('Number of input tokens'),
+    outputTokens: z.number().min(0).describe('Number of output tokens'),
+});
+
+export const SuggestModelSchema = z.object({
+    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction'])
+        .describe('Type of task to perform'),
+    budget: z.number().min(0).describe('Maximum cost per million tokens in USD'),
+    latencyRequirement: z.enum(['low', 'medium', 'high']).describe('Latency tolerance'),
+});
+
+export const CompareModelsSchema = z.object({
+    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction'])
+        .describe('Type of task to compare models for'),
+});
+
+export const RankingByCostEfficiencySchema = z.object({
+    task: z.string().describe('Task description to rank models by cost efficiency'),
+});
+
+export const EstimatePerformanceSchema = z.object({
+    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction']),
+    tokenSize: z.number().min(0).describe('Expected token size per request'),
+});
+
+// ============== Tool Handlers ==============
+
+export function handleEstimateOpenAICost(args: z.infer<typeof EstimateOpenAICostSchema>) {
+    return estimateOpenAICost(args.model, args.inputTokens, args.outputTokens);
+}
+
+export function handleEstimateAnthropicCost(args: z.infer<typeof EstimateAnthropicCostSchema>) {
+    return estimateAnthropicCost(args.model, args.inputTokens, args.outputTokens);
+}
+
+export function handleSuggestModel(args: z.infer<typeof SuggestModelSchema>) {
+    return suggestModel(
+        args.taskType as TaskType,
+        args.budget,
+        args.latencyRequirement as LatencyRequirement
+    );
+}
+
+export function handleCompareModels(args: z.infer<typeof CompareModelsSchema>) {
+    return compareModels(args.taskType as TaskType);
+}
+
+export function handleRankingByCostEfficiency(args: z.infer<typeof RankingByCostEfficiencySchema>) {
+    // Map task description to task type
+    const taskLower = args.task.toLowerCase();
+    let taskType: TaskType = 'chat';
+
+    if (taskLower.includes('code') || taskLower.includes('programming')) {
+        taskType = 'code';
+    } else if (taskLower.includes('embed') || taskLower.includes('search') || taskLower.includes('similarity')) {
+        taskType = 'embedding';
+    } else if (taskLower.includes('vision') || taskLower.includes('image')) {
+        taskType = 'vision';
+    } else if (taskLower.includes('reason') || taskLower.includes('math') || taskLower.includes('logic')) {
+        taskType = 'reasoning';
+    } else if (taskLower.includes('classif') || taskLower.includes('categoriz')) {
+        taskType = 'classification';
+    } else if (taskLower.includes('extract') || taskLower.includes('parse')) {
+        taskType = 'extraction';
+    }
+
+    const comparison = compareModels(taskType);
+
+    return {
+        task: args.task,
+        inferredTaskType: taskType,
+        efficiencyRankings: comparison.rankings.map(r => ({
+            rank: r.rank,
+            model: r.model,
+            provider: r.provider,
+            costPer1M: r.costPer1M,
+            efficiencyScore: r.efficiencyScore,
+            recommendation: r.rank === 1 ? 'Best choice for this task' :
+                r.rank <= 3 ? 'Good alternative' : 'Consider only if specific features needed',
+        })),
+        insights: [
+            ...comparison.insights,
+            {
+                type: 'action' as const,
+                message: `For "${args.task}", prioritize ${comparison.rankings[0].model} for best cost-efficiency`,
+            },
+        ],
+    };
+}
+
+export function handleEstimatePerformance(args: z.infer<typeof EstimatePerformanceSchema>) {
+    // Performance estimates based on task type and token size
+    const performanceProfiles: Record<string, { avgLatencyMs: number; tokensPerSecond: number }> = {
+        'chat': { avgLatencyMs: 800, tokensPerSecond: 80 },
+        'code': { avgLatencyMs: 1200, tokensPerSecond: 60 },
+        'embedding': { avgLatencyMs: 100, tokensPerSecond: 1000 },
+        'vision': { avgLatencyMs: 2000, tokensPerSecond: 40 },
+        'reasoning': { avgLatencyMs: 5000, tokensPerSecond: 30 },
+        'classification': { avgLatencyMs: 300, tokensPerSecond: 150 },
+        'extraction': { avgLatencyMs: 500, tokensPerSecond: 100 },
+    };
+
+    const profile = performanceProfiles[args.taskType] || performanceProfiles['chat'];
+    const estimatedLatency = profile.avgLatencyMs + (args.tokenSize / profile.tokensPerSecond) * 1000;
+
+    return {
+        taskType: args.taskType,
+        tokenSize: args.tokenSize,
+        estimatedLatencyMs: Math.round(estimatedLatency),
+        estimatedThroughput: {
+            requestsPerMinute: Math.round(60000 / estimatedLatency),
+            tokensPerMinute: Math.round(60000 / estimatedLatency * args.tokenSize),
+        },
+        bottlenecks: [
+            args.tokenSize > 4000 ? 'Large context may cause increased latency' : null,
+            args.taskType === 'reasoning' ? 'Reasoning models have higher latency by design' : null,
+            args.taskType === 'vision' ? 'Image processing adds overhead' : null,
+        ].filter(Boolean),
+        scalingRecommendations: [
+            estimatedLatency > 3000 ? 'Consider async processing for requests >3s' : null,
+            args.tokenSize > 8000 ? 'Implement request chunking for large contexts' : null,
+            'Use connection pooling for high throughput',
+        ].filter(Boolean),
+        insights: [
+            {
+                type: 'prediction' as const,
+                message: `At ${Math.round(60000 / estimatedLatency)} req/min, you can handle ~${Math.round(60000 / estimatedLatency * 60 * 24)} requests/day`,
+            },
+        ],
+    };
+}
+
+// ============== Tool Definitions ==============
+
+export const aiModelTools = [
+    {
+        name: 'estimateOpenAICost',
+        description: 'Calculate OpenAI API cost with intelligent insights. Returns cost breakdown, cheaper alternatives, and optimization tips. Perfect for understanding your OpenAI spend and finding savings opportunities.',
+        inputSchema: EstimateOpenAICostSchema,
+        handler: handleEstimateOpenAICost,
+    },
+    {
+        name: 'estimateAnthropicCost',
+        description: 'Calculate Anthropic Claude API cost with intelligent insights. Returns cost breakdown, batch API savings, and optimization strategies. Includes comparison with OpenAI alternatives.',
+        inputSchema: EstimateAnthropicCostSchema,
+        handler: handleEstimateAnthropicCost,
+    },
+    {
+        name: 'suggestModel',
+        description: 'Get intelligent model recommendation based on your task, budget, and latency needs. Returns the best model with detailed reasoning, alternatives analysis, and break-even thresholds.',
+        inputSchema: SuggestModelSchema,
+        handler: handleSuggestModel,
+    },
+    {
+        name: 'compareModels',
+        description: 'Compare all available AI models for a specific task type. Returns ranked list with efficiency scores, cost breakdown, and quality-cost matrix to help you choose.',
+        inputSchema: CompareModelsSchema,
+        handler: handleCompareModels,
+    },
+    {
+        name: 'rankingByCostEfficiency',
+        description: 'Rank AI models by cost efficiency for any task description. Automatically infers the task type and returns models sorted by value-for-money with actionable recommendations.',
+        inputSchema: RankingByCostEfficiencySchema,
+        handler: handleRankingByCostEfficiency,
+    },
+    {
+        name: 'estimatePerformance',
+        description: 'Estimate latency and throughput for AI model requests. Returns expected response times, bottleneck identification, and scaling recommendations.',
+        inputSchema: EstimatePerformanceSchema,
+        handler: handleEstimatePerformance,
+    },
+];

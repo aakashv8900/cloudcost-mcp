@@ -1,0 +1,400 @@
+{
+    "cosmos_db": {
+        "serverless": {
+            "per_million_rus": 0.25,
+            "storage_per_gb": 0.25
+        },
+        "provisioned": {
+            "per_100_rus_hour": 0.008,
+            "storage_per_gb": 0.25,
+            "dedicated_gateway_per_hour": 0.278
+        },
+        "autoscale": {
+            "per_100_rus_hour": 0.012,
+            "storage_per_gb": 0.25
+        },
+        "multi_region_write_multiplier": 1.25,
+        "backup_periodic_per_gb": 0.15,
+        "backup_continuous_per_gb": 0.20
+    },
+    "sql_database": {
+        "basic": {
+            "dtu": 5,
+            "storage_gb": 2,
+            "monthly": 4.99
+        },
+        "standard_s0": {
+            "dtu": 10,
+            "storage_gb": 250,
+            "monthly": 15
+        },
+        "standard_s1": {
+            "dtu": 20,
+            "storage_gb": 250,
+            "monthly": 30
+        },
+        "standard_s2": {
+            "dtu": 50,
+            "storage_gb": 250,
+            "monthly": 75
+        },
+        "standard_s3": {
+            "dtu": 100,
+            "storage_gb": 250,
+            "monthly": 150
+        },
+        "premium_p1": {
+            "dtu": 125,
+            "storage_gb": 500,
+            "monthly": 465
+        },
+        "premium_p2": {
+            "dtu": 250,
+            "storage_gb": 500,
+            "monthly": 930
+        },
+        "premium_p4": {
+            "dtu": 500,
+            "storage_gb": 500,
+            "monthly": 1860
+        },
+        "serverless": {
+            "min_vcores": 0.5,
+            "max_vcores": 40,
+            "per_vcore_second": 0.000145,
+            "per_gb_storage": 0.115
+        },
+        "hyperscale": {
+            "per_vcore_hour": 0.12,
+            "per_100gb_storage": 10.00,
+            "read_replica_per_vcore_hour": 0.12
+        }
+    },
+    "mysql_flexible": {
+        "burstable_b1s": {
+            "vcpu": 1,
+            "memory_gb": 1,
+            "monthly": 6.21
+        },
+        "burstable_b1ms": {
+            "vcpu": 1,
+            "memory_gb": 2,
+            "monthly": 12.41
+        },
+        "burstable_b2s": {
+            "vcpu": 2,
+            "memory_gb": 4,
+            "monthly": 24.82
+        },
+        "general_d2ds_v4": {
+            "vcpu": 2,
+            "memory_gb": 8,
+            "monthly": 102.20
+        },
+        "general_d4ds_v4": {
+            "vcpu": 4,
+            "memory_gb": 16,
+            "monthly": 204.40
+        },
+        "general_d8ds_v4": {
+            "vcpu": 8,
+            "memory_gb": 32,
+            "monthly": 408.80
+        },
+        "storage_per_gb": 0.115,
+        "backup_per_gb": 0.095,
+        "iops_above_baseline": 0.05
+    },
+    "postgresql_flexible": {
+        "burstable_b1ms": {
+            "vcpu": 1,
+            "memory_gb": 2,
+            "monthly": 12.41
+        },
+        "burstable_b2s": {
+            "vcpu": 2,
+            "memory_gb": 4,
+            "monthly": 24.82
+        },
+        "general_d2ds_v4": {
+            "vcpu": 2,
+            "memory_gb": 8,
+            "monthly": 102.20
+        },
+        "general_d4ds_v4": {
+            "vcpu": 4,
+            "memory_gb": 16,
+            "monthly": 204.40
+        },
+        "memory_e2ds_v4": {
+            "vcpu": 2,
+            "memory_gb": 16,
+            "monthly": 136.51
+        },
+        "memory_e4ds_v4": {
+            "vcpu": 4,
+            "memory_gb": 32,
+            "monthly": 273.02
+        },
+        "storage_per_gb": 0.115,
+        "backup_per_gb": 0.095
+    },
+    "cache_for_redis": {
+        "basic_c0": {
+            "memory_gb": 0.25,
+            "monthly": 16
+        },
+        "basic_c1": {
+            "memory_gb": 1,
+            "monthly": 51
+        },
+        "basic_c2": {
+            "memory_gb": 2.5,
+            "monthly": 102
+        },
+        "standard_c0": {
+            "memory_gb": 0.25,
+            "monthly": 41,
+            "replicated": true
+        },
+        "standard_c1": {
+            "memory_gb": 1,
+            "monthly": 81,
+            "replicated": true
+        },
+        "standard_c2": {
+            "memory_gb": 2.5,
+            "monthly": 163,
+            "replicated": true
+        },
+        "premium_p1": {
+            "memory_gb": 6,
+            "monthly": 440,
+            "cluster": true
+        },
+        "premium_p2": {
+            "memory_gb": 13,
+            "monthly": 880,
+            "cluster": true
+        },
+        "premium_p3": {
+            "memory_gb": 26,
+            "monthly": 1760,
+            "cluster": true
+        },
+        "enterprise_e10": {
+            "memory_gb": 12,
+            "monthly": 724,
+            "redis_enterprise": true
+        },
+        "enterprise_e20": {
+            "memory_gb": 25,
+            "monthly": 1293,
+            "redis_enterprise": true
+        },
+        "enterprise_e50": {
+            "memory_gb": 50,
+            "monthly": 2422,
+            "redis_enterprise": true
+        }
+    },
+    "functions": {
+        "consumption": {
+            "executions_per_million": 0.20,
+            "gb_seconds": 0.000016,
+            "free_monthly_executions": 1000000,
+            "free_monthly_gb_seconds": 400000
+        },
+        "premium": {
+            "vcpu_per_second": 0.000017,
+            "memory_per_gb_second": 0.000017,
+            "pre_warmed_instances": true
+        },
+        "dedicated": {
+            "app_service_plan_pricing": true
+        }
+    },
+    "logic_apps": {
+        "consumption": {
+            "actions_per_1000": 0.000025,
+            "connector_executions_per_1000": 0.000125,
+            "enterprise_connector_per_1000": 0.001
+        },
+        "standard": {
+            "workflow_per_hour": 0.50,
+            "connector_operations_per_1000": 0.43
+        }
+    },
+    "event_grid": {
+        "operations_per_million": 0.60,
+        "free_monthly_operations": 100000
+    },
+    "event_hubs": {
+        "basic": {
+            "per_hour": 0.015,
+            "ingress_events_per_million": 0.028
+        },
+        "standard": {
+            "per_hour": 0.03,
+            "ingress_events_per_million": 0.028,
+            "consumer_groups": 20
+        },
+        "premium": {
+            "per_hour": 1.252,
+            "processing_unit": true
+        },
+        "dedicated": {
+            "per_hour": 6.849,
+            "capacity_unit": true
+        }
+    },
+    "service_bus": {
+        "basic": {
+            "per_million_operations": 0.05
+        },
+        "standard": {
+            "base_per_hour": 0.01,
+            "per_million_operations": 0.80
+        },
+        "premium": {
+            "per_messaging_unit_hour": 0.893
+        }
+    },
+    "api_management": {
+        "consumption": {
+            "per_10000_calls": 0.035
+        },
+        "developer": {
+            "per_hour": 0.07
+        },
+        "basic": {
+            "per_hour": 0.21
+        },
+        "standard": {
+            "per_hour": 0.94
+        },
+        "premium": {
+            "per_hour": 3.76
+        }
+    },
+    "container_instances": {
+        "vcpu_per_second": 0.0000130,
+        "memory_per_gb_second": 0.0000014,
+        "gpu_k80_per_second": 0.00046,
+        "gpu_v100_per_second": 0.00159
+    },
+    "container_apps": {
+        "vcpu_per_second": 0.000024,
+        "memory_per_gb_second": 0.000003,
+        "requests_per_million": 0.40,
+        "free_monthly_requests": 2000000
+    },
+    "aks": {
+        "cluster_management_free": true,
+        "node_pool_pricing": "vm_pricing",
+        "uptime_sla_per_hour": 0.10
+    },
+    "cognitive_services": {
+        "openai_service": {
+            "gpt-4o": {
+                "input_per_1k": 0.005,
+                "output_per_1k": 0.015
+            },
+            "gpt-4o-mini": {
+                "input_per_1k": 0.000165,
+                "output_per_1k": 0.00066
+            },
+            "gpt-4-turbo": {
+                "input_per_1k": 0.01,
+                "output_per_1k": 0.03
+            },
+            "gpt-35-turbo": {
+                "input_per_1k": 0.0005,
+                "output_per_1k": 0.0015
+            },
+            "text-embedding-3-small": {
+                "per_1k": 0.00002
+            },
+            "text-embedding-3-large": {
+                "per_1k": 0.00013
+            },
+            "dall-e-3-standard-1024": 0.04,
+            "dall-e-3-hd-1024": 0.08,
+            "whisper": {
+                "per_hour": 0.36
+            },
+            "tts": {
+                "per_million_chars": 15.00
+            },
+            "tts-hd": {
+                "per_million_chars": 30.00
+            },
+            "provisioned_throughput_unit_hourly": 0.07
+        },
+        "speech_to_text_per_hour": 1.00,
+        "text_to_speech_per_million_chars": 16.00,
+        "language_understanding_per_1000": 1.50,
+        "translator_per_million_chars": 10.00,
+        "computer_vision_per_1000": 1.00,
+        "face_api_per_1000": 1.00,
+        "content_moderator_per_1000": 1.00,
+        "document_intelligence_per_page": 0.01
+    },
+    "storage_accounts": {
+        "hot": {
+            "lrs_per_gb": 0.0184,
+            "zrs_per_gb": 0.023,
+            "grs_per_gb": 0.0368,
+            "write_per_10k": 0.055,
+            "read_per_10k": 0.0044
+        },
+        "cool": {
+            "lrs_per_gb": 0.01,
+            "zrs_per_gb": 0.0125,
+            "grs_per_gb": 0.02,
+            "write_per_10k": 0.10,
+            "read_per_10k": 0.01,
+            "retrieval_per_gb": 0.01
+        },
+        "cold": {
+            "lrs_per_gb": 0.0036,
+            "zrs_per_gb": 0.0045,
+            "grs_per_gb": 0.0072,
+            "write_per_10k": 0.18,
+            "read_per_10k": 0.10,
+            "retrieval_per_gb": 0.03
+        },
+        "archive": {
+            "lrs_per_gb": 0.00099,
+            "grs_per_gb": 0.002,
+            "write_per_10k": 0.10,
+            "read_per_10k": 5.50,
+            "retrieval_per_gb": 0.022,
+            "high_priority_retrieval_per_gb": 0.11
+        }
+    },
+    "cdn": {
+        "standard_microsoft": {
+            "first_10tb": 0.081,
+            "next_40tb": 0.075,
+            "next_100tb": 0.051,
+            "next_350tb": 0.037,
+            "over_500tb": 0.025
+        },
+        "standard_akamai": {
+            "first_10tb": 0.072,
+            "over_10tb": 0.067
+        },
+        "premium_verizon": {
+            "first_10tb": 0.162,
+            "over_10tb": 0.153
+        }
+    },
+    "front_door": {
+        "base_per_hour": 0.035,
+        "requests_per_10000": 0.01,
+        "data_transfer_per_gb": 0.12,
+        "waf_custom_rules": 5.00,
+        "waf_managed_rules": 20.00
+    }
+}

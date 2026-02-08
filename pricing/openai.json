@@ -1,0 +1,353 @@
+{
+    "gpt-4o": {
+        "input_per_million": 2.50,
+        "output_per_million": 10.00,
+        "cached_input_per_million": 1.25,
+        "context_window": 128000,
+        "max_output": 16384,
+        "category": "flagship",
+        "best_for": [
+            "chat",
+            "code",
+            "vision",
+            "reasoning",
+            "extraction"
+        ],
+        "latency": "medium",
+        "vision": true,
+        "function_calling": true,
+        "json_mode": true
+    },
+    "gpt-4o-2024-11-20": {
+        "input_per_million": 2.50,
+        "output_per_million": 10.00,
+        "cached_input_per_million": 1.25,
+        "context_window": 128000,
+        "max_output": 16384,
+        "category": "flagship",
+        "best_for": [
+            "chat",
+            "code",
+            "vision",
+            "reasoning"
+        ],
+        "latency": "medium",
+        "vision": true
+    },
+    "gpt-4o-2024-08-06": {
+        "input_per_million": 2.50,
+        "output_per_million": 10.00,
+        "cached_input_per_million": 1.25,
+        "context_window": 128000,
+        "max_output": 16384,
+        "category": "flagship",
+        "best_for": [
+            "chat",
+            "code",
+            "vision"
+        ],
+        "latency": "medium",
+        "vision": true
+    },
+    "gpt-4o-mini": {
+        "input_per_million": 0.15,
+        "output_per_million": 0.60,
+        "cached_input_per_million": 0.075,
+        "context_window": 128000,
+        "max_output": 16384,
+        "category": "efficient",
+        "best_for": [
+            "chat",
+            "code",
+            "classification",
+            "extraction"
+        ],
+        "latency": "low",
+        "vision": true,
+        "function_calling": true,
+        "json_mode": true
+    },
+    "gpt-4o-mini-2024-07-18": {
+        "input_per_million": 0.15,
+        "output_per_million": 0.60,
+        "cached_input_per_million": 0.075,
+        "context_window": 128000,
+        "max_output": 16384,
+        "category": "efficient",
+        "best_for": [
+            "chat",
+            "classification"
+        ],
+        "latency": "low",
+        "vision": true
+    },
+    "o1": {
+        "input_per_million": 15.00,
+        "output_per_million": 60.00,
+        "cached_input_per_million": 7.50,
+        "context_window": 200000,
+        "max_output": 100000,
+        "category": "reasoning",
+        "best_for": [
+            "reasoning",
+            "math",
+            "code",
+            "science"
+        ],
+        "latency": "high",
+        "vision": true
+    },
+    "o1-2024-12-17": {
+        "input_per_million": 15.00,
+        "output_per_million": 60.00,
+        "cached_input_per_million": 7.50,
+        "context_window": 200000,
+        "max_output": 100000,
+        "category": "reasoning",
+        "best_for": [
+            "reasoning",
+            "math",
+            "code"
+        ],
+        "latency": "high",
+        "vision": true
+    },
+    "o1-mini": {
+        "input_per_million": 3.00,
+        "output_per_million": 12.00,
+        "cached_input_per_million": 1.50,
+        "context_window": 128000,
+        "max_output": 65536,
+        "category": "reasoning",
+        "best_for": [
+            "reasoning",
+            "math",
+            "code"
+        ],
+        "latency": "medium"
+    },
+    "o3-mini": {
+        "input_per_million": 1.10,
+        "output_per_million": 4.40,
+        "cached_input_per_million": 0.55,
+        "context_window": 200000,
+        "max_output": 100000,
+        "category": "reasoning",
+        "best_for": [
+            "reasoning",
+            "math",
+            "code"
+        ],
+        "latency": "medium",
+        "reasoning_effort": [
+            "low",
+            "medium",
+            "high"
+        ]
+    },
+    "o3-mini-2025-01-31": {
+        "input_per_million": 1.10,
+        "output_per_million": 4.40,
+        "cached_input_per_million": 0.55,
+        "context_window": 200000,
+        "max_output": 100000,
+        "category": "reasoning",
+        "best_for": [
+            "reasoning",
+            "code"
+        ],
+        "latency": "medium"
+    },
+    "gpt-4-turbo": {
+        "input_per_million": 10.00,
+        "output_per_million": 30.00,
+        "context_window": 128000,
+        "max_output": 4096,
+        "category": "legacy-flagship",
+        "best_for": [
+            "chat",
+            "code"
+        ],
+        "latency": "medium",
+        "vision": true
+    },
+    "gpt-4-turbo-2024-04-09": {
+        "input_per_million": 10.00,
+        "output_per_million": 30.00,
+        "context_window": 128000,
+        "max_output": 4096,
+        "category": "legacy-flagship",
+        "best_for": [
+            "chat",
+            "code"
+        ],
+        "latency": "medium",
+        "vision": true
+    },
+    "gpt-4": {
+        "input_per_million": 30.00,
+        "output_per_million": 60.00,
+        "context_window": 8192,
+        "max_output": 8192,
+        "category": "legacy",
+        "best_for": [
+            "chat"
+        ],
+        "latency": "medium"
+    },
+    "gpt-4-32k": {
+        "input_per_million": 60.00,
+        "output_per_million": 120.00,
+        "context_window": 32768,
+        "max_output": 32768,
+        "category": "legacy",
+        "best_for": [
+            "long-context"
+        ],
+        "latency": "medium"
+    },
+    "gpt-3.5-turbo": {
+        "input_per_million": 0.50,
+        "output_per_million": 1.50,
+        "context_window": 16385,
+        "max_output": 4096,
+        "category": "legacy",
+        "best_for": [
+            "simple-tasks"
+        ],
+        "latency": "low"
+    },
+    "gpt-3.5-turbo-0125": {
+        "input_per_million": 0.50,
+        "output_per_million": 1.50,
+        "context_window": 16385,
+        "max_output": 4096,
+        "category": "legacy",
+        "best_for": [
+            "simple-tasks"
+        ],
+        "latency": "low"
+    },
+    "text-embedding-3-large": {
+        "input_per_million": 0.13,
+        "dimensions": 3072,
+        "category": "embedding",
+        "best_for": [
+            "embedding",
+            "search",
+            "similarity"
+        ],
+        "latency": "low"
+    },
+    "text-embedding-3-small": {
+        "input_per_million": 0.02,
+        "dimensions": 1536,
+        "category": "embedding",
+        "best_for": [
+            "embedding",
+            "search"
+        ],
+        "latency": "low"
+    },
+    "text-embedding-ada-002": {
+        "input_per_million": 0.10,
+        "dimensions": 1536,
+        "category": "embedding-legacy",
+        "best_for": [
+            "embedding"
+        ],
+        "latency": "low"
+    },
+    "whisper-1": {
+        "per_minute_audio": 0.006,
+        "category": "audio",
+        "best_for": [
+            "transcription",
+            "translation"
+        ],
+        "latency": "medium"
+    },
+    "tts-1": {
+        "per_million_characters": 15.00,
+        "category": "audio",
+        "best_for": [
+            "text-to-speech"
+        ],
+        "latency": "low"
+    },
+    "tts-1-hd": {
+        "per_million_characters": 30.00,
+        "category": "audio",
+        "best_for": [
+            "text-to-speech-hd"
+        ],
+        "latency": "medium"
+    },
+    "dall-e-3": {
+        "standard_1024x1024": 0.04,
+        "standard_1024x1792": 0.08,
+        "hd_1024x1024": 0.08,
+        "hd_1024x1792": 0.12,
+        "category": "image",
+        "best_for": [
+            "image-generation"
+        ],
+        "latency": "high"
+    },
+    "dall-e-2": {
+        "1024x1024": 0.02,
+        "512x512": 0.018,
+        "256x256": 0.016,
+        "category": "image",
+        "best_for": [
+            "image-generation-fast"
+        ],
+        "latency": "medium"
+    },
+    "gpt-4o-realtime-preview": {
+        "audio_input_per_million": 40.00,
+        "audio_output_per_million": 80.00,
+        "text_input_per_million": 2.50,
+        "text_output_per_million": 10.00,
+        "category": "realtime",
+        "best_for": [
+            "voice",
+            "realtime-chat"
+        ],
+        "latency": "low"
+    },
+    "gpt-4o-mini-realtime-preview": {
+        "audio_input_per_million": 10.00,
+        "audio_output_per_million": 20.00,
+        "text_input_per_million": 0.60,
+        "text_output_per_million": 2.40,
+        "category": "realtime",
+        "best_for": [
+            "voice",
+            "realtime-chat"
+        ],
+        "latency": "low"
+    },
+    "batch_api_discount": 0.50,
+    "fine_tuning": {
+        "gpt-4o-mini": {
+            "training_per_million": 3.00,
+            "inference_input_per_million": 0.30,
+            "inference_output_per_million": 1.20
+        },
+        "gpt-4o-2024-08-06": {
+            "training_per_million": 25.00,
+            "inference_input_per_million": 3.75,
+            "inference_output_per_million": 15.00
+        },
+        "gpt-3.5-turbo": {
+            "training_per_million": 8.00,
+            "inference_input_per_million": 3.00,
+            "inference_output_per_million": 6.00
+        }
+    },
+    "assistants_api": {
+        "code_interpreter_per_session": 0.03,
+        "file_search_per_gb_day": 0.10
+    }
+}

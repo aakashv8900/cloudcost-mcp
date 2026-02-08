@@ -1,0 +1,33 @@
+{
+  "name": "cloudcost-mcp",
+  "version": "1.0.0",
+  "description": "CloudCost Intelligence MCP - AI model cost estimation, cloud infrastructure pricing, and startup burn optimization",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "inspect": "npx @modelcontextprotocol/inspector node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "ai",
+    "cost",
+    "cloud",
+    "pricing",
+    "optimization"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@ctxprotocol/sdk": "^0.1.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}

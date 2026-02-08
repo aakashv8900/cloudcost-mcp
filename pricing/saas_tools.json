@@ -1,0 +1,682 @@
+{
+    "vercel": {
+        "hobby": {
+            "monthly_cost": 0,
+            "bandwidth_gb": 100,
+            "serverless_invocations": 100000,
+            "edge_invocations": 1000000,
+            "build_minutes": 6000,
+            "kv_requests": 30000,
+            "kv_storage_mb": 256,
+            "postgres_compute_hours": 60,
+            "postgres_storage_gb": 0.25,
+            "blob_storage_gb": 2,
+            "image_optimizations": 1000,
+            "analytics_events": 2500
+        },
+        "pro": {
+            "monthly_cost": 20,
+            "bandwidth_gb": 1000,
+            "serverless_invocations": 1000000,
+            "edge_invocations": 10000000,
+            "build_minutes": 24000,
+            "team_members": "unlimited",
+            "additional_bandwidth_per_gb": 0.15,
+            "additional_serverless_per_million": 0.60,
+            "additional_edge_per_million": 0.40,
+            "additional_build_minutes_per_1000": 10.00,
+            "preview_deployments": "unlimited",
+            "firewall_rules": 50,
+            "kv_requests": 3000000,
+            "kv_storage_mb": 1024,
+            "kv_additional_per_million": 0.50,
+            "postgres_compute_hours": 100,
+            "postgres_storage_gb": 10,
+            "postgres_additional_per_hour": 0.16,
+            "postgres_additional_storage_per_gb": 0.30,
+            "blob_storage_gb": 100,
+            "blob_additional_per_gb": 0.03,
+            "image_optimizations": 5000,
+            "image_additional_per_1000": 5.00
+        },
+        "enterprise": {
+            "custom_pricing": true,
+            "sso": true,
+            "audit_logs": true,
+            "sla": true,
+            "advanced_protection": true,
+            "priority_support": true
+        },
+        "functions": {
+            "streaming_per_gb_egress": 0.15,
+            "cron_jobs_invocations": "included",
+            "og_image_generation_per_1000": 0.00
+        }
+    },
+    "cloudflare": {
+        "free": {
+            "monthly_cost": 0,
+            "unlimited_bandwidth": true,
+            "ddos_protection": true,
+            "cdn_global": true,
+            "ssl_free": true,
+            "workers_requests_per_day": 100000,
+            "workers_kv_reads_per_day": 100000,
+            "pages_builds": 500,
+            "pages_bandwidth": "unlimited",
+            "r2_storage_gb": 10,
+            "r2_class_a_per_month": 1000000,
+            "r2_class_b_per_month": 10000000,
+            "d1_reads_per_day": 5000000,
+            "d1_writes_per_day": 100000,
+            "d1_storage_gb": 5
+        },
+        "pro": {
+            "monthly_cost": 20,
+            "waf_managed_rules": true,
+            "image_optimization": true,
+            "mobile_redirect": true,
+            "polish": true
+        },
+        "business": {
+            "monthly_cost": 200,
+            "waf_custom_rules": true,
+            "advanced_ddos": true,
+            "custom_ssl": true,
+            "dedicated_ssl": true
+        },
+        "enterprise": {
+            "custom_pricing": true,
+            "dedicated_account_team": true,
+            "sla": true,
+            "advanced_security": true
+        },
+        "workers_paid": {
+            "monthly_cost": 5,
+            "requests_included_million": 10,
+            "additional_per_million": 0.50,
+            "cpu_time_per_million_ms": 30000000,
+            "additional_cpu_per_million_ms": 0.02,
+            "kv_reads_per_million": 0.50,
+            "kv_writes_per_million": 5.00,
+            "kv_storage_per_gb": 0.50
+        },
+        "r2_storage": {
+            "storage_per_gb": 0.015,
+            "class_a_per_million": 4.50,
+            "class_b_per_million": 0.36,
+            "egress_free": true
+        },
+        "d1_storage": {
+            "read_per_million": 0.25,
+            "write_per_million": 1.00,
+            "storage_per_gb": 0.75
+        },
+        "durable_objects": {
+            "per_million_requests": 0.15,
+            "per_million_websocket_messages": 0.10,
+            "storage_per_gb": 0.20,
+            "compute_per_million_gb_sec": 12.50
+        },
+        "stream": {
+            "per_1000_minutes_stored": 5.00,
+            "per_1000_minutes_delivered": 1.00,
+            "encoding_per_minute": 0.0167
+        },
+        "images": {
+            "per_100000_delivered": 1.00,
+            "storage_per_100000_stored": 5.00,
+            "transformations_included": "unlimited"
+        }
+    },
+    "railway": {
+        "hobby": {
+            "monthly_cost": 0,
+            "execution_hours": 500,
+            "credit_limit": 5.00,
+            "vcpu_per_hour": 0.000463,
+            "memory_per_gb_hour": 0.000231,
+            "shared_network": true
+        },
+        "pro": {
+            "monthly_cost": 20,
+            "vcpu_per_hour": 0.000463,
+            "memory_per_gb_hour": 0.000231,
+            "network_per_gb": 0.10,
+            "build_minutes_per": 0.01,
+            "disk_per_gb": 0.25,
+            "included_usage": 20.00,
+            "priority_builds": true,
+            "log_retention_days": 90,
+            "preview_environments": true
+        },
+        "team": {
+            "monthly_cost": 250,
+            "vcpu_per_hour": 0.000463,
+            "memory_per_gb_hour": 0.000231,
+            "included_usage": 250.00,
+            "sso": true,
+            "audit_logs": true,
+            "priority_support": true
+        },
+        "enterprise": {
+            "custom_pricing": true,
+            "dedicated_infrastructure": true,
+            "sla": true
+        }
+    },
+    "render": {
+        "static_sites": {
+            "free": true,
+            "bandwidth_gb": 100,
+            "ssl_free": true,
+            "global_cdn": true
+        },
+        "web_services": {
+            "starter": {
+                "vcpu": 0.5,
+                "memory_gb": 0.5,
+                "monthly": 7
+            },
+            "standard": {
+                "vcpu": 1,
+                "memory_gb": 2,
+                "monthly": 25
+            },
+            "pro": {
+                "vcpu": 2,
+                "memory_gb": 4,
+                "monthly": 85
+            },
+            "pro_plus": {
+                "vcpu": 4,
+                "memory_gb": 8,
+                "monthly": 175
+            },
+            "pro_max": {
+                "vcpu": 8,
+                "memory_gb": 16,
+                "monthly": 475
+            },
+            "pro_ultra": {
+                "vcpu": 16,
+                "memory_gb": 32,
+                "monthly": 1000
+            }
+        },
+        "private_services": {
+            "same_as_web_services": true,
+            "internal_only": true
+        },
+        "background_workers": {
+            "same_as_web_services": true,
+            "always_on": true
+        },
+        "cron_jobs": {
+            "starter": {
+                "vcpu": 0.5,
+                "memory_gb": 0.5,
+                "monthly": 1
+            },
+            "standard": {
+                "vcpu": 1,
+                "memory_gb": 2,
+                "monthly": 3
+            }
+        },
+        "postgresql": {
+            "free": {
+                "storage_gb": 0.25,
+                "monthly": 0
+            },
+            "starter": {
+                "storage_gb": 1,
+                "monthly": 7
+            },
+            "standard": {
+                "storage_gb": 16,
+                "monthly": 20
+            },
+            "pro": {
+                "storage_gb": 32,
+                "monthly": 75
+            },
+            "pro_plus": {
+                "storage_gb": 64,
+                "monthly": 150
+            },
+            "additional_storage_per_gb": 0.50,
+            "pitr_per_gb": 0.10
+        },
+        "redis": {
+            "free": {
+                "memory_mb": 25,
+                "monthly": 0
+            },
+            "starter": {
+                "memory_mb": 50,
+                "monthly": 10
+            },
+            "standard": {
+                "memory_mb": 256,
+                "monthly": 30
+            },
+            "pro": {
+                "memory_mb": 1024,
+                "monthly": 100
+            }
+        },
+        "bandwidth": {
+            "included_gb": 100,
+            "additional_per_gb": 0.10
+        },
+        "team": {
+            "per_seat_monthly": 19,
+            "team_features": true
+        }
+    },
+    "fly.io": {
+        "machines": {
+            "shared-cpu-1x-256mb": {
+                "per_month": 1.94,
+                "per_hour": 0.00267
+            },
+            "shared-cpu-1x-512mb": {
+                "per_month": 3.19,
+                "per_hour": 0.00439
+            },
+            "shared-cpu-1x-1gb": {
+                "per_month": 5.70,
+                "per_hour": 0.00783
+            },
+            "shared-cpu-1x-2gb": {
+                "per_month": 10.70,
+                "per_hour": 0.01472
+            },
+            "shared-cpu-2x-4gb": {
+                "per_month": 31.24,
+                "per_hour": 0.04296
+            },
+            "shared-cpu-4x-8gb": {
+                "per_month": 62.55,
+                "per_hour": 0.08601
+            },
+            "performance-1x-256mb": {
+                "per_month": 5.70,
+                "per_hour": 0.00783
+            },
+            "performance-1x-2gb": {
+                "per_month": 29.97,
+                "per_hour": 0.04121
+            },
+            "performance-2x-4gb": {
+                "per_month": 59.95,
+                "per_hour": 0.08243
+            },
+            "performance-4x-8gb": {
+                "per_month": 119.89,
+                "per_hour": 0.16486
+            },
+            "performance-8x-16gb": {
+                "per_month": 239.79,
+                "per_hour": 0.32971
+            },
+            "performance-16x-32gb": {
+                "per_month": 479.57,
+                "per_hour": 0.65943
+            }
+        },
+        "gpu_machines": {
+            "a10-24gb": {
+                "per_hour": 1.50
+            },
+            "l40s-48gb": {
+                "per_hour": 2.50
+            },
+            "a100-pcie-40gb": {
+                "per_hour": 3.50
+            }
+        },
+        "storage": {
+            "volumes_per_gb": 0.15,
+            "volume_snapshots_per_gb": 0.05
+        },
+        "networking": {
+            "ipv4_dedicated_per_month": 2.00,
+            "outbound_data_per_gb": 0.02,
+            "anycast_ip": "included"
+        },
+        "postgres": {
+            "development_single_node": {
+                "monthly": 3.57
+            },
+            "production_3_node": {
+                "monthly_starts_at": 56
+            }
+        },
+        "free_allowance": {
+            "shared_cpu_hours": 2340,
+            "upstash_redis": true,
+            "3_shared_ipv4": true
+        },
+        "pay_as_you_go_monthly": 0,
+        "launch_monthly": 29,
+        "scale_monthly": 79,
+        "enterprise": {
+            "custom_pricing": true,
+            "sla": true
+        }
+    },
+    "netlify": {
+        "starter": {
+            "monthly_cost": 0,
+            "bandwidth_gb": 100,
+            "build_minutes": 300,
+            "serverless_invocations": 125000,
+            "forms_submissions": 100,
+            "identity_users": 1000,
+            "large_media_users": 1000
+        },
+        "pro": {
+            "monthly_cost": 19,
+            "bandwidth_gb": 1000,
+            "build_minutes": 25000,
+            "serverless_invocations": 2000000,
+            "additional_bandwidth_per_100gb": 55.00,
+            "additional_build_per_1000": 7.00,
+            "additional_functions_per_million": 25.00,
+            "background_functions": true,
+            "scheduled_functions": true
+        },
+        "business": {
+            "monthly_cost": 99,
+            "bandwidth_gb": 1500,
+            "build_minutes": 25000,
+            "password_protection": true,
+            "sso": true,
+            "priority_support": true
+        },
+        "enterprise": {
+            "custom_pricing": true,
+            "sla": true,
+            "advanced_security": true
+        },
+        "addons": {
+            "forms_per_100_submissions": 19.00,
+            "identity_per_1000_users": 99.00,
+            "analytics_per_site": 9.00,
+            "large_media_per_gb": 0.25
+        }
+    },
+    "digitalocean": {
+        "droplets": {
+            "s-1vcpu-512mb-10gb": {
+                "monthly": 4,
+                "hourly": 0.00595
+            },
+            "s-1vcpu-1gb-25gb": {
+                "monthly": 6,
+                "hourly": 0.00893
+            },
+            "s-1vcpu-2gb-50gb": {
+                "monthly": 12,
+                "hourly": 0.01786
+            },
+            "s-2vcpu-2gb-60gb": {
+                "monthly": 18,
+                "hourly": 0.02679
+            },
+            "s-2vcpu-4gb-80gb": {
+                "monthly": 24,
+                "hourly": 0.03571
+            },
+            "s-4vcpu-8gb-160gb": {
+                "monthly": 48,
+                "hourly": 0.07143
+            },
+            "s-8vcpu-16gb-320gb": {
+                "monthly": 96,
+                "hourly": 0.14286
+            },
+            "g-2vcpu-8gb": {
+                "monthly": 63,
+                "hourly": 0.09375
+            },
+            "g-4vcpu-16gb": {
+                "monthly": 126,
+                "hourly": 0.1875
+            },
+            "g-8vcpu-32gb": {
+                "monthly": 252,
+                "hourly": 0.375
+            },
+            "gd-2vcpu-8gb-nvme": {
+                "monthly": 68,
+                "hourly": 0.10119
+            },
+            "c-2vcpu-4gb": {
+                "monthly": 42,
+                "hourly": 0.0625
+            },
+            "c-4vcpu-8gb": {
+                "monthly": 84,
+                "hourly": 0.125
+            },
+            "c-8vcpu-16gb": {
+                "monthly": 168,
+                "hourly": 0.25
+            },
+            "m-2vcpu-16gb": {
+                "monthly": 84,
+                "hourly": 0.125
+            },
+            "m-4vcpu-32gb": {
+                "monthly": 168,
+                "hourly": 0.25
+            }
+        },
+        "kubernetes": {
+            "control_plane_per_month": 12,
+            "basic_node_pools": "droplet_pricing"
+        },
+        "databases": {
+            "postgresql_basic_1gb": {
+                "monthly": 15
+            },
+            "postgresql_basic_2gb": {
+                "monthly": 30
+            },
+            "postgresql_basic_4gb": {
+                "monthly": 60
+            },
+            "mysql_basic_1gb": {
+                "monthly": 15
+            },
+            "redis_1gb": {
+                "monthly": 15
+            },
+            "mongodb_2gb": {
+                "monthly": 25
+            }
+        },
+        "spaces_cdn": {
+            "storage_per_gb": 0.02,
+            "transfer_per_gb": 0.01,
+            "included_storage_gb": 250,
+            "included_transfer_gb": 1000
+        },
+        "load_balancers": {
+            "monthly": 12
+        },
+        "volumes": {
+            "per_gb": 0.10
+        },
+        "bandwidth": {
+            "included_per_droplet_tb": 1,
+            "additional_per_tb": 10.00
+        },
+        "app_platform": {
+            "starter": {
+                "monthly": 0,
+                "cpu_limit": 512,
+                "memory_mb": 512
+            },
+            "basic": {
+                "monthly": 5,
+                "vcpu": 1,
+                "memory_gb": 1
+            },
+            "professional": {
+                "monthly": 12,
+                "vcpu": 1,
+                "memory_gb": 2
+            }
+        }
+    },
+    "heroku": {
+        "dynos": {
+            "eco": {
+                "monthly": 5,
+                "shared": true,
+                "sleep": true
+            },
+            "basic": {
+                "monthly": 7,
+                "shared": true
+            },
+            "standard_1x": {
+                "monthly": 25,
+                "vcpu": 1,
+                "memory_gb": 0.5
+            },
+            "standard_2x": {
+                "monthly": 50,
+                "vcpu": 2,
+                "memory_gb": 1
+            },
+            "performance_m": {
+                "monthly": 250,
+                "vcpu": 2.5,
+                "memory_gb": 2.5
+            },
+            "performance_l": {
+                "monthly": 500,
+                "vcpu": 8,
+                "memory_gb": 14
+            },
+            "performance_l_ram": {
+                "monthly": 1500,
+                "vcpu": 16,
+                "memory_gb": 62
+            }
+        },
+        "postgres": {
+            "essential_0": {
+                "monthly": 5,
+                "rows": 10000
+            },
+            "essential_1": {
+                "monthly": 9,
+                "storage_gb": 1
+            },
+            "essential_2": {
+                "monthly": 15,
+                "storage_gb": 4
+            },
+            "standard_0": {
+                "monthly": 50,
+                "storage_gb": 64,
+                "memory_gb": 4
+            },
+            "standard_2": {
+                "monthly": 200,
+                "storage_gb": 256,
+                "memory_gb": 8
+            },
+            "premium_0": {
+                "monthly": 350,
+                "storage_gb": 128,
+                "memory_gb": 8
+            }
+        },
+        "data_for_redis": {
+            "mini": {
+                "monthly": 3,
+                "memory_mb": 25
+            },
+            "premium_0": {
+                "monthly": 15,
+                "memory_mb": 50
+            },
+            "premium_1": {
+                "monthly": 30,
+                "memory_mb": 100
+            },
+            "premium_3": {
+                "monthly": 60,
+                "memory_mb": 250
+            }
+        },
+        "addons_popular": {
+            "papertrail": {
+                "starts_at": 0
+            },
+            "new_relic": {
+                "starts_at": 0
+            },
+            "sendgrid": {
+                "starts_at": 0
+            }
+        }
+    },
+    "github": {
+        "free": {
+            "monthly_cost": 0,
+            "actions_minutes": 2000,
+            "packages_storage_gb": 0.5,
+            "packages_transfer_gb": 1,
+            "codespaces_hours": 120,
+            "copilot": false
+        },
+        "pro": {
+            "monthly_cost": 4,
+            "actions_minutes": 3000,
+            "packages_storage_gb": 2,
+            "packages_transfer_gb": 10
+        },
+        "team": {
+            "monthly_cost": 4,
+            "per_user": true,
+            "actions_minutes": 3000,
+            "packages_storage_gb": 2,
+            "packages_transfer_gb": 10
+        },
+        "enterprise": {
+            "monthly_cost": 21,
+            "per_user": true,
+            "actions_minutes": 50000,
+            "packages_storage_gb": 50,
+            "packages_transfer_gb": 100,
+            "advanced_security": true,
+            "sso": true
+        },
+        "copilot": {
+            "individual": {
+                "monthly": 10
+            },
+            "business": {
+                "monthly": 19,
+                "per_user": true
+            },
+            "enterprise": {
+                "monthly": 39,
+                "per_user": true
+            }
+        },
+        "actions_overage": {
+            "linux_per_minute": 0.008,
+            "windows_per_minute": 0.016,
+            "macos_per_minute": 0.08
+        }
+    }
+}

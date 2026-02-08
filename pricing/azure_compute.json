@@ -1,0 +1,680 @@
+{
+    "B": {
+        "B1s": {
+            "vcpu": 1,
+            "memory_gb": 1,
+            "hourly_rate": 0.0104,
+            "category": "burstable"
+        },
+        "B1ms": {
+            "vcpu": 1,
+            "memory_gb": 2,
+            "hourly_rate": 0.0207,
+            "category": "burstable"
+        },
+        "B2s": {
+            "vcpu": 2,
+            "memory_gb": 4,
+            "hourly_rate": 0.0416,
+            "category": "burstable"
+        },
+        "B2ms": {
+            "vcpu": 2,
+            "memory_gb": 8,
+            "hourly_rate": 0.0832,
+            "category": "burstable"
+        },
+        "B4ms": {
+            "vcpu": 4,
+            "memory_gb": 16,
+            "hourly_rate": 0.166,
+            "category": "burstable"
+        },
+        "B8ms": {
+            "vcpu": 8,
+            "memory_gb": 32,
+            "hourly_rate": 0.333,
+            "category": "burstable"
+        },
+        "B12ms": {
+            "vcpu": 12,
+            "memory_gb": 48,
+            "hourly_rate": 0.499,
+            "category": "burstable"
+        },
+        "B16ms": {
+            "vcpu": 16,
+            "memory_gb": 64,
+            "hourly_rate": 0.666,
+            "category": "burstable"
+        },
+        "B20ms": {
+            "vcpu": 20,
+            "memory_gb": 80,
+            "hourly_rate": 0.832,
+            "category": "burstable"
+        }
+    },
+    "D": {
+        "D2s_v5": {
+            "vcpu": 2,
+            "memory_gb": 8,
+            "hourly_rate": 0.096,
+            "category": "general-purpose"
+        },
+        "D4s_v5": {
+            "vcpu": 4,
+            "memory_gb": 16,
+            "hourly_rate": 0.192,
+            "category": "general-purpose"
+        },
+        "D8s_v5": {
+            "vcpu": 8,
+            "memory_gb": 32,
+            "hourly_rate": 0.384,
+            "category": "general-purpose"
+        },
+        "D16s_v5": {
+            "vcpu": 16,
+            "memory_gb": 64,
+            "hourly_rate": 0.768,
+            "category": "general-purpose"
+        },
+        "D32s_v5": {
+            "vcpu": 32,
+            "memory_gb": 128,
+            "hourly_rate": 1.536,
+            "category": "general-purpose"
+        },
+        "D48s_v5": {
+            "vcpu": 48,
+            "memory_gb": 192,
+            "hourly_rate": 2.304,
+            "category": "general-purpose"
+        },
+        "D64s_v5": {
+            "vcpu": 64,
+            "memory_gb": 256,
+            "hourly_rate": 3.072,
+            "category": "general-purpose"
+        },
+        "D96s_v5": {
+            "vcpu": 96,
+            "memory_gb": 384,
+            "hourly_rate": 4.608,
+            "category": "general-purpose"
+        },
+        "D2as_v5": {
+            "vcpu": 2,
+            "memory_gb": 8,
+            "hourly_rate": 0.086,
+            "category": "general-purpose-amd"
+        },
+        "D4as_v5": {
+            "vcpu": 4,
+            "memory_gb": 16,
+            "hourly_rate": 0.173,
+            "category": "general-purpose-amd"
+        },
+        "D8as_v5": {
+            "vcpu": 8,
+            "memory_gb": 32,
+            "hourly_rate": 0.346,
+            "category": "general-purpose-amd"
+        },
+        "D16as_v5": {
+            "vcpu": 16,
+            "memory_gb": 64,
+            "hourly_rate": 0.691,
+            "category": "general-purpose-amd"
+        },
+        "D32as_v5": {
+            "vcpu": 32,
+            "memory_gb": 128,
+            "hourly_rate": 1.382,
+            "category": "general-purpose-amd"
+        },
+        "D64as_v5": {
+            "vcpu": 64,
+            "memory_gb": 256,
+            "hourly_rate": 2.765,
+            "category": "general-purpose-amd"
+        },
+        "D96as_v5": {
+            "vcpu": 96,
+            "memory_gb": 384,
+            "hourly_rate": 4.147,
+            "category": "general-purpose-amd"
+        },
+        "D2ps_v5": {
+            "vcpu": 2,
+            "memory_gb": 8,
+            "hourly_rate": 0.077,
+            "category": "general-purpose-arm"
+        },
+        "D4ps_v5": {
+            "vcpu": 4,
+            "memory_gb": 16,
+            "hourly_rate": 0.154,
+            "category": "general-purpose-arm"
+        },
+        "D8ps_v5": {
+            "vcpu": 8,
+            "memory_gb": 32,
+            "hourly_rate": 0.308,
+            "category": "general-purpose-arm"
+        },
+        "D16ps_v5": {
+            "vcpu": 16,
+            "memory_gb": 64,
+            "hourly_rate": 0.616,
+            "category": "general-purpose-arm"
+        },
+        "D32ps_v5": {
+            "vcpu": 32,
+            "memory_gb": 128,
+            "hourly_rate": 1.232,
+            "category": "general-purpose-arm"
+        },
+        "D64ps_v5": {
+            "vcpu": 64,
+            "memory_gb": 256,
+            "hourly_rate": 2.464,
+            "category": "general-purpose-arm"
+        }
+    },
+    "E": {
+        "E2s_v5": {
+            "vcpu": 2,
+            "memory_gb": 16,
+            "hourly_rate": 0.126,
+            "category": "memory-optimized"
+        },
+        "E4s_v5": {
+            "vcpu": 4,
+            "memory_gb": 32,
+            "hourly_rate": 0.252,
+            "category": "memory-optimized"
+        },
+        "E8s_v5": {
+            "vcpu": 8,
+            "memory_gb": 64,
+            "hourly_rate": 0.504,
+            "category": "memory-optimized"
+        },
+        "E16s_v5": {
+            "vcpu": 16,
+            "memory_gb": 128,
+            "hourly_rate": 1.008,
+            "category": "memory-optimized"
+        },
+        "E32s_v5": {
+            "vcpu": 32,
+            "memory_gb": 256,
+            "hourly_rate": 2.016,
+            "category": "memory-optimized"
+        },
+        "E48s_v5": {
+            "vcpu": 48,
+            "memory_gb": 384,
+            "hourly_rate": 3.024,
+            "category": "memory-optimized"
+        },
+        "E64s_v5": {
+            "vcpu": 64,
+            "memory_gb": 512,
+            "hourly_rate": 4.032,
+            "category": "memory-optimized"
+        },
+        "E96s_v5": {
+            "vcpu": 96,
+            "memory_gb": 672,
+            "hourly_rate": 6.048,
+            "category": "memory-optimized"
+        },
+        "E2as_v5": {
+            "vcpu": 2,
+            "memory_gb": 16,
+            "hourly_rate": 0.113,
+            "category": "memory-optimized-amd"
+        },
+        "E4as_v5": {
+            "vcpu": 4,
+            "memory_gb": 32,
+            "hourly_rate": 0.226,
+            "category": "memory-optimized-amd"
+        },
+        "E8as_v5": {
+            "vcpu": 8,
+            "memory_gb": 64,
+            "hourly_rate": 0.452,
+            "category": "memory-optimized-amd"
+        },
+        "E16as_v5": {
+            "vcpu": 16,
+            "memory_gb": 128,
+            "hourly_rate": 0.904,
+            "category": "memory-optimized-amd"
+        },
+        "E32as_v5": {
+            "vcpu": 32,
+            "memory_gb": 256,
+            "hourly_rate": 1.808,
+            "category": "memory-optimized-amd"
+        },
+        "E64as_v5": {
+            "vcpu": 64,
+            "memory_gb": 512,
+            "hourly_rate": 3.616,
+            "category": "memory-optimized-amd"
+        },
+        "E96as_v5": {
+            "vcpu": 96,
+            "memory_gb": 672,
+            "hourly_rate": 5.424,
+            "category": "memory-optimized-amd"
+        }
+    },
+    "F": {
+        "F2s_v2": {
+            "vcpu": 2,
+            "memory_gb": 4,
+            "hourly_rate": 0.085,
+            "category": "compute-optimized"
+        },
+        "F4s_v2": {
+            "vcpu": 4,
+            "memory_gb": 8,
+            "hourly_rate": 0.169,
+            "category": "compute-optimized"
+        },
+        "F8s_v2": {
+            "vcpu": 8,
+            "memory_gb": 16,
+            "hourly_rate": 0.338,
+            "category": "compute-optimized"
+        },
+        "F16s_v2": {
+            "vcpu": 16,
+            "memory_gb": 32,
+            "hourly_rate": 0.677,
+            "category": "compute-optimized"
+        },
+        "F32s_v2": {
+            "vcpu": 32,
+            "memory_gb": 64,
+            "hourly_rate": 1.353,
+            "category": "compute-optimized"
+        },
+        "F48s_v2": {
+            "vcpu": 48,
+            "memory_gb": 96,
+            "hourly_rate": 2.03,
+            "category": "compute-optimized"
+        },
+        "F64s_v2": {
+            "vcpu": 64,
+            "memory_gb": 128,
+            "hourly_rate": 2.706,
+            "category": "compute-optimized"
+        },
+        "F72s_v2": {
+            "vcpu": 72,
+            "memory_gb": 144,
+            "hourly_rate": 3.045,
+            "category": "compute-optimized"
+        },
+        "Fx4mds": {
+            "vcpu": 4,
+            "memory_gb": 84,
+            "hourly_rate": 0.396,
+            "category": "compute-memory"
+        },
+        "Fx12mds": {
+            "vcpu": 12,
+            "memory_gb": 252,
+            "hourly_rate": 1.188,
+            "category": "compute-memory"
+        },
+        "Fx24mds": {
+            "vcpu": 24,
+            "memory_gb": 504,
+            "hourly_rate": 2.376,
+            "category": "compute-memory"
+        },
+        "Fx36mds": {
+            "vcpu": 36,
+            "memory_gb": 756,
+            "hourly_rate": 3.564,
+            "category": "compute-memory"
+        },
+        "Fx48mds": {
+            "vcpu": 48,
+            "memory_gb": 1008,
+            "hourly_rate": 4.752,
+            "category": "compute-memory"
+        }
+    },
+    "L": {
+        "L8s_v3": {
+            "vcpu": 8,
+            "memory_gb": 64,
+            "hourly_rate": 0.624,
+            "category": "storage-optimized",
+            "nvme_tb": 1.92
+        },
+        "L16s_v3": {
+            "vcpu": 16,
+            "memory_gb": 128,
+            "hourly_rate": 1.248,
+            "category": "storage-optimized",
+            "nvme_tb": 3.84
+        },
+        "L32s_v3": {
+            "vcpu": 32,
+            "memory_gb": 256,
+            "hourly_rate": 2.496,
+            "category": "storage-optimized",
+            "nvme_tb": 7.68
+        },
+        "L48s_v3": {
+            "vcpu": 48,
+            "memory_gb": 384,
+            "hourly_rate": 3.744,
+            "category": "storage-optimized",
+            "nvme_tb": 11.52
+        },
+        "L64s_v3": {
+            "vcpu": 64,
+            "memory_gb": 512,
+            "hourly_rate": 4.992,
+            "category": "storage-optimized",
+            "nvme_tb": 15.36
+        },
+        "L80s_v3": {
+            "vcpu": 80,
+            "memory_gb": 640,
+            "hourly_rate": 6.24,
+            "category": "storage-optimized",
+            "nvme_tb": 19.2
+        }
+    },
+    "M": {
+        "M8ms": {
+            "vcpu": 8,
+            "memory_gb": 219,
+            "hourly_rate": 1.68,
+            "category": "memory-intensive"
+        },
+        "M16ms": {
+            "vcpu": 16,
+            "memory_gb": 438,
+            "hourly_rate": 3.36,
+            "category": "memory-intensive"
+        },
+        "M32ms": {
+            "vcpu": 32,
+            "memory_gb": 875,
+            "hourly_rate": 6.72,
+            "category": "memory-intensive"
+        },
+        "M64ms": {
+            "vcpu": 64,
+            "memory_gb": 1750,
+            "hourly_rate": 13.44,
+            "category": "memory-intensive"
+        },
+        "M128ms": {
+            "vcpu": 128,
+            "memory_gb": 3892,
+            "hourly_rate": 26.88,
+            "category": "memory-intensive"
+        },
+        "M192ms_v2": {
+            "vcpu": 192,
+            "memory_gb": 4096,
+            "hourly_rate": 42.58,
+            "category": "memory-intensive"
+        }
+    },
+    "NC": {
+        "NC4as_T4_v3": {
+            "vcpu": 4,
+            "memory_gb": 28,
+            "hourly_rate": 0.526,
+            "category": "gpu-inference",
+            "gpu": "1x T4"
+        },
+        "NC8as_T4_v3": {
+            "vcpu": 8,
+            "memory_gb": 56,
+            "hourly_rate": 0.752,
+            "category": "gpu-inference",
+            "gpu": "1x T4"
+        },
+        "NC16as_T4_v3": {
+            "vcpu": 16,
+            "memory_gb": 112,
+            "hourly_rate": 1.204,
+            "category": "gpu-inference",
+            "gpu": "1x T4"
+        },
+        "NC64as_T4_v3": {
+            "vcpu": 64,
+            "memory_gb": 448,
+            "hourly_rate": 4.352,
+            "category": "gpu-inference",
+            "gpu": "4x T4"
+        },
+        "NC24ads_A100_v4": {
+            "vcpu": 24,
+            "memory_gb": 220,
+            "hourly_rate": 3.673,
+            "category": "gpu-ml",
+            "gpu": "1x A100 80GB"
+        },
+        "NC48ads_A100_v4": {
+            "vcpu": 48,
+            "memory_gb": 440,
+            "hourly_rate": 7.346,
+            "category": "gpu-ml",
+            "gpu": "2x A100 80GB"
+        },
+        "NC96ads_A100_v4": {
+            "vcpu": 96,
+            "memory_gb": 880,
+            "hourly_rate": 14.692,
+            "category": "gpu-ml",
+            "gpu": "4x A100 80GB"
+        }
+    },
+    "ND": {
+        "ND96amsr_A100_v4": {
+            "vcpu": 96,
+            "memory_gb": 1900,
+            "hourly_rate": 32.77,
+            "category": "gpu-ml-training",
+            "gpu": "8x A100 80GB"
+        },
+        "ND96isr_H100_v5": {
+            "vcpu": 96,
+            "memory_gb": 1900,
+            "hourly_rate": 70.00,
+            "category": "gpu-ml-training",
+            "gpu": "8x H100 80GB"
+        }
+    },
+    "NV": {
+        "NV6ads_A10_v5": {
+            "vcpu": 6,
+            "memory_gb": 55,
+            "hourly_rate": 0.90,
+            "category": "gpu-visualization",
+            "gpu": "1/6x A10"
+        },
+        "NV12ads_A10_v5": {
+            "vcpu": 12,
+            "memory_gb": 110,
+            "hourly_rate": 1.18,
+            "category": "gpu-visualization",
+            "gpu": "1/3x A10"
+        },
+        "NV18ads_A10_v5": {
+            "vcpu": 18,
+            "memory_gb": 220,
+            "hourly_rate": 1.50,
+            "category": "gpu-visualization",
+            "gpu": "1/2x A10"
+        },
+        "NV36ads_A10_v5": {
+            "vcpu": 36,
+            "memory_gb": 440,
+            "hourly_rate": 2.36,
+            "category": "gpu-visualization",
+            "gpu": "1x A10"
+        },
+        "NV72ads_A10_v5": {
+            "vcpu": 72,
+            "memory_gb": 880,
+            "hourly_rate": 4.72,
+            "category": "gpu-visualization",
+            "gpu": "2x A10"
+        }
+    },
+    "HB": {
+        "HB120rs_v3": {
+            "vcpu": 120,
+            "memory_gb": 448,
+            "hourly_rate": 3.60,
+            "category": "hpc"
+        },
+        "HB176rs_v4": {
+            "vcpu": 176,
+            "memory_gb": 768,
+            "hourly_rate": 5.76,
+            "category": "hpc"
+        },
+        "HBv4": {
+            "vcpu": 176,
+            "memory_gb": 768,
+            "hourly_rate": 6.40,
+            "category": "hpc-latest"
+        }
+    },
+    "HC": {
+        "HC44rs": {
+            "vcpu": 44,
+            "memory_gb": 352,
+            "hourly_rate": 3.17,
+            "category": "hpc-compute"
+        }
+    },
+    "reserved_discounts": {
+        "1_year_no_upfront": 0.37,
+        "1_year_upfront": 0.40,
+        "3_year_no_upfront": 0.54,
+        "3_year_upfront": 0.57
+    },
+    "spot_discounts": {
+        "B_series": 0.80,
+        "D_series": 0.70,
+        "E_series": 0.65,
+        "F_series": 0.75,
+        "NC_series": 0.55,
+        "general": 0.70
+    },
+    "region_multipliers": {
+        "eastus": 1.0,
+        "eastus2": 1.0,
+        "westus": 1.0,
+        "westus2": 1.0,
+        "westus3": 1.02,
+        "centralus": 1.0,
+        "northcentralus": 1.02,
+        "southcentralus": 1.0,
+        "westeurope": 1.15,
+        "northeurope": 1.10,
+        "uksouth": 1.12,
+        "ukwest": 1.15,
+        "francecentral": 1.18,
+        "germanywestcentral": 1.18,
+        "swedencentral": 1.12,
+        "norwayeast": 1.20,
+        "switzerlandnorth": 1.25,
+        "australiaeast": 1.18,
+        "australiasoutheast": 1.20,
+        "japaneast": 1.22,
+        "japanwest": 1.25,
+        "koreacentral": 1.18,
+        "southeastasia": 1.15,
+        "eastasia": 1.18,
+        "centralindia": 1.08,
+        "southindia": 1.10,
+        "brazilsouth": 1.35,
+        "canadacentral": 1.05,
+        "uaenorth": 1.22,
+        "southafricanorth": 1.28
+    },
+    "storage": {
+        "standard_hdd": {
+            "per_gb": 0.04,
+            "per_transaction": 0.0005
+        },
+        "standard_ssd": {
+            "per_gb": 0.075,
+            "per_transaction": 0.002
+        },
+        "premium_ssd": {
+            "p4": 5.28,
+            "p6": 10.21,
+            "p10": 19.71,
+            "p15": 38.11,
+            "p20": 73.22,
+            "p30": 122.88,
+            "p40": 235.52,
+            "p50": 450.56
+        },
+        "premium_ssd_v2": {
+            "per_gb": 0.08,
+            "per_iops": 0.065,
+            "per_mbps": 0.04
+        },
+        "ultra_disk": {
+            "per_gb": 0.12,
+            "per_iops": 0.05,
+            "per_mbps": 0.02
+        }
+    },
+    "blob_storage": {
+        "hot": {
+            "per_gb": 0.0208,
+            "write_per_10k": 0.055,
+            "read_per_10k": 0.0044
+        },
+        "cool": {
+            "per_gb": 0.01,
+            "write_per_10k": 0.10,
+            "read_per_10k": 0.01
+        },
+        "cold": {
+            "per_gb": 0.0036,
+            "write_per_10k": 0.18,
+            "read_per_10k": 0.10
+        },
+        "archive": {
+            "per_gb": 0.002,
+            "write_per_10k": 0.11,
+            "read_per_10k": 5.50
+        }
+    },
+    "data_transfer": {
+        "internet_out_first_5gb": 0.0,
+        "internet_out_5gb_to_10tb": 0.087,
+        "internet_out_10tb_to_50tb": 0.083,
+        "internet_out_50tb_to_150tb": 0.07,
+        "internet_out_over_150tb": 0.05,
+        "inter_region": 0.02,
+        "vnet_peering_same_region": 0.01,
+        "vnet_peering_cross_region": 0.035
+    }
+}

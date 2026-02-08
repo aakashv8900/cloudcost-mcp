@@ -1,0 +1,434 @@
+{
+    "rds": {
+        "mysql": {
+            "db.t3.micro": {
+                "vcpu": 2,
+                "memory_gb": 1,
+                "hourly_rate": 0.017
+            },
+            "db.t3.small": {
+                "vcpu": 2,
+                "memory_gb": 2,
+                "hourly_rate": 0.034
+            },
+            "db.t3.medium": {
+                "vcpu": 2,
+                "memory_gb": 4,
+                "hourly_rate": 0.068
+            },
+            "db.t3.large": {
+                "vcpu": 2,
+                "memory_gb": 8,
+                "hourly_rate": 0.136
+            },
+            "db.t3.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 16,
+                "hourly_rate": 0.272
+            },
+            "db.t3.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 32,
+                "hourly_rate": 0.544
+            },
+            "db.m6g.large": {
+                "vcpu": 2,
+                "memory_gb": 8,
+                "hourly_rate": 0.129
+            },
+            "db.m6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 16,
+                "hourly_rate": 0.258
+            },
+            "db.m6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 32,
+                "hourly_rate": 0.516
+            },
+            "db.m6g.4xlarge": {
+                "vcpu": 16,
+                "memory_gb": 64,
+                "hourly_rate": 1.032
+            },
+            "db.r6g.large": {
+                "vcpu": 2,
+                "memory_gb": 16,
+                "hourly_rate": 0.182
+            },
+            "db.r6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 32,
+                "hourly_rate": 0.364
+            },
+            "db.r6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 64,
+                "hourly_rate": 0.728
+            },
+            "db.r6g.4xlarge": {
+                "vcpu": 16,
+                "memory_gb": 128,
+                "hourly_rate": 1.456
+            }
+        },
+        "postgresql": {
+            "db.t3.micro": {
+                "vcpu": 2,
+                "memory_gb": 1,
+                "hourly_rate": 0.018
+            },
+            "db.t3.small": {
+                "vcpu": 2,
+                "memory_gb": 2,
+                "hourly_rate": 0.036
+            },
+            "db.t3.medium": {
+                "vcpu": 2,
+                "memory_gb": 4,
+                "hourly_rate": 0.072
+            },
+            "db.t3.large": {
+                "vcpu": 2,
+                "memory_gb": 8,
+                "hourly_rate": 0.144
+            },
+            "db.m6g.large": {
+                "vcpu": 2,
+                "memory_gb": 8,
+                "hourly_rate": 0.136
+            },
+            "db.m6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 16,
+                "hourly_rate": 0.272
+            },
+            "db.m6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 32,
+                "hourly_rate": 0.544
+            },
+            "db.r6g.large": {
+                "vcpu": 2,
+                "memory_gb": 16,
+                "hourly_rate": 0.191
+            },
+            "db.r6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 32,
+                "hourly_rate": 0.382
+            },
+            "db.r6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 64,
+                "hourly_rate": 0.764
+            }
+        },
+        "aurora_mysql": {
+            "db.t3.medium": {
+                "vcpu": 2,
+                "memory_gb": 4,
+                "hourly_rate": 0.082
+            },
+            "db.t3.large": {
+                "vcpu": 2,
+                "memory_gb": 8,
+                "hourly_rate": 0.164
+            },
+            "db.r6g.large": {
+                "vcpu": 2,
+                "memory_gb": 16,
+                "hourly_rate": 0.26
+            },
+            "db.r6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 32,
+                "hourly_rate": 0.52
+            },
+            "db.r6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 64,
+                "hourly_rate": 1.04
+            },
+            "db.r6g.4xlarge": {
+                "vcpu": 16,
+                "memory_gb": 128,
+                "hourly_rate": 2.08
+            },
+            "db.r6g.8xlarge": {
+                "vcpu": 32,
+                "memory_gb": 256,
+                "hourly_rate": 4.16
+            },
+            "db.r6g.16xlarge": {
+                "vcpu": 64,
+                "memory_gb": 512,
+                "hourly_rate": 8.32
+            },
+            "serverless_v2_acu": 0.12
+        },
+        "aurora_postgresql": {
+            "db.t3.medium": {
+                "vcpu": 2,
+                "memory_gb": 4,
+                "hourly_rate": 0.082
+            },
+            "db.t3.large": {
+                "vcpu": 2,
+                "memory_gb": 8,
+                "hourly_rate": 0.164
+            },
+            "db.r6g.large": {
+                "vcpu": 2,
+                "memory_gb": 16,
+                "hourly_rate": 0.26
+            },
+            "db.r6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 32,
+                "hourly_rate": 0.52
+            },
+            "db.r6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 64,
+                "hourly_rate": 1.04
+            },
+            "db.r6g.4xlarge": {
+                "vcpu": 16,
+                "memory_gb": 128,
+                "hourly_rate": 2.08
+            },
+            "serverless_v2_acu": 0.12
+        },
+        "storage": {
+            "gp2_per_gb": 0.115,
+            "gp3_per_gb": 0.08,
+            "io1_per_gb": 0.125,
+            "io1_per_iops": 0.10,
+            "aurora_per_gb": 0.10,
+            "aurora_io_per_million": 0.20,
+            "backup_per_gb": 0.021
+        }
+    },
+    "dynamodb": {
+        "on_demand": {
+            "write_per_million": 1.25,
+            "read_per_million": 0.25
+        },
+        "provisioned": {
+            "write_per_wcu_hour": 0.00065,
+            "read_per_rcu_hour": 0.00013
+        },
+        "storage_per_gb": 0.25,
+        "global_tables_per_rwu": 1.875,
+        "streams_per_100k_reads": 0.02,
+        "backup_per_gb": 0.10,
+        "restore_per_gb": 0.15,
+        "dax_node_per_hour": 0.269
+    },
+    "elasticache": {
+        "redis": {
+            "cache.t3.micro": {
+                "vcpu": 2,
+                "memory_gb": 0.5,
+                "hourly_rate": 0.017
+            },
+            "cache.t3.small": {
+                "vcpu": 2,
+                "memory_gb": 1.37,
+                "hourly_rate": 0.034
+            },
+            "cache.t3.medium": {
+                "vcpu": 2,
+                "memory_gb": 3.09,
+                "hourly_rate": 0.068
+            },
+            "cache.m6g.large": {
+                "vcpu": 2,
+                "memory_gb": 6.38,
+                "hourly_rate": 0.127
+            },
+            "cache.m6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 13.07,
+                "hourly_rate": 0.254
+            },
+            "cache.m6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 26.32,
+                "hourly_rate": 0.508
+            },
+            "cache.r6g.large": {
+                "vcpu": 2,
+                "memory_gb": 13.07,
+                "hourly_rate": 0.178
+            },
+            "cache.r6g.xlarge": {
+                "vcpu": 4,
+                "memory_gb": 26.32,
+                "hourly_rate": 0.356
+            },
+            "cache.r6g.2xlarge": {
+                "vcpu": 8,
+                "memory_gb": 52.82,
+                "hourly_rate": 0.712
+            },
+            "cache.r6g.4xlarge": {
+                "vcpu": 16,
+                "memory_gb": 105.81,
+                "hourly_rate": 1.424
+            }
+        },
+        "memcached": {
+            "cache.t3.micro": {
+                "vcpu": 2,
+                "memory_gb": 0.5,
+                "hourly_rate": 0.016
+            },
+            "cache.t3.small": {
+                "vcpu": 2,
+                "memory_gb": 1.37,
+                "hourly_rate": 0.032
+            },
+            "cache.t3.medium": {
+                "vcpu": 2,
+                "memory_gb": 3.09,
+                "hourly_rate": 0.064
+            },
+            "cache.m6g.large": {
+                "vcpu": 2,
+                "memory_gb": 6.38,
+                "hourly_rate": 0.112
+            }
+        },
+        "serverless": {
+            "ecpu_per_million": 0.0034,
+            "storage_per_gb_hour": 0.000125
+        }
+    },
+    "documentdb": {
+        "db.t3.medium": {
+            "vcpu": 2,
+            "memory_gb": 4,
+            "hourly_rate": 0.076
+        },
+        "db.r6g.large": {
+            "vcpu": 2,
+            "memory_gb": 16,
+            "hourly_rate": 0.277
+        },
+        "db.r6g.xlarge": {
+            "vcpu": 4,
+            "memory_gb": 32,
+            "hourly_rate": 0.554
+        },
+        "db.r6g.2xlarge": {
+            "vcpu": 8,
+            "memory_gb": 64,
+            "hourly_rate": 1.108
+        },
+        "storage_per_gb": 0.10,
+        "io_per_million": 0.20,
+        "backup_per_gb": 0.021
+    },
+    "neptune": {
+        "db.t3.medium": {
+            "vcpu": 2,
+            "memory_gb": 4,
+            "hourly_rate": 0.086
+        },
+        "db.r6g.large": {
+            "vcpu": 2,
+            "memory_gb": 16,
+            "hourly_rate": 0.348
+        },
+        "db.r6g.xlarge": {
+            "vcpu": 4,
+            "memory_gb": 32,
+            "hourly_rate": 0.696
+        },
+        "db.r6g.2xlarge": {
+            "vcpu": 8,
+            "memory_gb": 64,
+            "hourly_rate": 1.392
+        },
+        "storage_per_gb": 0.10,
+        "io_per_million": 0.20
+    },
+    "redshift": {
+        "dc2.large": {
+            "vcpu": 2,
+            "memory_gb": 15,
+            "storage_gb": 160,
+            "hourly_rate": 0.25
+        },
+        "dc2.8xlarge": {
+            "vcpu": 32,
+            "memory_gb": 244,
+            "storage_gb": 2560,
+            "hourly_rate": 4.80
+        },
+        "ra3.xlplus": {
+            "vcpu": 4,
+            "memory_gb": 32,
+            "storage_tb": 32,
+            "hourly_rate": 1.086
+        },
+        "ra3.4xlarge": {
+            "vcpu": 12,
+            "memory_gb": 96,
+            "storage_tb": 128,
+            "hourly_rate": 3.26
+        },
+        "ra3.16xlarge": {
+            "vcpu": 48,
+            "memory_gb": 384,
+            "storage_tb": 128,
+            "hourly_rate": 13.04
+        },
+        "serverless_rpu_hour": 0.36,
+        "managed_storage_per_gb": 0.024,
+        "spectrum_per_tb_scanned": 5.00
+    },
+    "timestream": {
+        "write_per_million": 0.50,
+        "memory_store_per_gb_hour": 0.036,
+        "magnetic_store_per_gb": 0.03,
+        "query_per_gb_scanned": 0.01
+    },
+    "keyspaces": {
+        "on_demand_write_per_million": 1.45,
+        "on_demand_read_per_million": 0.29,
+        "provisioned_write_per_wcu": 0.00072,
+        "provisioned_read_per_rcu": 0.00014,
+        "storage_per_gb": 0.25
+    },
+    "memorydb": {
+        "db.t4g.small": {
+            "vcpu": 2,
+            "memory_gb": 1.37,
+            "hourly_rate": 0.044
+        },
+        "db.t4g.medium": {
+            "vcpu": 2,
+            "memory_gb": 3.09,
+            "hourly_rate": 0.088
+        },
+        "db.r6g.large": {
+            "vcpu": 2,
+            "memory_gb": 13.07,
+            "hourly_rate": 0.203
+        },
+        "db.r6g.xlarge": {
+            "vcpu": 4,
+            "memory_gb": 26.32,
+            "hourly_rate": 0.406
+        },
+        "db.r6g.2xlarge": {
+            "vcpu": 8,
+            "memory_gb": 52.82,
+            "hourly_rate": 0.812
+        },
+        "snapshot_per_gb": 0.021
+    }
+}

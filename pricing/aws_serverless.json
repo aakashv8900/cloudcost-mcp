@@ -1,0 +1,197 @@
+{
+    "lambda": {
+        "arm_per_gb_second": 0.0000133334,
+        "x86_per_gb_second": 0.0000166667,
+        "per_million_requests": 0.20,
+        "provisioned_concurrency_per_gb_hour": 0.000004463,
+        "free_tier_monthly": {
+            "gb_seconds": 400000,
+            "requests": 1000000
+        }
+    },
+    "api_gateway": {
+        "rest_api_per_million": 3.50,
+        "http_api_per_million": 1.00,
+        "websocket_per_million_messages": 1.00,
+        "websocket_per_million_connection_minutes": 0.25,
+        "cache_per_hour": {
+            "0.5gb": 0.020,
+            "1.6gb": 0.038,
+            "6.1gb": 0.200,
+            "13.5gb": 0.250,
+            "28.4gb": 0.500
+        }
+    },
+    "step_functions": {
+        "standard_per_1000_transitions": 0.025,
+        "express_per_million_requests": 1.00,
+        "express_per_gb_second": 0.00001667
+    },
+    "eventbridge": {
+        "custom_events_per_million": 1.00,
+        "partner_events_per_million": 1.00,
+        "archive_ingestion_per_gb": 0.10,
+        "archive_storage_per_gb": 0.023,
+        "replay_per_million": 0.10,
+        "pipes_per_million": 0.40,
+        "scheduler_per_million": 1.00
+    },
+    "sqs": {
+        "standard_per_million": 0.40,
+        "fifo_per_million": 0.50,
+        "free_tier_monthly": 1000000
+    },
+    "sns": {
+        "publish_per_million": 0.50,
+        "http_delivery_per_million": 0.60,
+        "email_per_1000": 2.00,
+        "sms_per_message": 0.0075,
+        "mobile_push_per_million": 0.50,
+        "free_tier_monthly": 1000000
+    },
+    "kinesis": {
+        "data_streams": {
+            "on_demand_per_gb": 0.08,
+            "on_demand_per_million_gets": 0.015,
+            "provisioned_per_shard_hour": 0.015,
+            "provisioned_per_million_puts": 0.014,
+            "extended_retention_per_shard_hour": 0.02
+        },
+        "firehose": {
+            "per_gb": 0.029,
+            "format_conversion_per_gb": 0.018,
+            "vpc_delivery_per_hour": 0.01,
+            "vpc_delivery_per_gb": 0.01
+        },
+        "data_analytics_per_kpu_hour": 0.11,
+        "video_streams_per_gb_ingested": 0.0085,
+        "video_streams_per_gb_consumed": 0.0085
+    },
+    "fargate": {
+        "vcpu_per_hour": 0.04048,
+        "memory_per_gb_hour": 0.004445,
+        "arm_vcpu_per_hour": 0.03238,
+        "arm_memory_per_gb_hour": 0.00356,
+        "spot_vcpu_per_hour": 0.01214,
+        "spot_memory_per_gb_hour": 0.00133,
+        "ephemeral_storage_per_gb": 0.000111
+    },
+    "ecs": {
+        "fargate_pricing": "see fargate section",
+        "ec2_launch_type": "ec2 instance pricing",
+        "service_connect_per_hour": 0.0
+    },
+    "eks": {
+        "cluster_per_hour": 0.10,
+        "fargate_pod_pricing": "see fargate section",
+        "ec2_node_pricing": "ec2 instance pricing"
+    },
+    "app_runner": {
+        "vcpu_per_hour": 0.064,
+        "memory_per_gb_hour": 0.007,
+        "provisioned_per_hour": 0.007,
+        "per_million_requests": 1.00,
+        "build_per_minute": 0.005
+    },
+    "elastic_beanstalk": {
+        "service_fee": 0.0,
+        "resources": "ec2, elb, rds pricing"
+    },
+    "batch": {
+        "service_fee": 0.0,
+        "resources": "ec2, fargate pricing"
+    },
+    "cloudfront": {
+        "data_transfer_out": {
+            "first_10tb": 0.085,
+            "next_40tb": 0.080,
+            "next_100tb": 0.060,
+            "next_350tb": 0.040,
+            "next_524tb": 0.030,
+            "over_1pb": 0.025
+        },
+        "requests": {
+            "http_per_10000": 0.0075,
+            "https_per_10000": 0.01
+        },
+        "functions_per_million": 0.10,
+        "lambda_edge_per_million_requests": 0.60,
+        "lambda_edge_per_gb_second": 0.00005001,
+        "origin_shield_per_10000": 0.0090,
+        "realtime_logs_per_million": 0.01
+    },
+    "route53": {
+        "hosted_zone_per_month": 0.50,
+        "queries_per_million": 0.40,
+        "latency_queries_per_million": 0.60,
+        "geo_queries_per_million": 0.70,
+        "health_check_basic_per_month": 0.50,
+        "health_check_https_per_month": 0.75,
+        "resolver_queries_per_million": 0.40,
+        "resolver_endpoint_per_eni_hour": 0.125
+    },
+    "global_accelerator": {
+        "fixed_per_hour": 0.025,
+        "data_transfer_premium_per_gb": 0.015
+    },
+    "elb": {
+        "alb": {
+            "per_hour": 0.0225,
+            "lcu_per_hour": 0.008
+        },
+        "nlb": {
+            "per_hour": 0.0225,
+            "nlcu_per_hour": 0.006
+        },
+        "gwlb": {
+            "per_hour": 0.0125,
+            "glcu_per_hour": 0.004
+        },
+        "classic": {
+            "per_hour": 0.025,
+            "per_gb": 0.008
+        }
+    },
+    "vpc": {
+        "nat_gateway_per_hour": 0.045,
+        "nat_gateway_per_gb": 0.045,
+        "transit_gateway_per_attachment_hour": 0.05,
+        "transit_gateway_per_gb": 0.02,
+        "vpc_endpoint_per_hour": 0.01,
+        "vpc_endpoint_per_gb": 0.01,
+        "private_link_per_hour": 0.01,
+        "private_link_per_gb": 0.01,
+        "client_vpn_per_hour": 0.05,
+        "site_to_site_vpn_per_hour": 0.05
+    },
+    "cognito": {
+        "mau_first_50k": 0.0,
+        "mau_50k_to_100k": 0.0055,
+        "mau_over_100k": 0.0046,
+        "advanced_security_per_mau": 0.050,
+        "saml_federation_per_mau": 0.015
+    },
+    "secrets_manager": {
+        "per_secret_per_month": 0.40,
+        "per_10000_api_calls": 0.05
+    },
+    "parameter_store": {
+        "standard_free": true,
+        "advanced_per_parameter": 0.05,
+        "advanced_throughput_per_10000": 0.05
+    },
+    "ses": {
+        "outbound_per_1000": 0.10,
+        "inbound_first_1000_free": true,
+        "inbound_per_1000_chunks": 0.09,
+        "dedicated_ip_per_month": 24.95
+    },
+    "pinpoint": {
+        "mau_first_5k": 0.0,
+        "mau_over_5k": 0.0012,
+        "sms_per_message": 0.0075,
+        "email_per_10000": 0.10,
+        "push_per_million": 1.00,
+        "voice_per_minute": 0.013
+    }
+}

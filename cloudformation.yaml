@@ -1,0 +1,296 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudCost Intelligence MCP Server - Free Tier EC2 Deployment'
+
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair for SSH access
+  
+  GitHubRepo:
+    Type: String
+    Default: 'https://github.com/your-username/cloudcost-mcp.git'
+    Description: GitHub repository URL for the CloudCost MCP project
+  
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+    Description: EC2 instance type (Free Tier eligible)
+
+Mappings:
+  RegionAMI:
+    us-east-1:
+      AMI: ami-0c7217cdde317cfec  # Ubuntu 22.04 LTS
+    us-east-2:
+      AMI: ami-05fb0b8c1424f266b
+    us-west-1:
+      AMI: ami-0ce2cb35386fc22e9
+    us-west-2:
+      AMI: ami-008fe2fc65df48dac
+    eu-west-1:
+      AMI: ami-0905a3c97561e0b69
+    eu-central-1:
+      AMI: ami-0faab6bdbac9486fb
+    ap-south-1:
+      AMI: ami-0f5ee92e2d63afc18
+    ap-southeast-1:
+      AMI: ami-078c1149d8ad719a7
+    ap-northeast-1:
+      AMI: ami-07c589821f2b353aa
+
+Resources:
+  # VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-VPC
+
+  # Internet Gateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-IGW
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # Public Subnet
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-Public-Subnet
+
+  # Route Table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-Public-RT
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
+  # Security Group
+  MCPSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: CloudCost-MCP-SG
+      GroupDescription: Security group for CloudCost MCP Server
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: SSH access
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP access
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: HTTPS access
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+          Description: MCP Server access
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-SG
+
+  # IAM Role for EC2
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CloudCost-MCP-EC2-Role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-EC2-Role
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: CloudCost-MCP-Instance-Profile
+      Roles:
+        - !Ref EC2Role
+
+  # EC2 Instance
+  MCPServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !FindInMap [RegionAMI, !Ref 'AWS::Region', AMI]
+      KeyName: !Ref KeyName
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: '0'
+          GroupSet:
+            - !Ref MCPSecurityGroup
+          SubnetId: !Ref PublicSubnet
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp3
+            DeleteOnTermination: true
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -e
+          exec > >(tee /var/log/user-data.log) 2>&1
+
+          echo "=== Starting CloudCost MCP Setup ==="
+
+          # Update system
+          apt-get update -y
+          apt-get upgrade -y
+
+          # Install Docker
+          apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update -y
+          apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+          # Start Docker
+          systemctl start docker
+          systemctl enable docker
+
+          # Add ubuntu user to docker group
+          usermod -aG docker ubuntu
+
+          # Install git
+          apt-get install -y git
+
+          # Clone repository
+          cd /home/ubuntu
+          git clone ${GitHubRepo} cloudcost-mcp
+          chown -R ubuntu:ubuntu cloudcost-mcp
+
+          # Create deployment directory
+          mkdir -p /home/ubuntu/cloudcost-mcp/nginx/ssl
+          chown -R ubuntu:ubuntu /home/ubuntu/cloudcost-mcp
+
+          # Create systemd service for auto-start
+          cat > /etc/systemd/system/cloudcost-mcp.service << 'EOF'
+          [Unit]
+          Description=CloudCost MCP Server
+          Requires=docker.service
+          After=docker.service
+
+          [Service]
+          Type=oneshot
+          RemainAfterExit=yes
+          WorkingDirectory=/home/ubuntu/cloudcost-mcp
+          ExecStart=/usr/bin/docker compose up -d --build
+          ExecStop=/usr/bin/docker compose down
+          User=ubuntu
+          Group=docker
+
+          [Install]
+          WantedBy=multi-user.target
+          EOF
+
+          systemctl daemon-reload
+          systemctl enable cloudcost-mcp.service
+
+          # Build and start the container
+          cd /home/ubuntu/cloudcost-mcp
+          docker compose up -d --build
+
+          echo "=== CloudCost MCP Setup Complete ==="
+          echo "Server running at http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3000"
+
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-Server
+        - Key: Environment
+          Value: Production
+
+  # Elastic IP (optional - comment out if not needed)
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: CloudCost-MCP-EIP
+
+  EIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId: !Ref MCPServer
+      EIP: !Ref ElasticIP
+
+Outputs:
+  InstanceId:
+    Description: EC2 Instance ID
+    Value: !Ref MCPServer
+
+  PublicIP:
+    Description: Public IP Address
+    Value: !Ref ElasticIP
+
+  PublicDNS:
+    Description: Public DNS Name
+    Value: !GetAtt MCPServer.PublicDnsName
+
+  MCPEndpoint:
+    Description: MCP Server Endpoint
+    Value: !Sub 'http://${ElasticIP}:3000'
+
+  SSHCommand:
+    Description: SSH command to connect to the server
+    Value: !Sub 'ssh -i ${KeyName}.pem ubuntu@${ElasticIP}'
+
+  DeploymentCommand:
+    Description: Command to deploy updates
+    Value: 'cd /home/ubuntu/cloudcost-mcp && git pull && docker compose up -d --build'
