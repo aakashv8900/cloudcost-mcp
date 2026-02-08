@@ -358,7 +358,9 @@ export function compareProviders(
 ): { winner: Provider; reasoning: string; considerations: string[] } {
     const sorted = Object.entries(costs).sort((a, b) => a[1] - b[1]) as [Provider, number][];
     const winner = sorted[0][0];
-    const savings = sorted[1][1] - sorted[0][1];
+    const lowestCost = sorted[0][1];
+    const secondLowest = sorted[1][1];
+    const savings = secondLowest - lowestCost;
 
     const workloadConsiderations: Record<WorkloadType, Record<Provider, string>> = {
         'api-heavy': {
@@ -390,7 +392,7 @@ export function compareProviders(
 
     const considerations = [
         workloadConsiderations[workloadType][winner],
-        `Saves $${savings.toFixed(2)}/month vs next cheapest`,
+        savings > 0 ? `Saves $${savings.toFixed(2)}/month vs next cheapest` : 'All providers have similar pricing',
     ];
 
     // Add startup credit consideration
@@ -402,9 +404,21 @@ export function compareProviders(
         considerations.push('Azure for Startups offers up to $150k in credits');
     }
 
+    // Calculate percentage savings safely (avoid division by zero or NaN)
+    let percentSavings = 0;
+    if (secondLowest > 0 && lowestCost >= 0) {
+        percentSavings = Math.round((1 - lowestCost / secondLowest) * 100);
+    }
+
+    const reasoning = percentSavings > 0
+        ? `${winner.toUpperCase()} is ${percentSavings}% cheaper for this workload`
+        : lowestCost === 0 && secondLowest === 0
+            ? 'All providers offer this service - provide instance type and hours for accurate comparison'
+            : `${winner.toUpperCase()} offers best value for this workload`;
+
     return {
         winner,
-        reasoning: `${winner.toUpperCase()} is ${Math.round((1 - sorted[0][1] / sorted[1][1]) * 100)}% cheaper for this workload`,
+        reasoning,
         considerations,
     };
 }

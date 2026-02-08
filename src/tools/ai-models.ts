@@ -86,6 +86,16 @@ export function handleRankingByCostEfficiency(args: z.infer<typeof RankingByCost
 
     const comparison = compareModels(taskType);
 
+    // Handle empty rankings
+    if (!comparison.rankings || comparison.rankings.length === 0) {
+        return {
+            task: args.task,
+            inferredTaskType: taskType,
+            efficiencyRankings: [],
+            insights: [{ type: 'warning' as const, message: 'No models found for this task type' }],
+        };
+    }
+
     return {
         task: args.task,
         inferredTaskType: taskType,

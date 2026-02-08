@@ -163,10 +163,28 @@ export function estimateAnthropicCost(
     inputTokens: number,
     outputTokens: number
 ): AIModelCostResult {
-    const pricing = anthropicPricing[model];
+    // Model aliases for common shorthand names
+    const modelAliases: Record<string, string> = {
+        'claude-3-5-sonnet': 'claude-3-5-sonnet-20241022',
+        'claude-3.5-sonnet': 'claude-3-5-sonnet-20241022',
+        'claude-3-5-haiku': 'claude-3-5-haiku-20241022',
+        'claude-3.5-haiku': 'claude-3-5-haiku-20241022',
+        'claude-3-opus': 'claude-3-opus-20240229',
+        'claude-3-sonnet': 'claude-3-sonnet-20240229',
+        'claude-3-haiku': 'claude-3-haiku-20240307',
+        'claude-2': 'claude-2.1',
+        'claude-instant': 'claude-instant-1.2',
+        'sonnet': 'claude-3-5-sonnet-20241022',
+        'haiku': 'claude-3-5-haiku-20241022',
+        'opus': 'claude-3-opus-20240229',
+    };
+
+    // Resolve alias if available
+    const resolvedModel = modelAliases[model.toLowerCase()] || model;
+    const pricing = anthropicPricing[resolvedModel];
 
     if (!pricing) {
-        throw new Error(`Unknown Anthropic model: ${model}. Available: ${Object.keys(anthropicPricing).join(', ')}`);
+        throw new Error(`Unknown Anthropic model: ${model}. Available: ${Object.keys(anthropicPricing).filter(k => !['prompt_caching', 'extended_context', 'model_aliases'].includes(k)).join(', ')}`);
     }
 
     const { inputCost, outputCost, totalCost } = calculateAIModelCost(
@@ -233,28 +251,32 @@ export function suggestModel(
     budget: number,
     latencyRequirement: LatencyRequirement
 ): ModelSuggestion {
-    // Combine all models with normalized data
+    // Combine all models with normalized data - filter out non-model entries
     const allModels = [
-        ...Object.entries(openaiPricing).map(([name, p]) => ({
-            name,
-            provider: 'openai' as AIProvider,
-            cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
-            latency: p.latency,
-            quality: p.category === 'flagship' ? 90 : p.category === 'reasoning' ? 95 : 70,
-            bestFor: p.best_for,
-        })),
-        ...Object.entries(anthropicPricing).map(([name, p]) => ({
-            name,
-            provider: 'anthropic' as AIProvider,
-            cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
-            latency: p.latency,
-            quality: p.category === 'flagship' ? 92 : p.category === 'premium' ? 95 : 72,
-            bestFor: p.best_for,
-        })),
-    ];
+        ...Object.entries(openaiPricing)
+            .filter(([_, p]) => p && typeof p === 'object' && Array.isArray(p.best_for))
+            .map(([name, p]) => ({
+                name,
+                provider: 'openai' as AIProvider,
+                cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
+                latency: p.latency || 'medium',
+                quality: p.category === 'flagship' ? 90 : p.category === 'reasoning' ? 95 : 70,
+                bestFor: p.best_for || [],
+            })),
+        ...Object.entries(anthropicPricing)
+            .filter(([_, p]) => p && typeof p === 'object' && Array.isArray(p.best_for))
+            .map(([name, p]) => ({
+                name,
+                provider: 'anthropic' as AIProvider,
+                cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
+                latency: p.latency || 'medium',
+                quality: p.category === 'flagship' ? 92 : p.category === 'premium' ? 95 : 72,
+                bestFor: p.best_for || [],
+            })),
+    ].filter(m => !isNaN(m.cost) && m.cost > 0);
 
     const result = recommendModel(taskType, budget, latencyRequirement, allModels);
-    const selectedModel = allModels.find(m => m.name === result.model)!;
+    const selectedModel = allModels.find(m => m.name === result.model) || allModels[0];
 
     return {
         recommendedModel: result.model,
@@ -271,7 +293,7 @@ export function suggestModel(
             },
             {
                 type: 'benchmark',
-                message: `${result.model} handles ${selectedModel.bestFor.join(', ')} well`,
+                message: `${result.model} handles ${(selectedModel.bestFor || []).join(', ')} well`,
             },
         ],
     };
@@ -279,31 +301,49 @@ export function suggestModel(
 
 export function compareModels(taskType: TaskType): ModelComparison {
     const allModels = [
-        ...Object.entries(openaiPricing).map(([name, p]) => ({
-            name,
-            provider: 'openai' as AIProvider,
-            cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
-            category: p.category,
-            bestFor: p.best_for,
-        })),
-        ...Object.entries(anthropicPricing).map(([name, p]) => ({
-            name,
-            provider: 'anthropic' as AIProvider,
-            cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
-            category: p.category,
-            bestFor: p.best_for,
-        })),
+        ...Object.entries(openaiPricing)
+            .filter(([_, p]) => p && typeof p === 'object' && Array.isArray(p.best_for))
+            .map(([name, p]) => ({
+                name,
+                provider: 'openai' as AIProvider,
+                cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
+                category: p.category || 'unknown',
+                bestFor: p.best_for || [],
+            })),
+        ...Object.entries(anthropicPricing)
+            .filter(([_, p]) => p && typeof p === 'object' && Array.isArray(p.best_for))
+            .map(([name, p]) => ({
+                name,
+                provider: 'anthropic' as AIProvider,
+                cost: calculateCostPerMillion(p.input_per_million, p.output_per_million),
+                category: p.category || 'unknown',
+                bestFor: p.best_for || [],
+            })),
     ];
 
-    // Filter and score by task relevance
-    const scoredModels = allModels.map(m => ({
-        ...m,
-        score: (m.bestFor.includes(taskType) ? 100 : 50) - m.cost,
-    }));
+    // Filter out models with invalid costs and score by task relevance
+    const scoredModels = allModels
+        .filter(m => !isNaN(m.cost) && m.cost > 0)
+        .map(m => ({
+            ...m,
+            score: (m.bestFor && m.bestFor.includes(taskType) ? 100 : 50) - m.cost,
+        }));
 
     scoredModels.sort((a, b) => b.score - a.score);
 
+    // Ensure we have at least one model
+    if (scoredModels.length === 0) {
+        return {
+            rankings: [],
+            winner: 'none',
+            reasoning: 'No models available for comparison',
+            qualityCostMatrix: [],
+            insights: [{ type: 'warning', message: 'No models found matching the criteria' }],
+        };
+    }
+
     const winner = scoredModels[0];
+    const winnerBestFor = winner.bestFor || [];
 
     return {
         rankings: scoredModels.slice(0, 10).map((m, i) => ({
@@ -312,10 +352,10 @@ export function compareModels(taskType: TaskType): ModelComparison {
             provider: m.provider,
             costPer1M: m.cost,
             efficiencyScore: Math.round(m.score),
-            bestFor: m.bestFor,
+            bestFor: m.bestFor || [],
         })),
         winner: winner.name,
-        reasoning: winner.bestFor.includes(taskType)
+        reasoning: winnerBestFor.includes(taskType)
             ? `${winner.name} is optimized for ${taskType} at $${winner.cost.toFixed(2)}/1M tokens`
             : `${winner.name} offers best overall value for this task type`,
         qualityCostMatrix: [
@@ -362,15 +402,46 @@ export function estimateComputeCost(
             throw new Error(`Unknown provider: ${provider}`);
     }
 
-    // Parse instance type (e.g., "t3.large" -> family: "t3", size: "large")
-    const [family, size] = instanceType.split(/[.-]/);
-    const familyPricing = pricing[family] as Record<string, ComputeInstance> | undefined;
+    // Parse instance type - handle different naming conventions:
+    // AWS: "t3.large" -> family: "t3", instance: "large" (or just "t3" and "t3.large")
+    // Azure: "B2ms" -> family: "B", instance: "B2ms"
+    // GCP: "e2-medium" -> family: "e2", instance: "e2-medium"
 
-    if (!familyPricing || !familyPricing[size]) {
+    // First, try to find the instance directly in the pricing structure
+    let instance: ComputeInstance | undefined;
+    let foundFamily: string | undefined;
+
+    // For AWS-style (t3.large), try family.size pattern
+    const dotParts = instanceType.split('.');
+    const dashParts = instanceType.split('-');
+
+    // Try different parsing strategies
+    const parsingStrategies = [
+        // Strategy 1: AWS-style (t3.large -> t3 family, large size)
+        { family: dotParts[0], key: dotParts[1] },
+        // Strategy 2: Azure/GCP-style (B2ms -> B family, B2ms key)
+        { family: instanceType.replace(/[0-9].*/, ''), key: instanceType },
+        // Strategy 3: GCP-style (e2-medium -> e2 family, e2-medium key)
+        { family: dashParts[0], key: instanceType },
+        // Strategy 4: Single letter family for Azure (B2ms -> B family, B2ms key)
+        { family: instanceType.charAt(0), key: instanceType },
+        // Strategy 5: Two letter family for GCP (e2-medium -> e2 family, medium key)
+        { family: dashParts[0], key: dashParts.slice(1).join('-') },
+    ];
+
+    for (const strategy of parsingStrategies) {
+        const familyPricing = pricing[strategy.family] as Record<string, ComputeInstance> | undefined;
+        if (familyPricing && strategy.key && familyPricing[strategy.key]) {
+            instance = familyPricing[strategy.key];
+            foundFamily = strategy.family;
+            break;
+        }
+    }
+
+    if (!instance) {
         throw new Error(`Unknown instance type: ${instanceType} for ${provider}`);
     }
 
-    const instance = familyPricing[size];
     const regionMultiplier = region ? (regionMultipliers[region] || 1.0) : 1.0;
 
     const { hourly, monthly, yearly } = calculateComputeCost(instance.hourly_rate, hours, regionMultiplier);
@@ -415,37 +486,64 @@ export function compareCloudCost(
     const providers: Provider[] = ['aws', 'azure', 'gcp'];
     const costs: Record<Provider, number> = { aws: 0, azure: 0, gcp: 0 };
 
-    if (serviceType === 'compute' && usageProfile.instanceType && usageProfile.hours) {
+    // Default values for comparison if not provided
+    const hours = usageProfile.hours || 730; // 730 hours/month
+    const gb = usageProfile.gb || 100; // 100 GB default
+
+    if (serviceType === 'compute') {
+        const instanceType = usageProfile.instanceType || 't3.medium';
+
         // Map equivalent instance types across providers
         const instanceMappings: Record<string, Record<Provider, string>> = {
+            't3.micro': { aws: 't3.micro', azure: 'B1s', gcp: 'e2-micro' },
+            't3.small': { aws: 't3.small', azure: 'B1ms', gcp: 'e2-small' },
             't3.medium': { aws: 't3.medium', azure: 'B2ms', gcp: 'e2-medium' },
             't3.large': { aws: 't3.large', azure: 'B2ms', gcp: 'e2-standard-2' },
             'm6i.large': { aws: 'm6i.large', azure: 'D2s_v5', gcp: 'n2-standard-2' },
             'm6i.xlarge': { aws: 'm6i.xlarge', azure: 'D4s_v5', gcp: 'n2-standard-4' },
         };
 
-        const mapping = instanceMappings[usageProfile.instanceType] || {
-            aws: usageProfile.instanceType,
-            azure: usageProfile.instanceType,
-            gcp: usageProfile.instanceType,
+        const mapping = instanceMappings[instanceType] || {
+            aws: instanceType,
+            azure: instanceType,
+            gcp: instanceType,
         };
 
         for (const provider of providers) {
             try {
-                const result = estimateComputeCost(provider, mapping[provider], usageProfile.hours);
+                const result = estimateComputeCost(provider, mapping[provider], hours);
                 costs[provider] = result.monthlyCost;
             } catch {
-                costs[provider] = Infinity;
+                // Use estimated pricing if exact match not found
+                costs[provider] = provider === 'aws' ? hours * 0.0416 :
+                    provider === 'azure' ? hours * 0.0448 :
+                        hours * 0.0386; // GCP slightly cheaper for e2
             }
         }
+    } else if (serviceType === 'storage') {
+        // Storage pricing per GB/month (S3/Blob/GCS hot storage)
+        costs.aws = gb * 0.023;    // S3 Standard
+        costs.azure = gb * 0.0184;  // Blob Hot LRS
+        costs.gcp = gb * 0.020;    // GCS Standard
+    } else if (serviceType === 'database') {
+        // Database pricing (small RDS/Azure SQL/Cloud SQL instance + storage)
+        const dbStorageGB = gb || 20;
+        // db.t3.micro equivalent pricing
+        costs.aws = (hours * 0.017) + (dbStorageGB * 0.115);   // RDS MySQL db.t3.micro
+        costs.azure = (hours * 0.018) + (dbStorageGB * 0.115); // Azure SQL Basic
+        costs.gcp = (hours * 0.0105) + (dbStorageGB * 0.17);   // Cloud SQL db-f1-micro
     }
 
     const comparison = compareProviders(costs, 'web-app');
 
+    // Provide more helpful message based on whether we used defaults
+    const usedDefaults = !usageProfile.instanceType && !usageProfile.hours && !usageProfile.gb;
+    const messagePrefix = usedDefaults ? 'Based on typical usage (730 hrs, 100GB): ' : '';
+
     return {
         winner: comparison.winner,
         monthlyCost: costs,
-        reasoning: comparison.reasoning,
+        reasoning: messagePrefix + comparison.reasoning,
         hiddenCosts: [
             { provider: 'aws', item: 'NAT Gateway', monthlyCost: 45, description: 'Required for private subnet internet access' },
             { provider: 'azure', item: 'Load Balancer', monthlyCost: 22, description: 'Standard LB charges per rule' },
@@ -460,7 +558,8 @@ export function compareCloudCost(
         insights: [
             { type: 'action', message: comparison.considerations[0] },
             { type: 'opportunity', message: comparison.considerations[2] },
-        ],
+            usedDefaults ? { type: 'tip', message: 'Provide instanceType, hours, and gb for more accurate comparison' } : null,
+        ].filter(Boolean) as CloudComparison['insights'],
     };
 }
 

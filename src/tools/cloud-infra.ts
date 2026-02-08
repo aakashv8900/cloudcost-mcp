@@ -19,7 +19,7 @@ export const CompareCloudCostSchema = z.object({
         instanceType: z.string().optional().describe('Instance type (e.g., t3.medium, m6i.large)'),
         hours: z.number().optional().describe('Hours of usage per month'),
         gb: z.number().optional().describe('Storage in GB'),
-    }).describe('Usage profile for cost estimation'),
+    }).optional().default({}).describe('Usage profile for cost estimation (optional - uses sensible defaults)'),
 });
 
 export const EstimateComputeCostSchema = z.object({
