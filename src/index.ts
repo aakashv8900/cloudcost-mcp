@@ -11,7 +11,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createServer as createMCPServer, toolCount } from "./server.js";
-import { createContextMiddleware } from "@ctxprotocol/sdk";
+import { createContextMiddleware } from "@ctxprotocol/sdk/express";
 
 const app = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
