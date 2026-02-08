@@ -6,7 +6,7 @@ set -e
 
 # Docker Compose service names
 SERVICE_MAIN="cloudcost-mcp"
-SERVICE_UPDATER="cloudcost-updater"
+SERVICE_UPDATER="pricing-updater"
 
 # Colors
 RED='\033[0;31m'

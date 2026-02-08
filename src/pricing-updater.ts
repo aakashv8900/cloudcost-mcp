@@ -537,6 +537,7 @@ async function fetchSupabasePricing(): Promise<PriceUpdate> {
         const existing = safeReadJson(filePath) || {};
 
         if (!existing.supabase) existing.supabase = { plans: {} };
+        if (!existing.supabase.plans) existing.supabase.plans = {};
 
         let updated = 0;
         for (const [plan, specs] of Object.entries(supabasePlans)) {
@@ -607,6 +608,7 @@ async function fetchVercelPricing(): Promise<PriceUpdate> {
         const existing = safeReadJson(filePath) || {};
 
         if (!existing.vercel) existing.vercel = { plans: {} };
+        if (!existing.vercel.plans) existing.vercel.plans = {};
 
         let updated = 0;
         for (const [plan, specs] of Object.entries(vercelPlans)) {
@@ -703,6 +705,7 @@ async function fetchMongoDBPricing(): Promise<PriceUpdate> {
         const existing = safeReadJson(filePath) || {};
 
         if (!existing.mongodb) existing.mongodb = { plans: {} };
+        if (!existing.mongodb.plans) existing.mongodb.plans = {};
 
         let updated = 0;
         for (const [plan, specs] of Object.entries(mongoPlans)) {
@@ -791,6 +794,7 @@ async function fetchCloudflarePricing(): Promise<PriceUpdate> {
         const existing = safeReadJson(filePath) || {};
 
         if (!existing.cloudflare) existing.cloudflare = { plans: {} };
+        if (!existing.cloudflare.plans) existing.cloudflare.plans = {};
 
         let updated = 0;
         for (const [plan, specs] of Object.entries(cloudflarePlans)) {
