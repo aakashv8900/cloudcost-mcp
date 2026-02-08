@@ -81,8 +81,6 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - cloudcost-mcp
-    profiles:
-      - production
 
 networks:
   default:
