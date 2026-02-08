@@ -11,6 +11,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { createServer as createMCPServer, toolCount } from "./server.js";
+import { createContextMiddleware } from "@ctxprotocol/sdk";
 
 const app = express();
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
@@ -77,6 +78,8 @@ const sseTransports = new Map<string, SSEServerTransport>();
  * Create main MCP Server and connect to Streamable transport
  */
 const mcpServer = createMCPServer();
+
+app.use("/mcp", createContextMiddleware());
 
 /**
  * Mount /mcp endpoint with auto-transport detection
