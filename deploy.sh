@@ -62,7 +62,7 @@ logs() {
 # Update from git and rebuild
 update() {
     log_info "Pulling latest changes from git..."
-    git pull origin main
+    git pull origin master
 
     log_info "Rebuilding and restarting containers..."
     $DOCKER_COMPOSE up -d --build
