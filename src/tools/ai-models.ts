@@ -6,6 +6,7 @@ import {
     suggestModel,
     compareModels,
 } from '../engine/pricing-engine.js';
+import { classifyTaskSync } from '../engine/task-classifier.js';
 import type { TaskType, LatencyRequirement } from '../engine/types.js';
 
 // ============== Schema Definitions ==============
@@ -23,14 +24,14 @@ export const EstimateAnthropicCostSchema = z.object({
 });
 
 export const SuggestModelSchema = z.object({
-    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction'])
+    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
         .describe('Type of task to perform'),
     budget: z.number().min(0).describe('Maximum cost per million tokens in USD'),
     latencyRequirement: z.enum(['low', 'medium', 'high']).describe('Latency tolerance'),
 });
 
 export const CompareModelsSchema = z.object({
-    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction'])
+    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
         .describe('Type of task to compare models for'),
 });
 
@@ -39,7 +40,7 @@ export const RankingByCostEfficiencySchema = z.object({
 });
 
 export const EstimatePerformanceSchema = z.object({
-    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction']),
+    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development']),
     tokenSize: z.number().min(0).describe('Expected token size per request'),
 });
 
@@ -66,23 +67,9 @@ export function handleCompareModels(args: z.infer<typeof CompareModelsSchema>) {
 }
 
 export function handleRankingByCostEfficiency(args: z.infer<typeof RankingByCostEfficiencySchema>) {
-    // Map task description to task type
-    const taskLower = args.task.toLowerCase();
-    let taskType: TaskType = 'chat';
-
-    if (taskLower.includes('code') || taskLower.includes('programming')) {
-        taskType = 'code';
-    } else if (taskLower.includes('embed') || taskLower.includes('search') || taskLower.includes('similarity')) {
-        taskType = 'embedding';
-    } else if (taskLower.includes('vision') || taskLower.includes('image')) {
-        taskType = 'vision';
-    } else if (taskLower.includes('reason') || taskLower.includes('math') || taskLower.includes('logic')) {
-        taskType = 'reasoning';
-    } else if (taskLower.includes('classif') || taskLower.includes('categoriz')) {
-        taskType = 'classification';
-    } else if (taskLower.includes('extract') || taskLower.includes('parse')) {
-        taskType = 'extraction';
-    }
+    // Use hybrid classifier for intelligent task type detection
+    const classification = classifyTaskSync(args.task);
+    const taskType = classification.taskType;
 
     const comparison = compareModels(taskType);
 
@@ -99,6 +86,8 @@ export function handleRankingByCostEfficiency(args: z.infer<typeof RankingByCost
     return {
         task: args.task,
         inferredTaskType: taskType,
+        classificationConfidence: classification.confidence,
+        matchedKeywords: classification.matchedKeywords,
         efficiencyRankings: comparison.rankings.map(r => ({
             rank: r.rank,
             model: r.model,

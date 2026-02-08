@@ -12,6 +12,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY:-}
     volumes:
       - ./pricing:/app/pricing:ro
     healthcheck:
@@ -45,6 +46,7 @@ services:
     environment:
       - NODE_ENV=production
       - UPDATE_PORT=3001
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY:-}
       - UPDATE_INTERVAL=6
     volumes:
       - ./pricing:/app/pricing:rw  # Read-write for updates

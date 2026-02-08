@@ -100,6 +100,18 @@ const testCases: TestCase[] = [
         validate: (r: any) => r.efficiencyRankings?.length > 0 ? null : 'Should have efficiency rankings',
     },
     {
+        toolName: 'rankingByCostEfficiency',
+        description: 'Classify voice conversion app',
+        args: { task: 'an app to convert my voice into someone else' },
+        validate: (r: any) => r.inferredTaskType !== 'chat' ? null : `Should not classify as chat, got: ${r.inferredTaskType}`,
+    },
+    {
+        toolName: 'rankingByCostEfficiency',
+        description: 'Classify PPT to video tool',
+        args: { task: 'building a tool to convert ppt into videos' },
+        validate: (r: any) => ['development', 'video'].includes(r.inferredTaskType) ? null : `Should classify as development or video, got: ${r.inferredTaskType}`,
+    },
+    {
         toolName: 'estimatePerformance',
         description: 'Estimate chat performance',
         args: { taskType: 'chat', tokenSize: 1000 },
