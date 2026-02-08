@@ -1,155 +1,205 @@
 #!/usr/bin/env node
-// CloudCost Intelligence MCP - Entry Point
-// Supports both stdio (local) and HTTP/SSE (remote) modes
+/**
+ * CloudCost Intelligence MCP Server (Streamable HTTP + SSE)
+ * Production-ready for CTX Protocol + Inspector
+ */
 
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
-import { createServer, toolCount } from './server.js';
-import http from 'http';
-import { URL } from 'url';
+import express, { Request, Response, NextFunction } from "express";
+import crypto from "crypto";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { createServer as createMCPServer, toolCount } from "./server.js";
 
-const PORT = parseInt(process.env.PORT || '3000', 10);
-const MODE = process.env.MCP_MODE || 'http'; // 'stdio' or 'http'
+const app = express();
+const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const MODE = process.env.MCP_MODE || "http"; // 'stdio' or 'http'
 
-// HTTP Server for MCP over SSE
+app.use(express.json());
+
+// CORS middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+    if (req.method === "OPTIONS") {
+        res.status(204).end();
+        return;
+    }
+    next();
+});
+
+/**
+ * Health Check
+ */
+app.get("/health", (_req: Request, res: Response) => {
+    res.json({
+        status: "healthy",
+        service: "cloudcost-mcp",
+        version: "1.0.0",
+        tools: toolCount,
+        timestamp: new Date().toISOString(),
+    });
+});
+
+/**
+ * API Info
+ */
+app.get("/", (_req: Request, res: Response) => {
+    res.json({
+        name: "CloudCost Intelligence MCP",
+        version: "1.0.0",
+        description: "AI-native cost intelligence for cloud, AI models, and SaaS",
+        toolCount,
+        endpoints: {
+            health: "GET /health",
+            mcp: "POST /mcp (StreamableHTTP) or GET /mcp (SSE)",
+            sse: "GET /sse",
+            messages: "POST /messages",
+        },
+    });
+});
+
+/**
+ * Create Streamable HTTP Transport
+ */
+const streamableTransport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: () => crypto.randomUUID(),
+});
+
+/**
+ * SSE Transport - Map of session ID to transport
+ */
+const sseTransports = new Map<string, SSEServerTransport>();
+
+/**
+ * Create main MCP Server and connect to Streamable transport
+ */
+const mcpServer = createMCPServer();
+
+/**
+ * Mount /mcp endpoint with auto-transport detection
+ */
+app.all("/mcp", async (req: Request, res: Response) => {
+    const acceptHeader = req.headers.accept || "";
+    const isSSERequest = req.method === "GET" && acceptHeader.includes("text/event-stream");
+
+    if (isSSERequest) {
+        // SSE transport for MCP Inspector
+        console.log(`[${new Date().toISOString()}] SSE connection on /mcp`);
+        const sseTransport = new SSEServerTransport("/messages", res);
+        const sessionId = sseTransport.sessionId;
+        sseTransports.set(sessionId, sseTransport);
+
+        const sseServer = createMCPServer();
+
+        res.on("close", () => {
+            console.log(`[${new Date().toISOString()}] SSE session ${sessionId} closed`);
+            sseTransports.delete(sessionId);
+        });
+
+        try {
+            await sseServer.connect(sseTransport);
+            console.log(`[${new Date().toISOString()}] SSE session ${sessionId} connected`);
+        } catch (error) {
+            console.error("SSE connection error:", error);
+            sseTransports.delete(sessionId);
+        }
+    } else {
+        // StreamableHTTP for production clients
+        await streamableTransport.handleRequest(req, res);
+    }
+});
+
+/**
+ * SSE endpoint - GET /sse for SSE connections (Inspector compatible)
+ */
+app.get("/sse", async (req: Request, res: Response) => {
+    console.log(`[${new Date().toISOString()}] New SSE connection on /sse`);
+    const sseTransport = new SSEServerTransport("/messages", res);
+    const sessionId = sseTransport.sessionId;
+    sseTransports.set(sessionId, sseTransport);
+
+    const sseServer = createMCPServer();
+
+    res.on("close", () => {
+        console.log(`[${new Date().toISOString()}] SSE session ${sessionId} closed`);
+        sseTransports.delete(sessionId);
+    });
+
+    try {
+        await sseServer.connect(sseTransport);
+        console.log(`[${new Date().toISOString()}] SSE session ${sessionId} connected`);
+    } catch (error) {
+        console.error("SSE connection error:", error);
+        sseTransports.delete(sessionId);
+    }
+});
+
+/**
+ * SSE message endpoint - POST /messages for SSE messages
+ */
+app.post("/messages", async (req: Request, res: Response) => {
+    const sessionId = req.query.sessionId as string;
+    console.log(`[${new Date().toISOString()}] POST /messages for session: ${sessionId}`);
+
+    const transport = sseTransports.get(sessionId);
+
+    if (!transport) {
+        console.error(`Session not found: ${sessionId}`);
+        res.status(400).json({ error: "Invalid or expired session" });
+        return;
+    }
+
+    try {
+        await transport.handlePostMessage(req, res, req.body);
+    } catch (error) {
+        console.error("SSE message error:", error);
+        res.status(500).json({ error: "Failed to handle message" });
+    }
+});
+
+/**
+ * Global Error Handler
+ */
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+    console.error("Server error:", err);
+    res.status(500).json({ error: err.message });
+});
+
+/**
+ * Start HTTP Server
+ */
 async function startHttpServer() {
-    const transports: Map<string, SSEServerTransport> = new Map();
+    try {
+        // Connect MCP to Streamable HTTP transport
+        await mcpServer.connect(streamableTransport);
 
-    const httpServer = http.createServer(async (req, res) => {
-        // CORS headers
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
-
-        // Handle preflight
-        if (req.method === 'OPTIONS') {
-            res.writeHead(204);
-            res.end();
-            return;
-        }
-
-        const url = new URL(req.url || '/', `http://localhost:${PORT}`);
-
-        // Health check
-        if (url.pathname === '/health') {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({
-                status: 'healthy',
-                service: 'cloudcost-mcp',
-                version: '1.0.0',
-                tools: toolCount,
-                timestamp: new Date().toISOString(),
-            }));
-            return;
-        }
-
-        // Info endpoint
-        if (url.pathname === '/' && req.method === 'GET') {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({
-                name: 'CloudCost Intelligence MCP',
-                version: '1.0.0',
-                description: 'AI-native cost intelligence for cloud, AI models, and SaaS',
-                toolCount,
-                endpoints: {
-                    health: 'GET /health',
-                    sse: 'GET /sse',
-                    message: 'POST /message',
-                },
-            }));
-            return;
-        }
-
-        // SSE endpoint - establish connection
-        if (url.pathname === '/sse' && req.method === 'GET') {
-            console.error(`[${new Date().toISOString()}] New SSE connection`);
-
-            const transport = new SSEServerTransport('/message', res);
-            const sessionId = transport.sessionId;
-            transports.set(sessionId, transport);
-
-            console.error(`[${new Date().toISOString()}] Session created: ${sessionId}`);
-
-            res.on('close', () => {
-                console.error(`[${new Date().toISOString()}] SSE connection closed: ${sessionId}`);
-                transports.delete(sessionId);
-            });
-
-            const server = createServer();
-            await server.connect(transport);
-            return;
-        }
-
-        // Message endpoint - handle incoming messages
-        if (url.pathname === '/message' && req.method === 'POST') {
-            const sessionId = url.searchParams.get('sessionId');
-            console.error(`[${new Date().toISOString()}] Message received for session: ${sessionId}`);
-
-            if (!sessionId || !transports.has(sessionId)) {
-                res.writeHead(400, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Invalid or missing session ID' }));
-                return;
-            }
-
-            const transport = transports.get(sessionId)!;
-
-            let body = '';
-            req.on('data', (chunk) => {
-                body += chunk.toString();
-            });
-
-            req.on('end', async () => {
-                try {
-                    await transport.handlePostMessage(req, res, body);
-                } catch (error) {
-                    console.error('Error handling message:', error);
-                    if (!res.headersSent) {
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Internal server error' }));
-                    }
-                }
-            });
-            return;
-        }
-
-        // Legacy /mcp endpoint - redirect to /sse
-        if (url.pathname === '/mcp' && req.method === 'GET') {
-            console.error(`[${new Date().toISOString()}] Redirecting /mcp to /sse`);
-
-            const transport = new SSEServerTransport('/message', res);
-            const sessionId = transport.sessionId;
-            transports.set(sessionId, transport);
-
-            res.on('close', () => {
-                transports.delete(sessionId);
-            });
-
-            const server = createServer();
-            await server.connect(transport);
-            return;
-        }
-
-        // 404 for unknown routes
-        res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: 'Not found', path: url.pathname }));
-    });
-
-    httpServer.listen(PORT, '0.0.0.0', () => {
-        console.error(`\n🚀 CloudCost Intelligence MCP v1.0.0`);
-        console.error(`📊 Loaded ${toolCount} intelligent cost tools`);
-        console.error(`🌐 HTTP server running on http://0.0.0.0:${PORT}`);
-        console.error(`\nEndpoints:`);
-        console.error(`  GET  /        - API info`);
-        console.error(`  GET  /health  - Health check`);
-        console.error(`  GET  /sse     - MCP SSE connection`);
-        console.error(`  POST /message - MCP message handler`);
-        console.error(`\n✅ Ready for connections`);
-    });
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║       CloudCost Intelligence MCP (HTTP + SSE Ready)       ║
+╠═══════════════════════════════════════════════════════════╣
+║  Running on port ${PORT}                                       ║
+║  StreamableHTTP: http://0.0.0.0:${PORT}/mcp                    ║
+║  SSE (Inspector): http://0.0.0.0:${PORT}/sse                   ║
+║  Health: http://0.0.0.0:${PORT}/health                         ║
+║  Tools: ${toolCount}                                              ║
+╚═══════════════════════════════════════════════════════════╝
+      `);
+        });
+    } catch (err) {
+        console.error("Failed to start MCP server:", err);
+        process.exit(1);
+    }
 }
 
-// Stdio mode for local development
+/**
+ * Start Stdio Server (for local development)
+ */
 async function startStdioServer() {
-    const server = createServer();
+    const server = createMCPServer();
     const transport = new StdioServerTransport();
 
     console.error(`CloudCost Intelligence MCP v1.0.0`);
@@ -159,9 +209,11 @@ async function startStdioServer() {
     await server.connect(transport);
 }
 
-// Main entry point
+/**
+ * Main entry point
+ */
 async function main() {
-    if (MODE === 'stdio') {
+    if (MODE === "stdio") {
         await startStdioServer();
     } else {
         await startHttpServer();
@@ -169,6 +221,8 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error('Failed to start CloudCost MCP:', error);
+    console.error("Failed to start CloudCost MCP:", error);
     process.exit(1);
 });
+
+export { app, mcpServer };
