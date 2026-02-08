@@ -13,9 +13,8 @@ Parameters:
   
   InstanceType:
     Type: String
-    Default: t2.micro
+    Default: t3.micro
     AllowedValues:
-      - t2.micro
       - t3.micro
     Description: EC2 instance type (Free Tier eligible)
 
@@ -178,7 +177,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 20
+            VolumeSize: 30
             VolumeType: gp3
             DeleteOnTermination: true
       UserData:
