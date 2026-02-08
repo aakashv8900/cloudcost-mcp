@@ -173,6 +173,12 @@ ssh -i ~/.ssh/cloudcost-key.pem ubuntu@YOUR_IP
 # Update
 cd /home/ubuntu/cloudcost-mcp
 git pull
+
+# Run SSL setup (only needed once or if certs are missing)
+chmod +x nginx/setup-ssl.sh
+./nginx/setup-ssl.sh
+
+# Update containers
 ./deploy.sh update
 ```
 
