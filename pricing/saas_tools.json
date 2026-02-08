@@ -51,7 +51,33 @@
             "streaming_per_gb_egress": 0.15,
             "cron_jobs_invocations": "included",
             "og_image_generation_per_1000": 0
-        }
+        },
+        "plans": {
+            "hobby": {
+                "monthly_cost": 0,
+                "bandwidth_gb": 100,
+                "serverless_function_execution_gb_hours": 100,
+                "edge_function_invocations": 1000000,
+                "builds_per_month": 6000,
+                "team_members": 1
+            },
+            "pro": {
+                "monthly_cost": 20,
+                "bandwidth_gb": 1000,
+                "serverless_function_execution_gb_hours": 1000,
+                "edge_function_invocations": "unlimited",
+                "builds_per_month": "unlimited",
+                "team_members": 10,
+                "overage_bandwidth_per_gb": 0.15
+            },
+            "enterprise": {
+                "monthly_cost": "custom",
+                "bandwidth_gb": "custom",
+                "sla": "99.99%",
+                "support": "dedicated"
+            }
+        },
+        "last_updated": "2026-02-08T18:15:43.670Z"
     },
     "cloudflare": {
         "free": {
@@ -127,7 +153,51 @@
             "per_100000_delivered": 1,
             "storage_per_100000_stored": 5,
             "transformations_included": "unlimited"
-        }
+        },
+        "plans": {
+            "free": {
+                "monthly_cost": 0,
+                "ddos_protection": true,
+                "cdn": true,
+                "ssl": true,
+                "workers_requests": 100000,
+                "workers_cpu_ms": 10,
+                "r2_storage_gb": 10,
+                "r2_operations_class_a": 1000000,
+                "r2_operations_class_b": 10000000
+            },
+            "pro": {
+                "monthly_cost": 20,
+                "ddos_protection": true,
+                "cdn": true,
+                "ssl": true,
+                "waf_rules": 5,
+                "workers_requests": 10000000,
+                "workers_cpu_ms": 50
+            },
+            "business": {
+                "monthly_cost": 200,
+                "ddos_protection": true,
+                "cdn": true,
+                "ssl": true,
+                "waf_rules": 25,
+                "sla": "100%"
+            },
+            "workers_paid": {
+                "monthly_cost": 5,
+                "requests_included": 10000000,
+                "overage_per_million": 0.3,
+                "cpu_ms": 50,
+                "duration_gb_sec": 400000
+            },
+            "r2": {
+                "storage_per_gb": 0.015,
+                "class_a_per_million": 4.5,
+                "class_b_per_million": 0.36,
+                "egress": 0
+            }
+        },
+        "last_updated": "2026-02-08T18:15:43.674Z"
     },
     "railway": {
         "hobby": {
