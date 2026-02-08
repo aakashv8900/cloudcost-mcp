@@ -1,26 +1,27 @@
 {
     "claude-3-5-sonnet-20241022": {
-        "input_per_million": 3.00,
-        "output_per_million": 15.00,
-        "cached_input_per_million": 0.30,
+        "input_per_million": 3,
+        "output_per_million": 15,
+        "cached_input_per_million": 0.3,
         "context_window": 200000,
         "max_output": 8192,
         "category": "flagship",
         "best_for": [
             "chat",
             "code",
-            "vision",
-            "reasoning",
-            "extraction"
+            "analysis",
+            "vision"
         ],
-        "latency": "medium",
+        "latency": "fast",
         "vision": true,
-        "batch_discount": 0.50
+        "batch_discount": 0.5,
+        "supports_vision": true,
+        "supports_tool_use": true
     },
     "claude-3-5-sonnet-20240620": {
-        "input_per_million": 3.00,
-        "output_per_million": 15.00,
-        "cached_input_per_million": 0.30,
+        "input_per_million": 3,
+        "output_per_million": 15,
+        "cached_input_per_million": 0.3,
         "context_window": 200000,
         "max_output": 8192,
         "category": "flagship",
@@ -31,54 +32,61 @@
         ],
         "latency": "medium",
         "vision": true,
-        "batch_discount": 0.50
+        "batch_discount": 0.5
     },
     "claude-3-5-haiku-20241022": {
-        "input_per_million": 0.80,
-        "output_per_million": 4.00,
+        "input_per_million": 0.8,
+        "output_per_million": 4,
         "cached_input_per_million": 0.08,
         "context_window": 200000,
         "max_output": 8192,
-        "category": "efficient",
+        "category": "speed",
         "best_for": [
             "chat",
-            "classification",
-            "extraction"
+            "quick-tasks",
+            "classification"
         ],
-        "latency": "low",
+        "latency": "very-fast",
         "vision": true,
-        "batch_discount": 0.50
+        "batch_discount": 0.5,
+        "supports_vision": true,
+        "supports_tool_use": true
     },
     "claude-3-opus-20240229": {
-        "input_per_million": 15.00,
-        "output_per_million": 75.00,
-        "cached_input_per_million": 1.50,
+        "input_per_million": 15,
+        "output_per_million": 75,
+        "cached_input_per_million": 1.5,
         "context_window": 200000,
         "max_output": 4096,
         "category": "premium",
         "best_for": [
-            "reasoning",
-            "complex-tasks",
-            "research"
+            "complex-analysis",
+            "research",
+            "writing"
         ],
-        "latency": "high",
+        "latency": "slow",
         "vision": true,
-        "batch_discount": 0.50
+        "batch_discount": 0.5,
+        "supports_vision": true,
+        "supports_tool_use": true
     },
     "claude-3-sonnet-20240229": {
-        "input_per_million": 3.00,
-        "output_per_million": 15.00,
-        "cached_input_per_million": 0.30,
+        "input_per_million": 3,
+        "output_per_million": 15,
+        "cached_input_per_million": 0.3,
         "context_window": 200000,
         "max_output": 4096,
         "category": "balanced",
         "best_for": [
             "chat",
-            "code"
+            "code",
+            "analysis"
         ],
         "latency": "medium",
         "vision": true,
-        "batch_discount": 0.50
+        "batch_discount": 0.5,
+        "supports_vision": true,
+        "supports_tool_use": true
     },
     "claude-3-haiku-20240307": {
         "input_per_million": 0.25,
@@ -86,19 +94,20 @@
         "cached_input_per_million": 0.03,
         "context_window": 200000,
         "max_output": 4096,
-        "category": "fast",
+        "category": "speed",
         "best_for": [
             "chat",
-            "simple-tasks",
-            "classification"
+            "quick-tasks"
         ],
-        "latency": "low",
+        "latency": "very-fast",
         "vision": true,
-        "batch_discount": 0.50
+        "batch_discount": 0.5,
+        "supports_vision": true,
+        "supports_tool_use": true
     },
     "claude-2.1": {
-        "input_per_million": 8.00,
-        "output_per_million": 24.00,
+        "input_per_million": 8,
+        "output_per_million": 24,
         "context_window": 200000,
         "max_output": 4096,
         "category": "legacy",
@@ -106,11 +115,11 @@
             "long-context"
         ],
         "latency": "medium",
-        "batch_discount": 0.50
+        "batch_discount": 0.5
     },
     "claude-2.0": {
-        "input_per_million": 8.00,
-        "output_per_million": 24.00,
+        "input_per_million": 8,
+        "output_per_million": 24,
         "context_window": 100000,
         "max_output": 4096,
         "category": "legacy",
@@ -118,11 +127,11 @@
             "chat"
         ],
         "latency": "medium",
-        "batch_discount": 0.50
+        "batch_discount": 0.5
     },
     "claude-instant-1.2": {
-        "input_per_million": 0.80,
-        "output_per_million": 2.40,
+        "input_per_million": 0.8,
+        "output_per_million": 2.4,
         "context_window": 100000,
         "max_output": 4096,
         "category": "legacy-fast",
@@ -130,16 +139,16 @@
             "simple-tasks"
         ],
         "latency": "low",
-        "batch_discount": 0.50
+        "batch_discount": 0.5
     },
     "prompt_caching": {
         "write_premium": 1.25,
         "ttl_minutes": 5,
-        "read_discount": 0.90
+        "read_discount": 0.9
     },
     "extended_context": {
-        "tokens_above_200k_input_multiplier": 2.0,
-        "tokens_above_200k_output_multiplier": 2.0
+        "tokens_above_200k_input_multiplier": 2,
+        "tokens_above_200k_output_multiplier": 2
     },
     "model_aliases": {
         "claude-3-5-sonnet": "claude-3-5-sonnet-20241022",

@@ -53,6 +53,15 @@
             "memory_gb": 80,
             "hourly_rate": 0.832,
             "category": "burstable"
+        },
+        "Basic_A3": {
+            "hourly_rate": 0.0352
+        },
+        "Basic_A1": {
+            "hourly_rate": 0.0046
+        },
+        "Basic_A2": {
+            "hourly_rate": 0.133
         }
     },
     "D": {
@@ -181,6 +190,12 @@
             "memory_gb": 256,
             "hourly_rate": 2.464,
             "category": "general-purpose-arm"
+        },
+        "Dadsv5_Type1": {
+            "hourly_rate": 6.345
+        },
+        "Dsv4_Type1": {
+            "hourly_rate": 4.224
         }
     },
     "E": {
@@ -273,6 +288,18 @@
             "memory_gb": 672,
             "hourly_rate": 5.424,
             "category": "memory-optimized-amd"
+        },
+        "Esv4_Type1": {
+            "hourly_rate": 4.435
+        },
+        "Esv3_Type3": {
+            "hourly_rate": 4.297
+        },
+        "Easv4_Type2": {
+            "hourly_rate": 6.653
+        },
+        "Edsv4_Type2": {
+            "hourly_rate": 6.019
         }
     },
     "F": {
@@ -353,6 +380,9 @@
             "memory_gb": 1008,
             "hourly_rate": 4.752,
             "category": "compute-memory"
+        },
+        "Fsv2 Type3": {
+            "hourly_rate": 3.927
         }
     },
     "L": {
@@ -435,6 +465,9 @@
             "memory_gb": 4096,
             "hourly_rate": 42.58,
             "category": "memory-intensive"
+        },
+        "Mdsv2MedMem_Type1": {
+            "hourly_rate": 14.674
         }
     },
     "NC": {
@@ -499,7 +532,7 @@
         "ND96isr_H100_v5": {
             "vcpu": 96,
             "memory_gb": 1900,
-            "hourly_rate": 70.00,
+            "hourly_rate": 70,
             "category": "gpu-ml-training",
             "gpu": "8x H100 80GB"
         }
@@ -508,7 +541,7 @@
         "NV6ads_A10_v5": {
             "vcpu": 6,
             "memory_gb": 55,
-            "hourly_rate": 0.90,
+            "hourly_rate": 0.9,
             "category": "gpu-visualization",
             "gpu": "1/6x A10"
         },
@@ -522,7 +555,7 @@
         "NV18ads_A10_v5": {
             "vcpu": 18,
             "memory_gb": 220,
-            "hourly_rate": 1.50,
+            "hourly_rate": 1.5,
             "category": "gpu-visualization",
             "gpu": "1/2x A10"
         },
@@ -545,7 +578,7 @@
         "HB120rs_v3": {
             "vcpu": 120,
             "memory_gb": 448,
-            "hourly_rate": 3.60,
+            "hourly_rate": 3.6,
             "category": "hpc"
         },
         "HB176rs_v4": {
@@ -557,7 +590,7 @@
         "HBv4": {
             "vcpu": 176,
             "memory_gb": 768,
-            "hourly_rate": 6.40,
+            "hourly_rate": 6.4,
             "category": "hpc-latest"
         }
     },
@@ -571,45 +604,45 @@
     },
     "reserved_discounts": {
         "1_year_no_upfront": 0.37,
-        "1_year_upfront": 0.40,
+        "1_year_upfront": 0.4,
         "3_year_no_upfront": 0.54,
         "3_year_upfront": 0.57
     },
     "spot_discounts": {
-        "B_series": 0.80,
-        "D_series": 0.70,
+        "B_series": 0.8,
+        "D_series": 0.7,
         "E_series": 0.65,
         "F_series": 0.75,
         "NC_series": 0.55,
-        "general": 0.70
+        "general": 0.7
     },
     "region_multipliers": {
-        "eastus": 1.0,
-        "eastus2": 1.0,
-        "westus": 1.0,
-        "westus2": 1.0,
+        "eastus": 1,
+        "eastus2": 1,
+        "westus": 1,
+        "westus2": 1,
         "westus3": 1.02,
-        "centralus": 1.0,
+        "centralus": 1,
         "northcentralus": 1.02,
-        "southcentralus": 1.0,
+        "southcentralus": 1,
         "westeurope": 1.15,
-        "northeurope": 1.10,
+        "northeurope": 1.1,
         "uksouth": 1.12,
         "ukwest": 1.15,
         "francecentral": 1.18,
         "germanywestcentral": 1.18,
         "swedencentral": 1.12,
-        "norwayeast": 1.20,
+        "norwayeast": 1.2,
         "switzerlandnorth": 1.25,
         "australiaeast": 1.18,
-        "australiasoutheast": 1.20,
+        "australiasoutheast": 1.2,
         "japaneast": 1.22,
         "japanwest": 1.25,
         "koreacentral": 1.18,
         "southeastasia": 1.15,
         "eastasia": 1.18,
         "centralindia": 1.08,
-        "southindia": 1.10,
+        "southindia": 1.1,
         "brazilsouth": 1.35,
         "canadacentral": 1.05,
         "uaenorth": 1.22,
@@ -653,22 +686,22 @@
         },
         "cool": {
             "per_gb": 0.01,
-            "write_per_10k": 0.10,
+            "write_per_10k": 0.1,
             "read_per_10k": 0.01
         },
         "cold": {
             "per_gb": 0.0036,
             "write_per_10k": 0.18,
-            "read_per_10k": 0.10
+            "read_per_10k": 0.1
         },
         "archive": {
             "per_gb": 0.002,
             "write_per_10k": 0.11,
-            "read_per_10k": 5.50
+            "read_per_10k": 5.5
         }
     },
     "data_transfer": {
-        "internet_out_first_5gb": 0.0,
+        "internet_out_first_5gb": 0,
         "internet_out_5gb_to_10tb": 0.087,
         "internet_out_10tb_to_50tb": 0.083,
         "internet_out_50tb_to_150tb": 0.07,
@@ -676,5 +709,1638 @@
         "inter_region": 0.02,
         "vnet_peering_same_region": 0.01,
         "vnet_peering_cross_region": 0.035
+    },
+    "S": {
+        "Standard_DC8as_v5": {
+            "hourly_rate": 0.0688
+        },
+        "Standard_FX64mds_v2": {
+            "hourly_rate": 8.753
+        },
+        "Standard_E112iads_v5": {
+            "hourly_rate": 13.222
+        },
+        "Standard_HX176-48rs": {
+            "hourly_rate": 6.694
+        },
+        "Standard_E8_v5": {
+            "hourly_rate": 0.101
+        },
+        "Standard_E8-4as_v5": {
+            "hourly_rate": 0.0904
+        },
+        "Standard_H16_Promo": {
+            "hourly_rate": 1.085
+        },
+        "Standard_M8ms": {
+            "hourly_rate": 0.843
+        },
+        "Standard_D48d_v4": {
+            "hourly_rate": 0.542
+        },
+        "Standard_NC24r_Promo": {
+            "hourly_rate": 2.846
+        },
+        "Standard_E32-16ads_v5": {
+            "hourly_rate": 3.568
+        },
+        "Standard_L16as_v4": {
+            "hourly_rate": 2.112
+        },
+        "Standard_NV4ads_V710_v5": {
+            "hourly_rate": 0.0667
+        },
+        "Standard_D2a_v4": {
+            "hourly_rate": 0.0192
+        },
+        "Standard_M128ms_v2": {
+            "hourly_rate": 5.254
+        },
+        "Standard_A8": {
+            "hourly_rate": 0.195
+        },
+        "Standard_B16als_v2": {
+            "hourly_rate": 0.606
+        },
+        "Standard_DC32ds_v3": {
+            "hourly_rate": 3.616
+        },
+        "Standard_DC16ads_v6": {
+            "hourly_rate": 0.912
+        },
+        "Standard_EC48ads_cc_v5": {
+            "hourly_rate": 5.352
+        },
+        "Standard_D2als_v7": {
+            "hourly_rate": 0.0804
+        },
+        "Standard_L48s_v3": {
+            "hourly_rate": 4.176
+        },
+        "Standard_HX176-144rs": {
+            "hourly_rate": 1.728
+        },
+        "Standard_DC2ads_v6": {
+            "hourly_rate": 0.0824
+        },
+        "Standard_EC2ads_v6": {
+            "hourly_rate": 0.145
+        },
+        "Standard_D64ads_v6": {
+            "hourly_rate": 0.73
+        },
+        "Standard_D48ls_v6": {
+            "hourly_rate": 4.35
+        },
+        "Standard_M96ds_2_v3": {
+            "hourly_rate": 2.646
+        },
+        "Standard_M176bds_v3": {
+            "hourly_rate": 16.11
+        },
+        "Standard_E2bs_v6": {
+            "hourly_rate": 0.266
+        },
+        "Standard_EC8ads_v6": {
+            "hourly_rate": 0.116
+        },
+        "Standard_D8s_v4": {
+            "hourly_rate": 0.384
+        },
+        "Standard_DC96as_v5": {
+            "hourly_rate": 4.128
+        },
+        "Standard_NC48ads_A100_v4": {
+            "hourly_rate": 3.822
+        },
+        "Standard_E32pds_v6": {
+            "hourly_rate": 1.872
+        },
+        "Standard_FX2ms_v2": {
+            "hourly_rate": 0.221
+        },
+        "Standard_E96-24ds_v5": {
+            "hourly_rate": 6.912
+        },
+        "Standard_E80ids_v4": {
+            "hourly_rate": 5.76
+        },
+        "Standard_E48bs_v5": {
+            "hourly_rate": 0.715
+        },
+        "Standard_L48s_v2": {
+            "hourly_rate": 5.952
+        },
+        "Standard_E2as_v4": {
+            "hourly_rate": 0.218
+        },
+        "Standard_M64ds_v2": {
+            "hourly_rate": 1.334
+        },
+        "Standard_DC4as_cc_v5": {
+            "hourly_rate": 0.0344
+        },
+        "Standard_DS13-2_v2": {
+            "hourly_rate": 0.148
+        },
+        "Standard_NV36ads_A10_v5": {
+            "hourly_rate": 4.856
+        },
+        "Standard_D3": {
+            "hourly_rate": 0.224
+        },
+        "Standard_NV36adms_A10_v5": {
+            "hourly_rate": 6.176
+        },
+        "Standard_E8-2ads_v7": {
+            "hourly_rate": 0.581
+        },
+        "Standard_EC96as_v5": {
+            "hourly_rate": 3.936
+        },
+        "Standard_DC8ds_v3": {
+            "hourly_rate": 0.181
+        },
+        "Standard_D8_v4": {
+            "hourly_rate": 0.301
+        },
+        "Standard_E96-48ads_v5": {
+            "hourly_rate": 10.704
+        },
+        "Standard_E8_v4": {
+            "hourly_rate": 0.349
+        },
+        "Standard_D4ds_v5": {
+            "hourly_rate": 0.41
+        },
+        "Standard_NC24s_v3": {
+            "hourly_rate": 2.448
+        },
+        "Standard_D4pds_v6": {
+            "hourly_rate": 0.184
+        },
+        "Standard_E16as_v5": {
+            "hourly_rate": 0.656
+        },
+        "Standard_E64-32ds_v6": {
+            "hourly_rate": 8.177
+        },
+        "Standard_FX16-4ms_v2": {
+            "hourly_rate": 1.003
+        },
+        "Standard_FX32-8ms_v2": {
+            "hourly_rate": 5.013
+        },
+        "Standard_B2ps_v2": {
+            "hourly_rate": 0.0764
+        },
+        "Standard_DC1s_v3": {
+            "hourly_rate": 0.0192
+        },
+        "Standard_EC8es_v6": {
+            "hourly_rate": 0.897
+        },
+        "Standard_E96-48as_v5": {
+            "hourly_rate": 9.84
+        },
+        "Standard_M208s_v2": {
+            "hourly_rate": 22.31
+        },
+        "Standard_D4as_v5": {
+            "hourly_rate": 0.142
+        },
+        "Standard_D16ds_v5": {
+            "hourly_rate": 0.904
+        },
+        "Standard_F48ads_v7": {
+            "hourly_rate": 6.324
+        },
+        "Standard_D96ads_v5": {
+            "hourly_rate": 3.744
+        },
+        "Standard_ND96isr_H100_v5": {
+            "hourly_rate": 98.32
+        },
+        "Standard_M624s-156_12_v3": {
+            "hourly_rate": 117.7788
+        },
+        "Standard_F16als_v6": {
+            "hourly_rate": 0.968
+        },
+        "Standard_E4-2ads_v7": {
+            "hourly_rate": 0.474
+        },
+        "Standard_EC16ads_v6": {
+            "hourly_rate": 0.232
+        },
+        "Standard_M128ms": {
+            "hourly_rate": 14.326
+        },
+        "Standard_DS11": {
+            "hourly_rate": 0.193
+        },
+        "Standard_E8-2ds_v4": {
+            "hourly_rate": 0.944
+        },
+        "Standard_EC8ads_v5": {
+            "hourly_rate": 0.105
+        },
+        "Standard_F2s_v2": {
+            "hourly_rate": 0.0169
+        },
+        "Standard_EC128es_v6": {
+            "hourly_rate": 14.355
+        },
+        "Standard_D64as_v5": {
+            "hourly_rate": 2.752
+        },
+        "Standard_D2lds_v6": {
+            "hourly_rate": 0.11
+        },
+        "Standard_DC32as_v6": {
+            "hourly_rate": 0.291
+        },
+        "Standard_A2": {
+            "hourly_rate": 0.12
+        },
+        "Standard_HB60-45rs": {
+            "hourly_rate": 5.04
+        },
+        "Standard_HC44-16rs": {
+            "hourly_rate": 5.192
+        },
+        "Standard_DS2": {
+            "hourly_rate": 0.112
+        },
+        "Standard_NV6ads_A10_v5": {
+            "hourly_rate": 0.454
+        },
+        "Standard_D32als_v6": {
+            "hourly_rate": 2.758
+        },
+        "Standard_D4ds_v4": {
+            "hourly_rate": 0.0452
+        },
+        "Standard_E128-64as_v7": {
+            "hourly_rate": 7.629
+        },
+        "Standard_E16-8as_v5": {
+            "hourly_rate": 0.656
+        },
+        "Standard_EC32eds_v6": {
+            "hourly_rate": 2.616
+        },
+        "Standard_M176s_4_v3": {
+            "hourly_rate": 4.98
+        },
+        "Standard_E8ds_v6": {
+            "hourly_rate": 0.654
+        },
+        "Standard_DC8s_v3": {
+            "hourly_rate": 0.768
+        },
+        "Standard_B2ls_v2": {
+            "hourly_rate": 0.00832
+        },
+        "Standard_E2ds_v5": {
+            "hourly_rate": 0.0288
+        },
+        "Standard_HB120-64rs_v2": {
+            "hourly_rate": 0.72
+        },
+        "Standard_FX24ms_v2": {
+            "hourly_rate": 2.656
+        },
+        "Standard_EC20ads_cc_v5": {
+            "hourly_rate": 0.262
+        },
+        "Standard_DS15_v2": {
+            "hourly_rate": 1.056
+        },
+        "Standard_D8ads_v5": {
+            "hourly_rate": 0.412
+        },
+        "Standard_E16ds_v4": {
+            "hourly_rate": 0.23
+        },
+        "Standard_D4als_v7": {
+            "hourly_rate": 0.161
+        },
+        "Standard_E20ds_v4": {
+            "hourly_rate": 2.36
+        },
+        "Standard_D11": {
+            "hourly_rate": 0.0386
+        },
+        "Standard_ND96asr_v4": {
+            "hourly_rate": 12.645
+        },
+        "Standard_D2_v4": {
+            "hourly_rate": 0.096
+        },
+        "Standard_DC1s_v2": {
+            "hourly_rate": 0.096
+        },
+        "Standard_E8-4s_v5": {
+            "hourly_rate": 0.101
+        },
+        "Standard_DC32as_cc_v5": {
+            "hourly_rate": 1.376
+        },
+        "Standard_M12ds_v3": {
+            "hourly_rate": 0.872
+        },
+        "Standard_D4d_v4": {
+            "hourly_rate": 0.41
+        },
+        "Standard_D96ads_v6": {
+            "hourly_rate": 1.094
+        },
+        "Standard_E20_v3": {
+            "hourly_rate": 1.26
+        },
+        "Standard_D14_v2": {
+            "hourly_rate": 0.296
+        },
+        "Standard_F1": {
+            "hourly_rate": 0.0497
+        },
+        "Standard_A1_v2": {
+            "hourly_rate": 0.026
+        },
+        "Standard_M128bds_v3": {
+            "hourly_rate": 17.6
+        },
+        "Standard_M416ds-208_8_v3": {
+            "hourly_rate": 86.98996
+        },
+        "Standard_FX8-4mds_v2": {
+            "hourly_rate": 1.094
+        },
+        "Standard_F1ads_v7": {
+            "hourly_rate": 0.132
+        },
+        "Standard_M176ds-44_3_v3": {
+            "hourly_rate": 19
+        },
+        "Standard_E16-8s_v5": {
+            "hourly_rate": 0.202
+        },
+        "Standard_DS14_v2": {
+            "hourly_rate": 0.844
+        },
+        "Standard_HB120-96rs_v3": {
+            "hourly_rate": 0.72
+        },
+        "Standard_D48s_v4": {
+            "hourly_rate": 4.512
+        },
+        "Standard_DC2as_v6": {
+            "hourly_rate": 0.183
+        },
+        "Standard_E96-48as_v7": {
+            "hourly_rate": 10.138
+        },
+        "Standard_E64s_v3": {
+            "hourly_rate": 6.573
+        },
+        "Standard_D8ps_v6": {
+            "hourly_rate": 0.281
+        },
+        "Standard_F32ads_v7": {
+            "hourly_rate": 4.216
+        },
+        "Standard_M176s-44_3_v3": {
+            "hourly_rate": 3.576
+        },
+        "Standard_B2als_v2": {
+            "hourly_rate": 0.00752
+        },
+        "Standard_E2ads_v5": {
+            "hourly_rate": 0.131
+        },
+        "Standard_M192idms_v2": {
+            "hourly_rate": 40.896
+        },
+        "Standard_E48s_v4": {
+            "hourly_rate": 3.024
+        },
+        "Standard_M832ds_12_v3": {
+            "hourly_rate": 116.505984
+        },
+        "Standard_B2pls_v2": {
+            "hourly_rate": 0.0428
+        },
+        "Standard_D96lds_v5": {
+            "hourly_rate": 9.024
+        },
+        "Standard_E48s_v3": {
+            "hourly_rate": 2.093
+        },
+        "Standard_E64bs_v5": {
+            "hourly_rate": 4.768
+        },
+        "Standard_E8-4ads_v5": {
+            "hourly_rate": 0.524
+        },
+        "Standard_D32als_v7": {
+            "hourly_rate": 1.286
+        },
+        "Standard_M624s-312_12_v3": {
+            "hourly_rate": 110.6028
+        },
+        "Standard_E8-4ds_v5": {
+            "hourly_rate": 0.378
+        },
+        "Standard_E16-4s_v6": {
+            "hourly_rate": 1.794
+        },
+        "Standard_D16alds_v7": {
+            "hourly_rate": 0.762
+        },
+        "Standard_L80as_v4": {
+            "hourly_rate": 10.56
+        },
+        "Standard_E4a_v4": {
+            "hourly_rate": 0.436
+        },
+        "Standard_E16_v5": {
+            "hourly_rate": 1.008
+        },
+        "Standard_E20d_v5": {
+            "hourly_rate": 2.36
+        },
+        "Standard_E64ads_v6": {
+            "hourly_rate": 4.646
+        },
+        "Standard_M32dms_v2": {
+            "hourly_rate": 6.146
+        },
+        "Standard_D32as_v6": {
+            "hourly_rate": 1.17
+        },
+        "Standard_B4s_v2": {
+            "hourly_rate": 0.0739
+        },
+        "Standard_HB176-24rs_v4": {
+            "hourly_rate": 7.2
+        },
+        "Standard_F48as_v7": {
+            "hourly_rate": 5.486
+        },
+        "Standard_M832ds-208_12_v3": {
+            "hourly_rate": 116.506017
+        },
+        "Standard_E48as_v6": {
+            "hourly_rate": 0.572
+        },
+        "Standard_D4nds_v6": {
+            "hourly_rate": 0.517
+        },
+        "Standard_F80ams_v7": {
+            "hourly_rate": 10.84
+        },
+        "Standard_D32_v4": {
+            "hourly_rate": 0.307
+        },
+        "Standard_F4-2amds_v7": {
+            "hourly_rate": 0.62
+        },
+        "Standard_D48nlds_v6": {
+            "hourly_rate": 5.676
+        },
+        "Standard_D32d_v5": {
+            "hourly_rate": 3.28
+        },
+        "Standard_FX24mds": {
+            "hourly_rate": 3.336
+        },
+        "Standard_D96_v5": {
+            "hourly_rate": 3.61
+        },
+        "Standard_DC32ads_v5": {
+            "hourly_rate": 3.12
+        },
+        "Standard_F32-8amds_v7": {
+            "hourly_rate": 3.489
+        },
+        "Standard_B8als_v2": {
+            "hourly_rate": 0.0533
+        },
+        "Standard_E64-32as_v7": {
+            "hourly_rate": 3.814
+        },
+        "Standard_E8ds_v5": {
+            "hourly_rate": 0.576
+        },
+        "Standard_E8ads_v6": {
+            "hourly_rate": 0.581
+        },
+        "Standard_D12": {
+            "hourly_rate": 0.211
+        },
+        "Standard_D32ads_v6": {
+            "hourly_rate": 3.296
+        },
+        "Standard_EC4ads_v6": {
+            "hourly_rate": 0.29
+        },
+        "Standard_FX32-16ms_v2": {
+            "hourly_rate": 3.541
+        },
+        "Standard_E48s_v5": {
+            "hourly_rate": 3.024
+        },
+        "Standard_E16-8s_v6": {
+            "hourly_rate": 1.058
+        },
+        "Standard_D128s_v6": {
+            "hourly_rate": 6.451
+        },
+        "Standard_D48lds_v6": {
+            "hourly_rate": 2.648
+        },
+        "Standard_E4-2ds_v5": {
+            "hourly_rate": 0.189
+        },
+        "Standard_D128als_v7": {
+            "hourly_rate": 11.034
+        },
+        "Standard_F32als_v6": {
+            "hourly_rate": 3.408
+        },
+        "Standard_D64nlds_v6": {
+            "hourly_rate": 4.625
+        },
+        "Standard_DS13_v2": {
+            "hourly_rate": 0.422
+        },
+        "Standard_H8": {
+            "hourly_rate": 0.181
+        },
+        "Standard_E8a_v4": {
+            "hourly_rate": 0.349
+        },
+        "Standard_E16a_v4": {
+            "hourly_rate": 1.008
+        },
+        "Standard_D32a_v4": {
+            "hourly_rate": 1.536
+        },
+        "Standard_DC2es_v6": {
+            "hourly_rate": 0.101
+        },
+        "Standard_B32s_v2": {
+            "hourly_rate": 1.331
+        },
+        "Standard_D4als_v6": {
+            "hourly_rate": 0.345
+        },
+        "Standard_E8-2as_v7": {
+            "hourly_rate": 0.477
+        },
+        "Standard_FX64-32ms_v2": {
+            "hourly_rate": 1.416
+        },
+        "Standard_DC64ads_v6": {
+            "hourly_rate": 3.648
+        },
+        "Standard_B16ps_v2": {
+            "hourly_rate": 0.244
+        },
+        "Standard_D64nls_v6": {
+            "hourly_rate": 0.748
+        },
+        "Standard_B8ms": {
+            "hourly_rate": 0.333
+        },
+        "Standard_DS14-8_v2": {
+            "hourly_rate": 1.904
+        },
+        "Standard_E16ads_v7": {
+            "hourly_rate": 1.162
+        },
+        "Standard_E16-4as_v5": {
+            "hourly_rate": 0.656
+        },
+        "Standard_E16-8s_v3": {
+            "hourly_rate": 0.698
+        },
+        "Standard_D4ads_v5": {
+            "hourly_rate": 0.156
+        },
+        "Standard_D8ds_v4": {
+            "hourly_rate": 0.328
+        },
+        "Standard_E8bds_v5": {
+            "hourly_rate": 0.134
+        },
+        "Standard_D8as_v6": {
+            "hourly_rate": 0.292
+        },
+        "Standard_M128s_v2": {
+            "hourly_rate": 18.807
+        },
+        "Standard_FX16-4mds_v2": {
+            "hourly_rate": 2.188
+        },
+        "Standard_DC2ads_v5": {
+            "hourly_rate": 0.078
+        },
+        "Standard_L80s_v3": {
+            "hourly_rate": 1.392
+        },
+        "Standard_DS2_v2": {
+            "hourly_rate": 0.029
+        },
+        "Standard_E96s_v5": {
+            "hourly_rate": 10.464
+        },
+        "Standard_M32ls": {
+            "hourly_rate": 0.5746
+        },
+        "Standard_B32als_v2": {
+            "hourly_rate": 1.065
+        },
+        "Standard_EC96ias_v5": {
+            "hourly_rate": 10.382
+        },
+        "Standard_H16mr_Promo": {
+            "hourly_rate": 1.599
+        },
+        "Standard_G1": {
+            "hourly_rate": 0.55
+        },
+        "Standard_D8as_v7": {
+            "hourly_rate": 0.363
+        },
+        "Standard_E96a_v4": {
+            "hourly_rate": 6.048
+        },
+        "Standard_DS14": {
+            "hourly_rate": 0.844
+        },
+        "Standard_E32_v3": {
+            "hourly_rate": 1.395
+        },
+        "Standard_F4s": {
+            "hourly_rate": 0.199
+        },
+        "Standard_F1ams_v7": {
+            "hourly_rate": 0.136
+        },
+        "Standard_M96s-48_2_v3": {
+            "hourly_rate": 12.45
+        },
+        "Standard_F16-8amds_v7": {
+            "hourly_rate": 2.48
+        },
+        "Standard_D96d_v5": {
+            "hourly_rate": 3.936
+        },
+        "Standard_D16lds_v6": {
+            "hourly_rate": 1.619
+        },
+        "Standard_L64s_v2": {
+            "hourly_rate": 7.936
+        },
+        "Standard_M192ids_v2": {
+            "hourly_rate": 9.946
+        },
+        "Standard_E4ds_v4": {
+            "hourly_rate": 0.189
+        },
+        "Standard_E96s_v6": {
+            "hourly_rate": 10.766
+        },
+        "Standard_M96ds-24_2_v3": {
+            "hourly_rate": 13.23
+        },
+        "Standard_DC48as_cc_v5": {
+            "hourly_rate": 4.272
+        },
+        "Standard_M12s-6_v32": {
+            "hourly_rate": 1.816
+        },
+        "Standard_E96nds_v6": {
+            "hourly_rate": 5.879
+        },
+        "Standard_E32-8ads_v7": {
+            "hourly_rate": 3.795
+        },
+        "Standard_D8nds_v6": {
+            "hourly_rate": 0.145
+        },
+        "Standard_E4bs_v5": {
+            "hourly_rate": 0.482
+        },
+        "Standard_M176ds-44_4_v3": {
+            "hourly_rate": 26.47
+        },
+        "Standard_DS12-1_v2": {
+            "hourly_rate": 0.211
+        },
+        "Standard_D16as_v4": {
+            "hourly_rate": 0.768
+        },
+        "Standard_B4ls_v2": {
+            "hourly_rate": 0.147
+        },
+        "Standard_E4-2s_v6": {
+            "hourly_rate": 0.265
+        },
+        "Standard_D48als_v6": {
+            "hourly_rate": 0.386
+        },
+        "Standard_E32ns_v6": {
+            "hourly_rate": 2.773
+        },
+        "Standard_EC96ads_v5": {
+            "hourly_rate": 1.258
+        },
+        "Standard_NC16as_T4_v3": {
+            "hourly_rate": 0.776
+        },
+        "Standard_E8-2ds_v6": {
+            "hourly_rate": 0.654
+        },
+        "Standard_DC48ads_v5": {
+            "hourly_rate": 2.472
+        },
+        "Standard_E32-8ds_v4": {
+            "hourly_rate": 1.51
+        },
+        "Standard_E96-24s_v6": {
+            "hourly_rate": 10.766
+        },
+        "Standard_M48s_1_v3": {
+            "hourly_rate": 8.44
+        },
+        "Standard_D96alds_v6": {
+            "hourly_rate": 3.594
+        },
+        "Standard_D16d_v5": {
+            "hourly_rate": 0.904
+        },
+        "Standard_E8bds_v6": {
+            "hourly_rate": 0.782
+        },
+        "Standard_F48als_v6": {
+            "hourly_rate": 2.904
+        },
+        "Standard_A2m_v2": {
+            "hourly_rate": 0.18
+        },
+        "Standard_B16s_v2": {
+            "hourly_rate": 0.739
+        },
+        "Standard_D32s_v4": {
+            "hourly_rate": 0.307
+        },
+        "Standard_GS2": {
+            "hourly_rate": 1.1
+        },
+        "Standard_DS12_v2": {
+            "hourly_rate": 0.074
+        },
+        "Standard_D8as_v5": {
+            "hourly_rate": 0.344
+        },
+        "Standard_DS4": {
+            "hourly_rate": 0.616
+        },
+        "Standard_FX32ms_v2": {
+            "hourly_rate": 2.005
+        },
+        "Standard_E32bds_v5": {
+            "hourly_rate": 2.672
+        },
+        "Standard_D48s_v6": {
+            "hourly_rate": 2.419
+        },
+        "Standard_B2as_v2": {
+            "hourly_rate": 0.0752
+        },
+        "Standard_DC48ads_cc_v5": {
+            "hourly_rate": 2.472
+        },
+        "Standard_E64nds_v6": {
+            "hourly_rate": 1.371
+        },
+        "Standard_M176s-88_4_v3": {
+            "hourly_rate": 28.958
+        },
+        "Standard_D2_v2": {
+            "hourly_rate": 0.146
+        },
+        "Standard_B8as_v2": {
+            "hourly_rate": 0.301
+        },
+        "Standard_E4-2s_v3": {
+            "hourly_rate": 0.174
+        },
+        "Standard_E32-16as_v5": {
+            "hourly_rate": 1.808
+        },
+        "Standard_D48_v4": {
+            "hourly_rate": 0.461
+        },
+        "Standard_E96-24s_v5": {
+            "hourly_rate": 10.464
+        },
+        "Standard_M128ds_v2": {
+            "hourly_rate": 7.691
+        },
+        "Standard_D128nls_v6": {
+            "hourly_rate": 13.372
+        },
+        "Standard_E4_v4": {
+            "hourly_rate": 0.174
+        },
+        "Standard_H16m": {
+            "hourly_rate": 4.699
+        },
+        "Standard_M96ds-48_2_v3": {
+            "hourly_rate": 13.23
+        },
+        "Standard_D32lds_v6": {
+            "hourly_rate": 1.765
+        },
+        "Standard_D96s_v5": {
+            "hourly_rate": 0.922
+        },
+        "Standard_D2ls_v5": {
+            "hourly_rate": 0.177
+        },
+        "Standard_F48als_v7": {
+            "hourly_rate": 5.112
+        },
+        "Standard_D8d_v4": {
+            "hourly_rate": 0.328
+        },
+        "Standard_D64lds_v5": {
+            "hourly_rate": 6.016
+        },
+        "Standard_D96nls_v6": {
+            "hourly_rate": 4.011
+        },
+        "Standard_DC64ads_v5": {
+            "hourly_rate": 3.296
+        },
+        "Standard_E16as_v6": {
+            "hourly_rate": 0.191
+        },
+        "Standard_DC4s": {
+            "hourly_rate": 0.195
+        },
+        "Standard_E64-16ds_v4": {
+            "hourly_rate": 7.552
+        },
+        "Standard_E32as_v4": {
+            "hourly_rate": 2.016
+        },
+        "Standard_EC8as_cc_v5": {
+            "hourly_rate": 0.452
+        },
+        "Standard_E20_v4": {
+            "hourly_rate": 0.872
+        },
+        "Standard_D160als_v7": {
+            "hourly_rate": 13.792
+        },
+        "Standard_E16-4ads_v5": {
+            "hourly_rate": 0.714
+        },
+        "Standard_F64s_v2": {
+            "hourly_rate": 0.541
+        },
+        "Standard_D32alds_v7": {
+            "hourly_rate": 1.523
+        },
+        "Standard_D32ds_v4": {
+            "hourly_rate": 3.28
+        },
+        "Standard_E96ds_v5": {
+            "hourly_rate": 1.382
+        },
+        "Standard_F64as_v6": {
+            "hourly_rate": 4.371
+        },
+        "Standard_E96-48s_v6": {
+            "hourly_rate": 10.766
+        },
+        "Standard_D64ls_v5": {
+            "hourly_rate": 0.544
+        },
+        "Standard_HB176-48rs_v4": {
+            "hourly_rate": 1.44
+        },
+        "Standard_E32-8ads_v6": {
+            "hourly_rate": 2.323
+        },
+        "Standard_F32-16amds_v7": {
+            "hourly_rate": 4.961
+        },
+        "Standard_B20ms": {
+            "hourly_rate": 0.832
+        },
+        "Standard_EC128eds_v6": {
+            "hourly_rate": 10.465
+        },
+        "Standard_D64_v4": {
+            "hourly_rate": 0.614
+        },
+        "Standard_F16amds_v7": {
+            "hourly_rate": 2.48
+        },
+        "Standard_D64_v5": {
+            "hourly_rate": 0.614
+        },
+        "Standard_A11": {
+            "hourly_rate": 1.56
+        },
+        "Standard_D4d_v5": {
+            "hourly_rate": 0.164
+        },
+        "Standard_L4s": {
+            "hourly_rate": 0.343
+        },
+        "Standard_DC2ds_v3": {
+            "hourly_rate": 0.0452
+        },
+        "Standard_D16_v4": {
+            "hourly_rate": 0.768
+        },
+        "Standard_DC16es_v6": {
+            "hourly_rate": 0.806
+        },
+        "Standard_DC48es_v6": {
+            "hourly_rate": 4.627
+        },
+        "Standard_D8s_v5": {
+            "hourly_rate": 0.384
+        },
+        "Standard_DC8as_v6": {
+            "hourly_rate": 0.731
+        },
+        "Standard_EC2ads_v5": {
+            "hourly_rate": 0.131
+        },
+        "Standard_F16-8ams_v7": {
+            "hourly_rate": 1.432
+        },
+        "Standard_E4s_v5": {
+            "hourly_rate": 0.436
+        },
+        "Standard_E20ps_v5": {
+            "hourly_rate": 0.202
+        },
+        "Standard_DC8ads_cc_v5": {
+            "hourly_rate": 0.312
+        },
+        "Standard_E96iads_v5": {
+            "hourly_rate": 6.917
+        },
+        "Standard_E64-32as_v4": {
+            "hourly_rate": 4.032
+        },
+        "Standard_D8nls_v6": {
+            "hourly_rate": 0.468
+        },
+        "Standard_D4pls_v6": {
+            "hourly_rate": 0.124
+        },
+        "Standard_NC12s_v3": {
+            "hourly_rate": 6.12
+        },
+        "Standard_M24ds-6_v3": {
+            "hourly_rate": 0.652
+        },
+        "Standard_A7": {
+            "hourly_rate": 0.2
+        },
+        "Standard_L80s_v4": {
+            "hourly_rate": 10.64
+        },
+        "Standard_E64i_v3": {
+            "hourly_rate": 2.629
+        },
+        "Standard_D5_v2": {
+            "hourly_rate": 0.806
+        },
+        "Standard_FX96ms_v2": {
+            "hourly_rate": 10.623
+        },
+        "Standard_D96nds_v6": {
+            "hourly_rate": 1.734
+        },
+        "Standard_EC4as_v5": {
+            "hourly_rate": 0.164
+        },
+        "Standard_M16-4ms": {
+            "hourly_rate": 1.686
+        },
+        "Standard_E16-4as_v6": {
+            "hourly_rate": 1.69
+        },
+        "Standard_D32nlds_v6": {
+            "hourly_rate": 3.784
+        },
+        "Standard_NV32as_v4": {
+            "hourly_rate": 3.336
+        },
+        "Standard_M64ms": {
+            "hourly_rate": 14.641
+        },
+        "Standard_D32ads_v5": {
+            "hourly_rate": 3.12
+        },
+        "Standard_A9": {
+            "hourly_rate": 1.173
+        },
+        "Standard_L96as_v4": {
+            "hourly_rate": 12.672
+        },
+        "Standard_E4as_v5": {
+            "hourly_rate": 0.41
+        },
+        "Standard_F8s": {
+            "hourly_rate": 0.766
+        },
+        "Standard_DC16as_v6": {
+            "hourly_rate": 1.462
+        },
+        "Standard_FX64-16ms_v2": {
+            "hourly_rate": 4.01
+        },
+        "Standard_E96pds_v6": {
+            "hourly_rate": 5.616
+        },
+        "Standard_D16ads_v6": {
+            "hourly_rate": 1.648
+        },
+        "Standard_B8ls_v2": {
+            "hourly_rate": 0.133
+        },
+        "Standard_E4d_v5": {
+            "hourly_rate": 0.288
+        },
+        "Standard_E8s_v4": {
+            "hourly_rate": 0.504
+        },
+        "Standard_D4nls_v6": {
+            "hourly_rate": 0.234
+        },
+        "Standard_E8-2s_v5": {
+            "hourly_rate": 0.504
+        },
+        "Standard_M208ms_v2": {
+            "hourly_rate": 8.924
+        },
+        "Standard_M16ms": {
+            "hourly_rate": 3.073
+        },
+        "Standard_HB120-16rs_v3": {
+            "hourly_rate": 3.648
+        },
+        "Standard_E4-2as_v4": {
+            "hourly_rate": 0.174
+        },
+        "Standard_D64s_v5": {
+            "hourly_rate": 2.406
+        },
+        "Standard_DS11_v2": {
+            "hourly_rate": 0.106
+        },
+        "Standard_E32-16s_v4": {
+            "hourly_rate": 0.403
+        },
+        "Standard_E16_v3": {
+            "hourly_rate": 0.202
+        },
+        "Standard_E96bds_v5": {
+            "hourly_rate": 8.016
+        },
+        "Standard_HB120-16rs_v2": {
+            "hourly_rate": 0.72
+        },
+        "Standard_E48as_v4": {
+            "hourly_rate": 3.024
+        },
+        "Standard_M176bs_v3": {
+            "hourly_rate": 15.34
+        },
+        "Standard_E16-4ds_v4": {
+            "hourly_rate": 1.888
+        },
+        "Standard_E96-24ds_v6": {
+            "hourly_rate": 12.265
+        },
+        "Standard_L16as_v3": {
+            "hourly_rate": 1.984
+        },
+        "Standard_M96ds-48_1_v3": {
+            "hourly_rate": 12.138
+        },
+        "Standard_D2lds_v5": {
+            "hourly_rate": 0.0192
+        },
+        "Standard_F8ams_v6": {
+            "hourly_rate": 1.084
+        },
+        "Standard_PB24s": {
+            "hourly_rate": 4.424
+        },
+        "Standard_EC2as_v6": {
+            "hourly_rate": 0.0845
+        },
+        "Standard_F2ams_v7": {
+            "hourly_rate": 0.179
+        },
+        "Standard_D1": {
+            "hourly_rate": 0.077
+        },
+        "Standard_D16ds_v4": {
+            "hourly_rate": 0.656
+        },
+        "Standard_F2ads_v7": {
+            "hourly_rate": 0.172
+        },
+        "Standard_H16r_Promo": {
+            "hourly_rate": 1.93
+        },
+        "Standard_M24s-12_v3": {
+            "hourly_rate": 1.4488
+        },
+        "Standard_D15_v2": {
+            "hourly_rate": 1.056
+        },
+        "Standard_F64-32ams_v7": {
+            "hourly_rate": 8.672
+        },
+        "Standard_D64s_v6": {
+            "hourly_rate": 3.226
+        },
+        "Standard_E64as_v4": {
+            "hourly_rate": 0.806
+        },
+        "Standard_ND96amsr_A100_v4": {
+            "hourly_rate": 6.554
+        },
+        "Standard_F2ams_v6": {
+            "hourly_rate": 0.271
+        },
+        "Standard_NV24ads_V710_v5": {
+            "hourly_rate": 2
+        },
+        "Standard_M64-32ms": {
+            "hourly_rate": 2.067
+        },
+        "Standard_E16nds_v6": {
+            "hourly_rate": 0.343
+        },
+        "Standard_FX12-6mds_v2": {
+            "hourly_rate": 1.641
+        },
+        "Standard_E32nds_v6": {
+            "hourly_rate": 0.685
+        },
+        "Standard_E32-16s_v3": {
+            "hourly_rate": 2.016
+        },
+        "Standard_D4ps_v5": {
+            "hourly_rate": 0.0308
+        },
+        "Standard_DC4as_v5": {
+            "hourly_rate": 0.172
+        },
+        "Standard_D64d_v4": {
+            "hourly_rate": 0.723
+        },
+        "Standard_D96ds_v5": {
+            "hourly_rate": 3.936
+        },
+        "Standard_B2ats_v2": {
+            "hourly_rate": 0.00188
+        },
+        "Standard_E32-8as_v5": {
+            "hourly_rate": 0.362
+        },
+        "Standard_E4-2ads_v5": {
+            "hourly_rate": 0.178
+        },
+        "Standard_E20_v5": {
+            "hourly_rate": 0.252
+        },
+        "Standard_E8nds_v6": {
+            "hourly_rate": 1.225
+        },
+        "Standard_D2": {
+            "hourly_rate": 0.112
+        },
+        "Standard_E48nds_v6": {
+            "hourly_rate": 1.028
+        },
+        "Standard_E2ds_v4": {
+            "hourly_rate": 0.0944
+        },
+        "Standard_E16ads_v5": {
+            "hourly_rate": 1.784
+        },
+        "Standard_E32s_v6": {
+            "hourly_rate": 2.117
+        },
+        "Standard_E8as_v6": {
+            "hourly_rate": 0.477
+        },
+        "Standard_FX48-12ms_v2": {
+            "hourly_rate": 1.062
+        },
+        "Standard_D64a_v4": {
+            "hourly_rate": 2.406
+        },
+        "Standard_E4pds_v5": {
+            "hourly_rate": 0.0461
+        },
+        "Standard_D48as_v6": {
+            "hourly_rate": 2.179
+        },
+        "Standard_EC96ads_cc_v5": {
+            "hourly_rate": 10.704
+        },
+        "Standard_E64-16s_v5": {
+            "hourly_rate": 2.79
+        },
+        "Standard_M176ds-88_4_v3": {
+            "hourly_rate": 12.2072
+        },
+        "Standard_M128": {
+            "hourly_rate": 2.668
+        },
+        "Standard_FX64-32mds_v2": {
+            "hourly_rate": 1.751
+        },
+        "Standard_NM16ads_MA35D  ": {
+            "hourly_rate": 1.95
+        },
+        "Standard_E8as_v5": {
+            "hourly_rate": 0.452
+        },
+        "Standard_E20as_v6": {
+            "hourly_rate": 0.845
+        },
+        "Standard_D8als_v7": {
+            "hourly_rate": 0.322
+        },
+        "Standard_D64s_v4": {
+            "hourly_rate": 6.016
+        },
+        "Standard_D4s_v3": {
+            "hourly_rate": 0.376
+        },
+        "Standard_E2_v5": {
+            "hourly_rate": 0.0872
+        },
+        "Standard_DC32as_v5": {
+            "hourly_rate": 2.848
+        },
+        "Standard_M8-4ms": {
+            "hourly_rate": 2.1069
+        },
+        "Standard_F8alds_v7": {
+            "hourly_rate": 0.572
+        },
+        "Standard_E2as_v6": {
+            "hourly_rate": 0.0845
+        },
+        "Standard_M8-2ms": {
+            "hourly_rate": 1.5365
+        },
+        "Standard_D48_v5": {
+            "hourly_rate": 2.304
+        },
+        "Standard_EC64as_v5": {
+            "hourly_rate": 3.616
+        },
+        "Standard_E104id_v5": {
+            "hourly_rate": 13.021
+        },
+        "Standard_E128bds_v6": {
+            "hourly_rate": 18.394
+        },
+        "Standard_E2_v4": {
+            "hourly_rate": 0.0872
+        },
+        "Standard_M96bds_2_v3": {
+            "hourly_rate": 34.47
+        },
+        "Standard_E128ns_v6": {
+            "hourly_rate": 11.092
+        },
+        "Standard_D64d_v5": {
+            "hourly_rate": 0.723
+        },
+        "Standard_E8-4s_v4": {
+            "hourly_rate": 0.504
+        },
+        "Standard_D2as_v5": {
+            "hourly_rate": 0.086
+        },
+        "Standard_A8m_v2": {
+            "hourly_rate": 0.72
+        },
+        "Standard_M176ds_4_v3": {
+            "hourly_rate": 34.56
+        },
+        "Standard_EC32ads_cc_v5": {
+            "hourly_rate": 2.096
+        },
+        "Standard_E64s_v5": {
+            "hourly_rate": 0.806
+        },
+        "Standard_E64-32ads_v5": {
+            "hourly_rate": 7.136
+        },
+        "Standard_EC20ads_v5": {
+            "hourly_rate": 0.892
+        },
+        "Standard_E16ads_v6": {
+            "hourly_rate": 1.898
+        },
+        "Standard_M416s_v2": {
+            "hourly_rate": 9.916
+        },
+        "Standard_F16alds_v7": {
+            "hourly_rate": 1.145
+        },
+        "Standard_E4-2s_v4": {
+            "hourly_rate": 0.0504
+        },
+        "Standard_E104i_v5": {
+            "hourly_rate": 1.441
+        },
+        "Standard_DC96ads_cc_v5": {
+            "hourly_rate": 3.744
+        },
+        "Standard_ND96is_H100_v5": {
+            "hourly_rate": 88.488
+        },
+        "Standard_E32s_v5": {
+            "hourly_rate": 1.395
+        },
+        "Standard_E16-4ds_v5": {
+            "hourly_rate": 0.755
+        },
+        "Standard_D32_v5": {
+            "hourly_rate": 1.536
+        },
+        "Standard_E48ads_v7": {
+            "hourly_rate": 3.485
+        },
+        "Standard_EC32as_v5": {
+            "hourly_rate": 1.808
+        },
+        "Standard_L16s_v3": {
+            "hourly_rate": 1.392
+        },
+        "Standard_ND96asr_A100_v4": {
+            "hourly_rate": 5.439
+        },
+        "Standard_B32ls_v2": {
+            "hourly_rate": 0.236
+        },
+        "Standard_D4": {
+            "hourly_rate": 0.448
+        },
+        "Standard_HB120-32rs_v3": {
+            "hourly_rate": 3.648
+        },
+        "Standard_D128ds_v6": {
+            "hourly_rate": 7.973
+        },
+        "Standard_DC32ads_cc_v5": {
+            "hourly_rate": 3.12
+        },
+        "Standard_B4as_v2": {
+            "hourly_rate": 0.0675
+        },
+        "Standard_B2ts_v2": {
+            "hourly_rate": 0.00784
+        },
+        "Standard_M64m": {
+            "hourly_rate": 2.067
+        },
+        "Standard_D8as_v4": {
+            "hourly_rate": 0.752
+        },
+        "Standard_A6": {
+            "hourly_rate": 0.5
+        },
+        "Standard_F16s": {
+            "hourly_rate": 0.159
+        },
+        "Standard_HB60rs": {
+            "hourly_rate": 2.28
+        },
+        "Standard_A1": {
+            "hourly_rate": 0.036
+        },
+        "Standard_DC4ads_v5": {
+            "hourly_rate": 0.39
+        },
+        "Standard_M64ls": {
+            "hourly_rate": 2.2606
+        },
+        "Standard_L32s_v3": {
+            "hourly_rate": 0.557
+        },
+        "Standard_D3_v2": {
+            "hourly_rate": 0.202
+        },
+        "Standard_F4s_v2": {
+            "hourly_rate": 0.354
+        },
+        "Standard_D32ps_v5": {
+            "hourly_rate": 0.246
+        },
+        "Standard_E2nds_v6": {
+            "hourly_rate": 0.0428
+        },
+        "Standard_D2as_v6": {
+            "hourly_rate": 0.183
+        },
+        "Standard_D64-32s_v3": {
+            "hourly_rate": 6.016
+        },
+        "Standard_L88is_v2": {
+            "hourly_rate": 1.373
+        },
+        "Standard_E64-32s_v4": {
+            "hourly_rate": 2.79
+        },
+        "Standard_M416ms_v2": {
+            "hourly_rate": 99.15
+        },
+        "Standard_M32-16ms": {
+            "hourly_rate": 6.146
+        },
+        "Standard_D64pls_v5": {
+            "hourly_rate": 0.435
+        },
+        "Standard_E16-8ads_v6": {
+            "hourly_rate": 1.898
+        },
+        "Standard_E4d_v4": {
+            "hourly_rate": 0.288
+        },
+        "Standard_E16-4as_v4": {
+            "hourly_rate": 0.202
+        },
+        "Standard_E32ds_v4": {
+            "hourly_rate": 3.776
+        },
+        "Standard_FX24-12mds_v2": {
+            "hourly_rate": 3.282
+        },
+        "Standard_H16": {
+            "hourly_rate": 3.508
+        },
+        "Standard_E96as_v6": {
+            "hourly_rate": 5.722
+        },
+        "Standard_HC44rs": {
+            "hourly_rate": 3.168
+        },
+        "Standard_D2nds_v6": {
+            "hourly_rate": 0.273
+        },
+        "Standard_E32s_v4": {
+            "hourly_rate": 3.488
+        },
+        "Standard_M48ds_1_v3": {
+            "hourly_rate": 3.532
+        },
+        "Standard_F2s": {
+            "hourly_rate": 0.099
+        },
+        "Standard_E20s_v4": {
+            "hourly_rate": 2.18
+        },
+        "Standard_D15i_v2": {
+            "hourly_rate": 2.38
+        },
+        "Standard_B1ls": {
+            "hourly_rate": 0.0052
+        },
+        "Standard_M128bds_3_v3": {
+            "hourly_rate": 45.96
+        },
+        "Standard_E4-2ds_v4": {
+            "hourly_rate": 0.472
+        },
+        "Standard_F4as_v6": {
+            "hourly_rate": 0.457
+        },
+        "Standard_E4_v3": {
+            "hourly_rate": 0.436
+        },
+        "Standard_E96-24as_v5": {
+            "hourly_rate": 3.936
+        },
+        "Standard_D2as_v4": {
+            "hourly_rate": 0.0752
+        },
+        "Standard_E64_v5": {
+            "hourly_rate": 6.976
+        },
+        "Standard_E2ns_v6": {
+            "hourly_rate": 0.0347
+        },
+        "Standard_E32-8as_v6": {
+            "hourly_rate": 3.379
+        },
+        "Standard_D48nds_v6": {
+            "hourly_rate": 4.335
+        },
+        "Standard_E4as_v6": {
+            "hourly_rate": 0.422
+        },
+        "Standard_L32aos_v4": {
+            "hourly_rate": 5.088
+        },
+        "Standard_M832is-208_16_v3": {
+            "hourly_rate": 163.856
+        },
+        "Standard_EC4as_v6": {
+            "hourly_rate": 0.169
+        },
+        "Standard_M96ds-24_1_v3": {
+            "hourly_rate": 4.4136
+        },
+        "Standard_D8_v5": {
+            "hourly_rate": 0.301
+        },
+        "Standard_E4as_v7": {
+            "hourly_rate": 0.238
+        },
+        "Standard_D8ads_v6": {
+            "hourly_rate": 0.33
+        },
+        "Standard_M64ms_v2": {
+            "hourly_rate": 2.026
+        },
+        "Standard_D96als_v6": {
+            "hourly_rate": 0.772
+        },
+        "Standard_DC128es_v6": {
+            "hourly_rate": 6.451
+        },
+        "Standard_FX48mds": {
+            "hourly_rate": 6.672
+        },
+        "Standard_E128-64ads_v7": {
+            "hourly_rate": 9.293
+        },
+        "Standard_F4ams_v7": {
+            "hourly_rate": 0.542
+        },
+        "Standard_E48pds_v6": {
+            "hourly_rate": 2.808
+        },
+        "Standard_B2s_v2": {
+            "hourly_rate": 0.037
+        },
+        "Standard_E16s_v3": {
+            "hourly_rate": 1.744
+        },
+        "Standard_M128bs_v3": {
+            "hourly_rate": 14.11
+        },
+        "Standard_F72s_v2": {
+            "hourly_rate": 2.344
+        },
+        "Standard_M416ds-104_8_v3": {
+            "hourly_rate": 77.42196
+        },
+        "Standard_DC4s_v2": {
+            "hourly_rate": 0.384
+        },
+        "Standard_FX48-24ms_v2": {
+            "hourly_rate": 5.312
+        },
+        "Standard_M832is_16_v3": {
+            "hourly_rate": 202.128
+        },
+        "Standard_M16-8ms": {
+            "hourly_rate": 1.686
+        },
+        "Standard_D96as_v5": {
+            "hourly_rate": 8.544
+        }
+    },
+    "DC": {
+        "DCasv6_Type1": {
+            "hourly_rate": 7.191
+        }
     }
 }

@@ -4,6 +4,7 @@ import {
     forecastRunway,
     recommendCostReduction,
     getStageRecommendations,
+    getSaaSPricing,
 } from '../engine/pricing-engine.js';
 import type { StartupStage } from '../engine/types.js';
 
@@ -129,33 +130,16 @@ export function handleCalculateSaaSBurn(args: z.infer<typeof CalculateSaaSBurnSc
 }
 
 export function handleSuggestOptimalPlan(args: z.infer<typeof SuggestOptimalPlanSchema>) {
-    // Service plan definitions
-    const servicePlans: Record<string, { plans: { name: string; cost: number; limits: Record<string, number> }[] }> = {
-        vercel: {
-            plans: [
-                { name: 'hobby', cost: 0, limits: { bandwidth: 100, functions: 100 } },
-                { name: 'pro', cost: 20, limits: { bandwidth: 1000, functions: 1000 } },
-            ],
-        },
-        supabase: {
-            plans: [
-                { name: 'free', cost: 0, limits: { storage: 0.5, bandwidth: 2 } },
-                { name: 'pro', cost: 25, limits: { storage: 8, bandwidth: 250 } },
-            ],
-        },
-        mongodb: {
-            plans: [
-                { name: 'm0', cost: 0, limits: { storage: 0.5 } },
-                { name: 'm10', cost: 57, limits: { storage: 10 } },
-                { name: 'm20', cost: 140, limits: { storage: 20 } },
-            ],
-        },
-        cloudflare: {
-            plans: [
-                { name: 'free', cost: 0, limits: { requests: 100000 } },
-                { name: 'pro', cost: 20, limits: { requests: Infinity } },
-            ],
-        },
+    // Fetch dynamic pricing data
+    let dynamicData = getSaaSPricing(args.serviceName);
+
+    // Handle inconsistent JSON structure (some have "plans" wrapper)
+    if (dynamicData && dynamicData.plans) {
+        dynamicData = dynamicData.plans;
+    }
+
+    // Default hardcoded fallbacks if dynamic data is missing (e.g. for services not in JSON)
+    const fallbackPlans: Record<string, { plans: { name: string; cost: number; limits: Record<string, number> }[] }> = {
         railway: {
             plans: [
                 { name: 'hobby', cost: 0, limits: { compute: 5 } },
@@ -176,12 +160,37 @@ export function handleSuggestOptimalPlan(args: z.infer<typeof SuggestOptimalPlan
         },
     };
 
-    const service = servicePlans[args.serviceName];
-    if (!service) {
+    let servicePlans: { name: string; cost: number; limits: Record<string, number> }[] = [];
+
+    if (dynamicData) {
+        // Map dynamic JSON data to tool structure
+        servicePlans = Object.entries(dynamicData).map(([planName, specs]: [string, any]) => {
+            // Map JSON specs to generic limits
+            const limits: Record<string, number> = {};
+
+            // Common mappings
+            if (specs.bandwidth_gb) limits.bandwidth = specs.bandwidth_gb;
+            if (specs.database_size_gb) limits.storage = specs.database_size_gb;
+            if (specs.storage_gb) limits.storage = specs.storage_gb;
+            if (specs.serverless_invocations) limits.functions = specs.serverless_invocations;
+            if (specs.workers_requests) limits.requests = specs.workers_requests;
+
+            // Parse cost
+            const cost = typeof specs.monthly_cost === 'number' ? specs.monthly_cost : 0;
+
+            return {
+                name: planName,
+                cost,
+                limits
+            };
+        });
+    } else if (fallbackPlans[args.serviceName]) {
+        servicePlans = fallbackPlans[args.serviceName].plans;
+    } else {
         throw new Error(`Unknown service: ${args.serviceName}`);
     }
 
-    const currentPlanData = service.plans.find(p => p.name === args.currentPlan);
+    const currentPlanData = servicePlans.find(p => p.name === args.currentPlan);
     if (!currentPlanData) {
         throw new Error(`Unknown plan: ${args.currentPlan} for ${args.serviceName}`);
     }
@@ -190,7 +199,20 @@ export function handleSuggestOptimalPlan(args: z.infer<typeof SuggestOptimalPlan
     const usageCheck = Object.entries(args.monthlyUsage).map(([metric, usage]) => {
         if (!usage) return null;
         const limit = currentPlanData.limits[metric];
-        if (!limit) return null;
+
+        // If limit is not defined in generic terms, check specific terms? 
+        // For now, if limit is missing, assume unlimited or not applicable
+        if (limit === undefined) return null;
+
+        // If limit is Infinity or -1, it's unlimited
+        if (limit === Infinity || limit === -1) return {
+            metric,
+            usage,
+            limit: 'Unlimited',
+            utilization: 0,
+            overLimit: false,
+        };
+
         return {
             metric,
             usage,
@@ -201,36 +223,49 @@ export function handleSuggestOptimalPlan(args: z.infer<typeof SuggestOptimalPlan
     }).filter(Boolean);
 
     // Find optimal plan
-    const optimalPlan = service.plans.find(plan => {
-        return Object.entries(args.monthlyUsage).every(([metric, usage]) => {
-            if (!usage) return true;
-            const limit = plan.limits[metric];
-            return limit === Infinity || usage <= limit;
-        });
-    }) || service.plans[service.plans.length - 1];
+    const optimalPlan = servicePlans
+        .filter(p => {
+            // Check if plan meets all needs
+            return Object.entries(args.monthlyUsage).every(([metric, usage]) => {
+                if (!usage) return true;
+                const limit = p.limits[metric];
+                // If limit undefined, assume it's NOT supported or unknown - safer to require limit
+                // But for simplicity, if limit missing, we skip check? No, risky. 
+                // If limit checks are main goal, missing limit = risk.
+                // Let's assume strict check: if metric requested, plan must have limit >= usage
 
-    const savingsPerMonth = currentPlanData.cost - optimalPlan.cost;
+                if (limit === undefined) return true; // Ignore if plan doesn't specify limit for this metric
+                if (limit === Infinity || limit === -1) return true;
+                return limit >= usage;
+            });
+        })
+        .sort((a, b) => a.cost - b.cost)[0];
 
     return {
         service: args.serviceName,
-        currentPlan: args.currentPlan,
-        currentCost: currentPlanData.cost,
-        recommendedPlan: optimalPlan.name,
-        recommendedCost: optimalPlan.cost,
-        monthlySavings: savingsPerMonth > 0 ? savingsPerMonth : 0,
-        annualSavings: (savingsPerMonth > 0 ? savingsPerMonth : 0) * 12,
+        currentPlan: {
+            name: args.currentPlan,
+            cost: currentPlanData.cost,
+            status: usageCheck.some(c => c && c.overLimit) ? 'over_limits' : 'within_limits',
+        },
         usageAnalysis: usageCheck,
-        featuresLost: savingsPerMonth > 0 ? ['Some premium features'] : [],
-        whenToUpgrade: usageCheck.some(u => u && u.utilization > 80)
-            ? 'Consider upgrading soon - usage at 80%+ capacity'
-            : 'Current plan adequate for foreseeable future',
+        recommendation: {
+            plan: optimalPlan ? optimalPlan.name : 'contact_sales',
+            cost: optimalPlan ? optimalPlan.cost : null,
+            savings: optimalPlan ? currentPlanData.cost - optimalPlan.cost : 0,
+            reasoning: optimalPlan
+                ? optimalPlan.name === args.currentPlan
+                    ? 'Current plan is optimal'
+                    : `Switch to ${optimalPlan.name} to ${currentPlanData.cost > optimalPlan.cost ? 'save money' : 'accommodate growth'}`
+                : 'No standard plan meets requirements - contact sales',
+        },
         insights: [
             {
-                type: savingsPerMonth > 0 ? 'opportunity' as const : 'benchmark' as const,
-                message: savingsPerMonth > 0
-                    ? `Switch to ${optimalPlan.name} to save $${savingsPerMonth}/month`
+                type: (optimalPlan && currentPlanData.cost > optimalPlan.cost) ? 'opportunity' as const : 'benchmark' as const,
+                message: (optimalPlan && currentPlanData.cost > optimalPlan.cost)
+                    ? `Switch to ${optimalPlan.name} to save $${currentPlanData.cost - optimalPlan.cost}/month`
                     : 'Already on optimal plan for your usage',
-                impact: savingsPerMonth * 12,
+                impact: (optimalPlan && currentPlanData.cost > optimalPlan.cost) ? (currentPlanData.cost - optimalPlan.cost) * 12 : 0,
             },
             {
                 type: 'action' as const,

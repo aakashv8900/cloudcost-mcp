@@ -68,6 +68,17 @@ interface AnthropicModel {
     batch_discount?: number;
 }
 
+interface GoogleModel {
+    input_per_million: number;
+    output_per_million: number;
+    context_window?: number;
+    category: string;
+    best_for: string[];
+    latency: string;
+    vision?: boolean;
+    audio?: boolean;
+}
+
 interface ComputeInstance {
     vcpu: number;
     memory_gb: number;
@@ -94,10 +105,49 @@ interface StoragePricing {
 // Load pricing data
 const openaiPricing = loadPricing<Record<string, OpenAIModel>>('openai.json');
 const anthropicPricing = loadPricing<Record<string, AnthropicModel>>('anthropic.json');
+const googlePricing = loadPricing<Record<string, Record<string, GoogleModel>>>('google.json');
 const awsComputePricing = loadPricing<AWSCompute>('aws_compute.json');
 const awsStoragePricing = loadPricing<{ s3: StoragePricing; ebs: StoragePricing; data_transfer: Record<string, number> }>('aws_storage.json');
 const azureComputePricing = loadPricing<AWSCompute>('azure_compute.json');
 const gcpComputePricing = loadPricing<AWSCompute>('gcp_compute.json');
+const saasPricing = loadPricing<Record<string, any>>('saas_tools.json');
+
+// ============== Data Accessors ==============
+
+export function getSaaSPricing(service: string) {
+    return saasPricing[service];
+}
+
+export function getAllSaaSPricing() {
+    return saasPricing;
+}
+
+export function getAIModelPricing(model: string) {
+    if (openaiPricing[model]) return { ...openaiPricing[model], provider: 'openai' };
+    if (anthropicPricing[model]) return { ...anthropicPricing[model], provider: 'anthropic' };
+
+    // Check Google models (nested under e.g. 'gemini')
+    for (const family of Object.values(googlePricing)) {
+        if (family && typeof family === 'object' && family[model]) {
+            return { ...family[model], provider: 'google' };
+        }
+    }
+
+    return null;
+}
+
+export function getAllAIModels() {
+    const allModels: Record<string, any> = { ...openaiPricing, ...anthropicPricing };
+
+    // Flatten Google models
+    for (const family of Object.values(googlePricing)) {
+        if (family && typeof family === 'object') {
+            Object.assign(allModels, family);
+        }
+    }
+
+    return allModels;
+}
 
 // ============== AI Model Pricing ==============
 

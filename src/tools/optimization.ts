@@ -6,6 +6,7 @@ import {
     forecastCost,
 } from '../engine/formulas.js';
 import { compareProviders } from '../engine/intelligence.js';
+import { getSaaSPricing, getAllAIModels } from '../engine/pricing-engine.js';
 import type { Provider, WorkloadType } from '../engine/types.js';
 
 // ============== Schema Definitions ==============
@@ -122,8 +123,16 @@ export function handleMultiCloudOptimization(args: z.infer<typeof MultiCloudOpti
 }
 
 export function handleDatabaseTierRecommendation(args: z.infer<typeof DatabaseTierRecommendationSchema>) {
-    // Database tier definitions
-    const dbTiers: Record<string, { name: string; cost: number; limits: Record<string, number> }[]> = {
+    // Fetch dynamic pricing
+    let dynamicData = getSaaSPricing(args.provider);
+
+    // Handle inconsistent JSON structure (some have "plans" wrapper)
+    if (dynamicData && dynamicData.plans) {
+        dynamicData = dynamicData.plans;
+    }
+
+    // Default/Fallback tiers
+    const fallbackTiers: Record<string, { name: string; cost: number; limits: Record<string, number> }[]> = {
         supabase: [
             { name: 'free', cost: 0, limits: { storage: 0.5, bandwidth: 2, connections: 50 } },
             { name: 'pro', cost: 25, limits: { storage: 8, bandwidth: 250, connections: 200 } },
@@ -147,7 +156,29 @@ export function handleDatabaseTierRecommendation(args: z.infer<typeof DatabaseTi
         ],
     };
 
-    const tiers = dbTiers[args.provider];
+    let tiers: { name: string; cost: number; limits: Record<string, number> }[] = [];
+
+    if (dynamicData) {
+        tiers = Object.entries(dynamicData).map(([planName, specs]: [string, any]) => {
+            const limits: Record<string, number> = {};
+            // Map JSON specs to tool limits
+            if (specs.storage_gb) limits.storage = specs.storage_gb;
+            if (specs.database_size_gb) limits.storage = specs.database_size_gb;
+            if (specs.connections) limits.connections = specs.connections === 'unlimited' ? Infinity : specs.connections;
+
+            return {
+                name: planName,
+                cost: typeof specs.monthly_cost === 'number' ? specs.monthly_cost : 0,
+                limits
+            };
+        }).sort((a, b) => a.cost - b.cost);
+    } else {
+        tiers = fallbackTiers[args.provider] || [];
+    }
+
+    if (tiers.length === 0) {
+        throw new Error(`Unknown provider or no pricing data: ${args.provider}`);
+    }
 
     // Find current best tier
     const currentBestTier = tiers.find(t => t.limits.storage >= args.currentUsage.storageGb) || tiers[tiers.length - 1];
@@ -189,32 +220,66 @@ export function handleDatabaseTierRecommendation(args: z.infer<typeof DatabaseTi
 }
 
 export function handleModelSwitchSavings(args: z.infer<typeof ModelSwitchSavingsSchema>) {
-    // Model cost and quality data
-    const modelData: Record<string, { cost: number; quality: number; provider: string }> = {
-        'gpt-4o': { cost: 7.5, quality: 95, provider: 'openai' },
-        'gpt-4o-mini': { cost: 0.375, quality: 82, provider: 'openai' },
-        'o1': { cost: 37.5, quality: 98, provider: 'openai' },
-        'o1-mini': { cost: 7.5, quality: 90, provider: 'openai' },
-        'o3-mini': { cost: 2.75, quality: 88, provider: 'openai' },
-        'claude-3-5-sonnet': { cost: 9, quality: 94, provider: 'anthropic' },
-        'claude-3-5-haiku': { cost: 2.4, quality: 80, provider: 'anthropic' },
-        'claude-3-opus': { cost: 45, quality: 96, provider: 'anthropic' },
+    // Fetch all dynamic models
+    const allModels = getAllAIModels();
+
+    // Quality scoring heuristics based on category
+    const categoryQuality: Record<string, number> = {
+        'flagship': 95,
+        'flagship-efficient': 92,
+        'premium': 96,
+        'reasoning': 98,
+        'balanced': 90,
+        'code': 92,
+        'efficient': 82,
+        'speed': 75,
+        'realtime': 85,
     };
 
-    const qualityThresholds: Record<string, number> = {
-        highest: 95,
-        high: 88,
-        medium: 80,
-        acceptable: 70,
-    };
+    const modelData: Record<string, { cost: number; quality: number; provider: string }> = {};
 
-    const current = modelData[args.currentModel];
-    if (!current) {
+    // Populate model data from dynamic source
+    Object.entries(allModels).forEach(([name, specs]: [string, any]) => {
+        if (!specs.input_per_million) return;
+
+        // Approximate blend cost (assume 3:1 input:output ratio common in chat)
+        // Cost per million tokens (blended)
+        const blendedCost = (specs.input_per_million * 0.75) + (specs.output_per_million * 0.25);
+
+        // Infer quality
+        let quality = 80; // default
+        if (specs.category && categoryQuality[specs.category]) {
+            quality = categoryQuality[specs.category];
+        } else if (name.includes('gpt-4') || name.includes('opus') || name.includes('sonnet')) {
+            quality = 95;
+        } else if (name.includes('mini') || name.includes('haiku') || name.includes('flash')) {
+            quality = 80;
+        }
+
+        modelData[name] = {
+            cost: blendedCost,
+            quality,
+            provider: specs.provider || 'unknown'
+        };
+    });
+
+    // Ensure we have data for the requested model
+    if (!modelData[args.currentModel]) {
+        // Fallback or error? Let's try to add it if missing but validation passed
+        // Or throw
         throw new Error(`Unknown model: ${args.currentModel}`);
     }
 
+    const current = modelData[args.currentModel];
+
+    // Re-calculate monthly cost using blended rate matching the modelData
     const currentMonthlyCost = (args.monthlyTokens / 1_000_000) * current.cost;
-    const minQuality = qualityThresholds[args.qualityRequirement];
+    const minQuality = {
+        highest: 95,
+        high: 88,
+        medium: 80,
+        acceptable: 70
+    }[args.qualityRequirement] || 80;
 
     // Find alternatives that meet quality requirement
     const alternatives = Object.entries(modelData)

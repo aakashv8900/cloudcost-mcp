@@ -21,19 +21,19 @@
         "e2-standard-2": {
             "vcpu": 2,
             "memory_gb": 8,
-            "hourly_rate": 0.067,
+            "hourly_rate": 0.0672,
             "category": "general-purpose"
         },
         "e2-standard-4": {
             "vcpu": 4,
             "memory_gb": 16,
-            "hourly_rate": 0.134,
+            "hourly_rate": 0.1344,
             "category": "general-purpose"
         },
         "e2-standard-8": {
             "vcpu": 8,
             "memory_gb": 32,
-            "hourly_rate": 0.268,
+            "hourly_rate": 0.2688,
             "category": "general-purpose"
         },
         "e2-standard-16": {
@@ -119,7 +119,7 @@
         "n2-standard-8": {
             "vcpu": 8,
             "memory_gb": 32,
-            "hourly_rate": 0.3884,
+            "hourly_rate": 0.3885,
             "category": "general-purpose"
         },
         "n2-standard-16": {
@@ -167,14 +167,14 @@
         "n2-highmem-2": {
             "vcpu": 2,
             "memory_gb": 16,
-            "hourly_rate": 0.131,
-            "category": "high-memory"
+            "hourly_rate": 0.1311,
+            "category": "general-purpose"
         },
         "n2-highmem-4": {
             "vcpu": 4,
             "memory_gb": 32,
-            "hourly_rate": 0.2621,
-            "category": "high-memory"
+            "hourly_rate": 0.2622,
+            "category": "general-purpose"
         },
         "n2-highmem-8": {
             "vcpu": 8,
@@ -668,7 +668,7 @@
         "a3-highgpu-8g": {
             "vcpu": 208,
             "memory_gb": 1872,
-            "hourly_rate": 85.00,
+            "hourly_rate": 85,
             "category": "gpu-ml-h100",
             "gpu": "8x H100 80GB"
         }
@@ -806,12 +806,12 @@
     "tpu": {
         "v2-8": {
             "tpu_cores": 8,
-            "hourly_rate": 4.50,
+            "hourly_rate": 4.5,
             "category": "tpu-v2"
         },
         "v3-8": {
             "tpu_cores": 8,
-            "hourly_rate": 8.00,
+            "hourly_rate": 8,
             "category": "tpu-v3"
         },
         "v4-8": {
@@ -821,37 +821,37 @@
         },
         "v5e-1": {
             "tpu_cores": 1,
-            "hourly_rate": 1.20,
+            "hourly_rate": 1.2,
             "category": "tpu-v5e"
         },
         "v5e-4": {
             "tpu_cores": 4,
-            "hourly_rate": 4.80,
+            "hourly_rate": 4.8,
             "category": "tpu-v5e"
         },
         "v5e-8": {
             "tpu_cores": 8,
-            "hourly_rate": 9.60,
+            "hourly_rate": 9.6,
             "category": "tpu-v5e"
         },
         "v5e-16": {
             "tpu_cores": 16,
-            "hourly_rate": 19.20,
+            "hourly_rate": 19.2,
             "category": "tpu-v5e"
         },
         "v5p-8": {
             "tpu_cores": 8,
-            "hourly_rate": 16.80,
+            "hourly_rate": 16.8,
             "category": "tpu-v5p"
         },
         "v5p-16": {
             "tpu_cores": 16,
-            "hourly_rate": 33.60,
+            "hourly_rate": 33.6,
             "category": "tpu-v5p"
         },
         "v5p-32": {
             "tpu_cores": 32,
-            "hourly_rate": 67.20,
+            "hourly_rate": 67.2,
             "category": "tpu-v5p"
         }
     },
@@ -860,39 +860,39 @@
         "3_year": 0.55
     },
     "sustained_use_discounts": {
-        "0_25_percent": 0.0,
-        "25_50_percent": 0.20,
-        "50_75_percent": 0.40,
-        "75_100_percent": 0.60
+        "0_25_percent": 0,
+        "25_50_percent": 0.2,
+        "50_75_percent": 0.4,
+        "75_100_percent": 0.6
     },
     "spot_discounts": {
-        "e2": 0.80,
-        "n2": 0.70,
+        "e2": 0.8,
+        "n2": 0.7,
         "n2d": 0.72,
         "c2": 0.65,
         "a2": 0.55,
-        "general": 0.70
+        "general": 0.7
     },
     "region_multipliers": {
-        "us-central1": 1.0,
-        "us-east1": 1.0,
+        "us-central1": 1,
+        "us-east1": 1,
         "us-east4": 1.02,
         "us-east5": 1.02,
-        "us-west1": 1.0,
+        "us-west1": 1,
         "us-west2": 1.16,
         "us-west3": 1.16,
         "us-west4": 1.02,
-        "us-south1": 1.0,
-        "europe-west1": 1.10,
-        "europe-west2": 1.20,
-        "europe-west3": 1.20,
+        "us-south1": 1,
+        "europe-west1": 1.1,
+        "europe-west2": 1.2,
+        "europe-west3": 1.2,
         "europe-west4": 1.08,
         "europe-west6": 1.28,
         "europe-west8": 1.15,
         "europe-west9": 1.15,
         "europe-north1": 1.08,
         "europe-central2": 1.16,
-        "asia-east1": 1.10,
+        "asia-east1": 1.1,
         "asia-east2": 1.18,
         "asia-northeast1": 1.24,
         "asia-northeast2": 1.28,
@@ -901,15 +901,15 @@
         "asia-south2": 1.08,
         "asia-southeast1": 1.12,
         "asia-southeast2": 1.18,
-        "australia-southeast1": 1.20,
+        "australia-southeast1": 1.2,
         "australia-southeast2": 1.25,
         "southamerica-east1": 1.45,
         "southamerica-west1": 1.35,
         "northamerica-northeast1": 1.08,
-        "northamerica-northeast2": 1.10,
+        "northamerica-northeast2": 1.1,
         "me-west1": 1.22,
         "me-central1": 1.25,
-        "africa-south1": 1.30
+        "africa-south1": 1.3
     },
     "storage": {
         "persistent_disk_standard": {
@@ -919,7 +919,7 @@
             "per_gb": 0.17
         },
         "persistent_disk_balanced": {
-            "per_gb": 0.10
+            "per_gb": 0.1
         },
         "persistent_disk_extreme": {
             "per_gb": 0.125,
@@ -943,20 +943,20 @@
         },
         "nearline": {
             "per_gb": 0.01,
-            "class_a_per_10k": 0.10,
+            "class_a_per_10k": 0.1,
             "class_b_per_10k": 0.01,
             "retrieval_per_gb": 0.01
         },
         "coldline": {
             "per_gb": 0.004,
-            "class_a_per_10k": 0.10,
+            "class_a_per_10k": 0.1,
             "class_b_per_10k": 0.05,
             "retrieval_per_gb": 0.02
         },
         "archive": {
             "per_gb": 0.0012,
-            "class_a_per_10k": 0.50,
-            "class_b_per_10k": 0.50,
+            "class_a_per_10k": 0.5,
+            "class_b_per_10k": 0.5,
             "retrieval_per_gb": 0.05
         }
     },
@@ -968,6 +968,6 @@
         },
         "egress_to_other_regions": 0.01,
         "egress_same_region": 0.01,
-        "ingress": 0.0
+        "ingress": 0
     }
 }
