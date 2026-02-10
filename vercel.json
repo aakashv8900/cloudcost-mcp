@@ -1,31 +1,9 @@
 {
     "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "api/index.ts",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/health",
-            "dest": "api/index.ts"
-        },
-        {
-            "src": "/mcp",
-            "dest": "api/index.ts"
-        },
-        {
-            "src": "/sse",
-            "dest": "api/index.ts"
-        },
-        {
-            "src": "/messages",
-            "dest": "api/index.ts"
-        },
-        {
-            "src": "/",
-            "dest": "api/index.ts"
+            "source": "/(.*)",
+            "destination": "/api/index"
         }
     ],
     "functions": {
