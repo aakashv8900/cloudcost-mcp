@@ -12,36 +12,37 @@ import type { TaskType, LatencyRequirement } from '../engine/types.js';
 // ============== Schema Definitions ==============
 
 export const EstimateOpenAICostSchema = z.object({
-    model: z.string().describe('OpenAI model name (e.g., gpt-4o, gpt-4o-mini, o1, o3-mini)'),
-    inputTokens: z.number().min(0).describe('Number of input tokens'),
-    outputTokens: z.number().min(0).describe('Number of output tokens'),
+    model: z.string().describe('OpenAI model name (e.g., gpt-4o, gpt-4o-mini, o1, o3-mini)').default('gpt-4o'),
+    inputTokens: z.number().min(0).describe('Number of input tokens (e.g., 1000)').default(1000),
+    outputTokens: z.number().min(0).describe('Number of output tokens (e.g., 500)').default(500),
 });
 
 export const EstimateAnthropicCostSchema = z.object({
-    model: z.string().describe('Anthropic model name (e.g., claude-3-5-sonnet, claude-3-5-haiku)'),
-    inputTokens: z.number().min(0).describe('Number of input tokens'),
-    outputTokens: z.number().min(0).describe('Number of output tokens'),
+    model: z.string().describe('Anthropic model name (e.g., claude-3-5-sonnet, claude-3-5-haiku)').default('claude-3-5-sonnet'),
+    inputTokens: z.number().min(0).describe('Number of input tokens (e.g., 1000)').default(1000),
+    outputTokens: z.number().min(0).describe('Number of output tokens (e.g., 500)').default(500),
 });
 
 export const SuggestModelSchema = z.object({
     taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
-        .describe('Type of task to perform'),
-    budget: z.number().min(0).describe('Maximum cost per million tokens in USD'),
-    latencyRequirement: z.enum(['low', 'medium', 'high']).describe('Latency tolerance'),
+        .describe('Type of task to perform (e.g., chat, code)').default('chat'),
+    budget: z.number().min(0).describe('Maximum cost per million tokens in USD (e.g., 10)').default(10),
+    latencyRequirement: z.enum(['low', 'medium', 'high']).describe('Latency tolerance (e.g., medium)').default('medium'),
 });
 
 export const CompareModelsSchema = z.object({
     taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
-        .describe('Type of task to compare models for'),
+        .describe('Type of task to compare models for (e.g., code, reasoning)').default('code'),
 });
 
 export const RankingByCostEfficiencySchema = z.object({
-    task: z.string().describe('Task description to rank models by cost efficiency'),
+    task: z.string().describe('Task description to rank models by cost efficiency (e.g., "code generation and debugging")').default('building a web app with React'),
 });
 
 export const EstimatePerformanceSchema = z.object({
-    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development']),
-    tokenSize: z.number().min(0).describe('Expected token size per request'),
+    taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
+        .describe('Type of task (e.g., chat, reasoning)').default('chat'),
+    tokenSize: z.number().min(0).describe('Expected token size per request (e.g., 1000)').default(1000),
 });
 
 // ============== Tool Handlers ==============

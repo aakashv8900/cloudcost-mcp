@@ -12,47 +12,56 @@ import type { StartupStage } from '../engine/types.js';
 
 export const CalculateSaaSBurnSchema = z.object({
     services: z.array(z.object({
-        name: z.string().describe('Service name'),
-        monthlyCost: z.number().describe('Monthly cost in USD'),
+        name: z.string().describe('Service name (e.g., AWS, Datadog, Slack)'),
+        monthlyCost: z.number().min(0).describe('Monthly cost in USD (e.g., 500)'),
         category: z.enum(['ai', 'compute', 'storage', 'database', 'saas', 'other']).describe('Service category'),
-    })).describe('List of services and their monthly costs'),
+    })).describe('List of services and their monthly costs').default([
+        { name: 'AWS', monthlyCost: 1000, category: 'compute' },
+        { name: 'OpenAI', monthlyCost: 500, category: 'ai' }
+    ]),
 });
 
 export const SuggestOptimalPlanSchema = z.object({
     serviceName: z.enum(['vercel', 'supabase', 'mongodb', 'cloudflare', 'railway', 'neon', 'planetscale'])
-        .describe('Service to analyze'),
-    currentPlan: z.string().describe('Current plan name'),
+        .describe('Service to analyze (e.g., vercel, supabase)'),
+    currentPlan: z.string().describe('Current plan name (e.g., hobby, free, pro)').default('free'),
     monthlyUsage: z.object({
-        requests: z.number().optional(),
-        storage: z.number().optional(),
-        bandwidth: z.number().optional(),
-        compute: z.number().optional(),
-    }).describe('Monthly usage metrics'),
+        requests: z.number().optional().describe('Approximate monthly requests'),
+        storage: z.number().optional().describe('Storage used in GB'),
+        bandwidth: z.number().optional().describe('Bandwidth used in GB'),
+        compute: z.number().optional().describe('Compute units used'),
+    }).describe('Monthly usage metrics').default({ bandwidth: 50, requests: 1000 }),
 });
 
 export const ForecastRunwaySchema = z.object({
-    monthlyInfraCost: z.number().min(0).describe('Total monthly infrastructure cost'),
-    monthlyRevenue: z.number().min(0).describe('Monthly recurring revenue'),
-    cashInBank: z.number().min(0).describe('Current cash in bank'),
-    monthlyGrowthRate: z.number().min(-1).max(10).default(0.1).describe('Monthly cost growth rate'),
+    monthlyInfraCost: z.number().min(0).describe('Total monthly infrastructure cost in USD (e.g., 5000)').default(2000),
+    monthlyRevenue: z.number().min(0).describe('Monthly recurring revenue (MRR) in USD').default(500),
+    cashInBank: z.number().min(0).describe('Current cash in bank in USD').default(50000),
+    monthlyGrowthRate: z.number().min(-1).max(10).default(0.1).describe('Monthly cost growth rate (0.1 = 10% monthly growth)'),
 });
 
 export const CostBreakdownByServiceSchema = z.object({
     services: z.array(z.object({
-        name: z.string(),
-        monthlyCost: z.number(),
-        category: z.string(),
-    })).describe('Services to categorize'),
-    stage: z.enum(['pre-seed', 'seed', 'series-a', 'scaling']).describe('Startup stage'),
+        name: z.string().describe('Service name'),
+        monthlyCost: z.number().describe('Monthly cost in USD'),
+        category: z.string().describe('Service category (e.g., compute, database)'),
+    })).describe('Services to categorize').default([
+        { name: 'EC2', monthlyCost: 800, category: 'compute' },
+        { name: 'RDS', monthlyCost: 400, category: 'database' }
+    ]),
+    stage: z.enum(['pre-seed', 'seed', 'series-a', 'scaling']).describe('Startup stage (e.g., seed, scaling)').default('seed'),
 });
 
 export const RecommendCostReductionSchema = z.object({
     services: z.array(z.object({
-        name: z.string(),
-        cost: z.number(),
-        category: z.string(),
-    })).describe('Current service costs'),
-    targetReduction: z.number().min(0).max(1).default(0.2).describe('Target reduction percentage (0.2 = 20%)'),
+        name: z.string().describe('Service name'),
+        cost: z.number().describe('Monthly cost in USD'),
+        category: z.string().describe('Service category'),
+    })).describe('Current service costs').default([
+        { name: 'Unused EC2', cost: 200, category: 'compute' },
+        { name: 'Premium DB', cost: 1000, category: 'database' }
+    ]),
+    targetReduction: z.number().min(0).max(1).default(0.2).describe('Target reduction percentage (e.g., 0.2 = 20% reduction)'),
 });
 
 // ============== Tool Handlers ==============
@@ -72,7 +81,7 @@ export function handleCalculateSaaSBurn(args: z.infer<typeof CalculateSaaSBurnSc
         service: s.name,
         category: s.category,
         monthlyCost: s.monthlyCost,
-        percentageOfTotal: Math.round((s.monthlyCost / totalBurn) * 100),
+        percentageOfTotal: totalBurn > 0 ? Math.round((s.monthlyCost / totalBurn) * 100) : 0,
         optimizationPotential: s.category === 'ai' ? 0.4 : s.category === 'compute' ? 0.35 : 0.2,
     }));
 

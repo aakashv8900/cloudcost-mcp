@@ -13,54 +13,55 @@ import type { Provider, WorkloadType } from '../engine/types.js';
 
 export const MultiCloudOptimizationSchema = z.object({
     workloadProfile: z.object({
-        workloadType: z.enum(['api-heavy', 'batch-processing', 'ml-training', 'web-app', 'realtime']),
-        monthlyBudget: z.number().min(0),
-        primaryProvider: z.enum(['aws', 'azure', 'gcp']).optional(),
+        workloadType: z.enum(['api-heavy', 'batch-processing', 'ml-training', 'web-app', 'realtime'])
+            .describe('Workload type (e.g., web-app, ml-training)').default('web-app'),
+        monthlyBudget: z.number().min(0).describe('Monthly budget in USD (e.g., 5000)').default(2000),
+        primaryProvider: z.enum(['aws', 'azure', 'gcp']).optional().describe('Current primary provider').default('aws'),
     }).describe('Current workload characteristics'),
     currentCosts: z.object({
-        aws: z.number().optional(),
-        azure: z.number().optional(),
-        gcp: z.number().optional(),
-    }).describe('Current costs per provider'),
+        aws: z.number().optional().describe('Monthly spend on AWS'),
+        azure: z.number().optional().describe('Monthly spend on Azure'),
+        gcp: z.number().optional().describe('Monthly spend on GCP'),
+    }).describe('Current costs per provider').default({ aws: 1000, gcp: 500 }),
 });
 
 export const DatabaseTierRecommendationSchema = z.object({
-    provider: z.enum(['supabase', 'mongodb', 'neon', 'planetscale']).describe('Database provider'),
+    provider: z.enum(['supabase', 'mongodb', 'neon', 'planetscale']).describe('Database provider').default('supabase'),
     currentUsage: z.object({
-        connectionCount: z.number().optional(),
-        storageGb: z.number(),
-        queriesPerSecond: z.number().optional(),
+        connectionCount: z.number().optional().describe('Average active connections').default(10),
+        storageGb: z.number().describe('Storage used in GB (e.g., 5)').default(1),
+        queriesPerSecond: z.number().optional().describe('Average queries per second'),
         monthlyReads: z.number().optional(),
         monthlyWrites: z.number().optional(),
     }).describe('Current database usage metrics'),
-    expectedGrowth: z.number().min(0).max(10).default(0.2).describe('Expected monthly growth rate'),
+    expectedGrowth: z.number().min(0).max(10).default(0.2).describe('Expected monthly growth rate (e.g., 0.2 for 20%)'),
 });
 
 export const ModelSwitchSavingsSchema = z.object({
-    currentModel: z.string().describe('Current AI model in use'),
-    currentProvider: z.enum(['openai', 'anthropic']).describe('Current provider'),
-    monthlyTokens: z.number().min(0).describe('Monthly token usage'),
-    qualityRequirement: z.enum(['highest', 'high', 'medium', 'acceptable']).describe('Minimum quality level'),
+    currentModel: z.string().describe('Current AI model in use (e.g., gpt-4o)').default('gpt-4o'),
+    currentProvider: z.enum(['openai', 'anthropic']).describe('Current provider').default('openai'),
+    monthlyTokens: z.number().min(0).describe('Monthly token usage (e.g., 1,000,000)').default(1000000),
+    qualityRequirement: z.enum(['highest', 'high', 'medium', 'acceptable']).describe('Minimum quality level').default('high'),
 });
 
 export const ReservedInstanceSavingsSchema = z.object({
-    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider'),
-    instanceType: z.string().describe('Instance type'),
-    currentMonthlySpend: z.number().min(0).describe('Current monthly on-demand spend'),
-    usagePattern: z.enum(['steady', 'variable', 'spiky']).describe('Usage pattern'),
+    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider').default('aws'),
+    instanceType: z.string().describe('Instance type (e.g., t3.medium)').default('t3.large'),
+    currentMonthlySpend: z.number().min(0).describe('Current monthly on-demand spend in USD').default(500),
+    usagePattern: z.enum(['steady', 'variable', 'spiky']).describe('Usage pattern (e.g., steady)').default('steady'),
 });
 
 export const BreakEvenAnalysisSchema = z.object({
     optionA: z.object({
-        name: z.string(),
-        upfrontCost: z.number().min(0),
-        monthlyCost: z.number().min(0),
-    }).describe('First option to compare'),
+        name: z.string().describe('Option name (e.g., On-demand)'),
+        upfrontCost: z.number().min(0).describe('Upfront cost in USD'),
+        monthlyCost: z.number().min(0).describe('Monthly cost in USD'),
+    }).describe('First option to compare').default({ name: 'On-demand', upfrontCost: 0, monthlyCost: 500 }),
     optionB: z.object({
-        name: z.string(),
-        upfrontCost: z.number().min(0),
-        monthlyCost: z.number().min(0),
-    }).describe('Second option to compare'),
+        name: z.string().describe('Option name (e.g., 1-yr Reserved)'),
+        upfrontCost: z.number().min(0).describe('Upfront cost in USD'),
+        monthlyCost: z.number().min(0).describe('Monthly cost in USD'),
+    }).describe('Second option to compare').default({ name: 'Reserved', upfrontCost: 3000, monthlyCost: 200 }),
     timeHorizon: z.number().min(1).max(60).default(24).describe('Analysis period in months'),
 });
 

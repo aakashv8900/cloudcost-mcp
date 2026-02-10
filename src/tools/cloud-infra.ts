@@ -23,30 +23,30 @@ export const CompareCloudCostSchema = z.object({
 });
 
 export const EstimateComputeCostSchema = z.object({
-    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider'),
-    instanceType: z.string().describe('Instance type (e.g., t3.large, D4s_v5, n2-standard-4)'),
-    hours: z.number().min(0).describe('Hours of usage per month'),
-    region: z.string().optional().describe('Optional region for pricing adjustment'),
+    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider (e.g., aws, gcp)').default('aws'),
+    instanceType: z.string().describe('Instance type (e.g., t3.large, D4s_v5, n2-standard-4)').default('t3.medium'),
+    hours: z.number().min(0).describe('Hours of usage per month (e.g., 730 for full month)').default(730),
+    region: z.string().optional().describe('Optional region for pricing adjustment (e.g., us-east-1)').default('us-east-1'),
 });
 
 export const EstimateStorageCostSchema = z.object({
-    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider'),
-    storageType: z.enum(['standard', 'ssd', 'archive']).describe('Storage tier'),
-    gb: z.number().min(0).describe('Storage amount in GB'),
-    durationMonths: z.number().min(1).default(1).describe('Duration in months'),
+    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider (e.g., aws, azure)').default('aws'),
+    storageType: z.enum(['standard', 'ssd', 'archive']).describe('Storage tier (e.g., standard, ssd)').default('standard'),
+    gb: z.number().min(0).describe('Storage amount in GB (e.g., 100)').default(100),
+    durationMonths: z.number().min(1).default(1).describe('Duration in months (e.g., 12)'),
 });
 
 export const EstimateBandwidthCostSchema = z.object({
-    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider'),
-    gbTransfer: z.number().min(0).describe('Data transfer in GB'),
+    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider (e.g., aws, gcp)').default('aws'),
+    gbTransfer: z.number().min(0).describe('Data transfer in GB (e.g., 1000)').default(100),
     direction: z.enum(['egress', 'ingress', 'inter-region']).default('egress').describe('Transfer direction'),
 });
 
 export const ForecastScalingCostSchema = z.object({
-    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider'),
-    currentMonthlyCost: z.number().min(0).describe('Current monthly infrastructure cost'),
-    growthRate: z.number().min(-1).max(10).describe('Monthly growth rate (0.1 = 10%)'),
-    months: z.number().min(1).max(36).describe('Forecast duration in months'),
+    provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider (e.g., aws)').default('aws'),
+    currentMonthlyCost: z.number().min(0).describe('Current monthly infrastructure cost in USD (e.g., 1000)').default(1000),
+    growthRate: z.number().min(-1).max(10).describe('Monthly growth rate (e.g., 0.1 for 10% monthly growth)').default(0.1),
+    months: z.number().min(1).max(36).describe('Forecast duration in months (e.g., 12)').default(12),
 });
 
 // ============== Tool Handlers ==============
