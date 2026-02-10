@@ -7,7 +7,21 @@ import {
     compareModels,
 } from '../engine/pricing-engine.js';
 import { classifyTaskSync } from '../engine/task-classifier.js';
-import type { TaskType, LatencyRequirement } from '../engine/types.js';
+import type { TaskType, LatencyRequirement, Insight, Alternative, AIProvider } from '../engine/types.js';
+
+// ============== Common Output Schemas ==============
+
+const InsightSchema = z.object({
+    type: z.enum(['warning', 'opportunity', 'prediction', 'benchmark', 'action']),
+    message: z.string(),
+    impact: z.number().optional(),
+});
+
+const AlternativeSchema = z.object({
+    option: z.string(),
+    whyNot: z.string(),
+    costDifference: z.number().optional(),
+});
 
 // ============== Schema Definitions ==============
 
@@ -17,11 +31,25 @@ export const EstimateOpenAICostSchema = z.object({
     outputTokens: z.number().min(0).describe('Number of output tokens (e.g., 500)').default(500),
 });
 
+export const AIModelCostResultOutputSchema = z.object({
+    model: z.string(),
+    provider: z.string(),
+    totalCost: z.number(),
+    inputCost: z.number(),
+    outputCost: z.number(),
+    currency: z.string(),
+    costPer1M: z.number(),
+    insights: z.array(InsightSchema),
+    alternatives: z.array(AlternativeSchema),
+    optimizationTips: z.array(z.string()),
+});
+
 export const EstimateAnthropicCostSchema = z.object({
     model: z.string().describe('Anthropic model name (e.g., claude-3-5-sonnet, claude-3-5-haiku)').default('claude-3-5-sonnet'),
     inputTokens: z.number().min(0).describe('Number of input tokens (e.g., 1000)').default(1000),
     outputTokens: z.number().min(0).describe('Number of output tokens (e.g., 500)').default(500),
 });
+// Uses AIModelCostResultOutputSchema
 
 export const SuggestModelSchema = z.object({
     taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
@@ -30,19 +58,79 @@ export const SuggestModelSchema = z.object({
     latencyRequirement: z.enum(['low', 'medium', 'high']).describe('Latency tolerance (e.g., medium)').default('medium'),
 });
 
+export const ModelSuggestionOutputSchema = z.object({
+    recommendedModel: z.string(),
+    provider: z.string(),
+    reasoning: z.string(),
+    confidence: z.string(),
+    costPer1M: z.number(),
+    alternatives: z.array(AlternativeSchema),
+    breakEvenPoint: z.string(),
+    insights: z.array(InsightSchema),
+});
+
 export const CompareModelsSchema = z.object({
     taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
         .describe('Type of task to compare models for (e.g., code, reasoning)').default('code'),
+});
+
+export const ModelComparisonOutputSchema = z.object({
+    rankings: z.array(z.object({
+        rank: z.number(),
+        model: z.string(),
+        provider: z.string(),
+        costPer1M: z.number(),
+        efficiencyScore: z.number(),
+        bestFor: z.array(z.string()),
+    })),
+    winner: z.string(),
+    reasoning: z.string(),
+    qualityCostMatrix: z.array(z.object({
+        model: z.string(),
+        quality: z.string(),
+        costTier: z.string(),
+        recommendation: z.string(),
+    })),
+    insights: z.array(InsightSchema),
 });
 
 export const RankingByCostEfficiencySchema = z.object({
     task: z.string().describe('Task description to rank models by cost efficiency (e.g., "code generation and debugging")').default('building a web app with React'),
 });
 
+export const RankingByCostEfficiencyOutputSchema = z.object({
+    task: z.string(),
+    inferredTaskType: z.string(),
+    classificationConfidence: z.number(),
+    matchedKeywords: z.array(z.string()),
+    efficiencyRankings: z.array(z.object({
+        rank: z.number(),
+        model: z.string(),
+        provider: z.string(),
+        costPer1M: z.number(),
+        efficiencyScore: z.number(),
+        recommendation: z.string(),
+    })),
+    insights: z.array(InsightSchema),
+});
+
 export const EstimatePerformanceSchema = z.object({
     taskType: z.enum(['chat', 'code', 'embedding', 'vision', 'reasoning', 'classification', 'extraction', 'audio', 'video', 'development'])
         .describe('Type of task (e.g., chat, reasoning)').default('chat'),
     tokenSize: z.number().min(0).describe('Expected token size per request (e.g., 1000)').default(1000),
+});
+
+export const EstimatePerformanceOutputSchema = z.object({
+    taskType: z.string(),
+    tokenSize: z.number(),
+    estimatedLatencyMs: z.number(),
+    estimatedThroughput: z.object({
+        requestsPerMinute: z.number(),
+        tokensPerMinute: z.number(),
+    }),
+    bottlenecks: z.array(z.string()),
+    scalingRecommendations: z.array(z.string()),
+    insights: z.array(InsightSchema),
 });
 
 // ============== Tool Handlers ==============
@@ -157,36 +245,42 @@ export const aiModelTools = [
         name: 'estimateOpenAICost',
         description: 'Calculate OpenAI API cost with intelligent insights. Returns cost breakdown, cheaper alternatives, and optimization tips. Perfect for understanding your OpenAI spend and finding savings opportunities.',
         inputSchema: EstimateOpenAICostSchema,
+        outputSchema: AIModelCostResultOutputSchema,
         handler: handleEstimateOpenAICost,
     },
     {
         name: 'estimateAnthropicCost',
         description: 'Calculate Anthropic Claude API cost with intelligent insights. Returns cost breakdown, batch API savings, and optimization strategies. Includes comparison with OpenAI alternatives.',
         inputSchema: EstimateAnthropicCostSchema,
+        outputSchema: AIModelCostResultOutputSchema,
         handler: handleEstimateAnthropicCost,
     },
     {
         name: 'suggestModel',
         description: 'Get intelligent model recommendation based on your task, budget, and latency needs. Returns the best model with detailed reasoning, alternatives analysis, and break-even thresholds.',
         inputSchema: SuggestModelSchema,
+        outputSchema: ModelSuggestionOutputSchema,
         handler: handleSuggestModel,
     },
     {
         name: 'compareModels',
         description: 'Compare all available AI models for a specific task type. Returns ranked list with efficiency scores, cost breakdown, and quality-cost matrix to help you choose.',
         inputSchema: CompareModelsSchema,
+        outputSchema: ModelComparisonOutputSchema,
         handler: handleCompareModels,
     },
     {
         name: 'rankingByCostEfficiency',
         description: 'Rank AI models by cost efficiency for any task description. Automatically infers the task type and returns models sorted by value-for-money with actionable recommendations.',
         inputSchema: RankingByCostEfficiencySchema,
+        outputSchema: RankingByCostEfficiencyOutputSchema,
         handler: handleRankingByCostEfficiency,
     },
     {
         name: 'estimatePerformance',
         description: 'Estimate latency and throughput for AI model requests. Returns expected response times, bottleneck identification, and scaling recommendations.',
         inputSchema: EstimatePerformanceSchema,
+        outputSchema: EstimatePerformanceOutputSchema,
         handler: handleEstimatePerformance,
     },
 ];

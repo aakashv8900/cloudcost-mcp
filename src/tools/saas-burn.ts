@@ -6,7 +6,24 @@ import {
     getStageRecommendations,
     getSaaSPricing,
 } from '../engine/pricing-engine.js';
-import type { StartupStage } from '../engine/types.js';
+import type { StartupStage, Insight, Recommendation, CostDriver, DecisionPoint, InvestorMetrics, CostReductionStrategy } from '../engine/types.js';
+
+// ============== Common Output Schemas ==============
+
+const InsightSchema = z.object({
+    type: z.enum(['warning', 'opportunity', 'prediction', 'benchmark', 'action']),
+    message: z.string(),
+    impact: z.number().optional(),
+});
+
+const RecommendationSchema = z.object({
+    action: z.string(),
+    reasoning: z.string(),
+    confidence: z.enum(['high', 'medium', 'low']),
+    savingsEstimate: z.number(),
+    implementationEffort: z.enum(['trivial', 'moderate', 'significant']),
+    tradeoffs: z.array(z.string()),
+});
 
 // ============== Schema Definitions ==============
 
@@ -21,6 +38,25 @@ export const CalculateSaaSBurnSchema = z.object({
     ]),
 });
 
+export const CalculateSaaSBurnOutputSchema = z.object({
+    monthlyBurn: z.number(),
+    annualBurn: z.number(),
+    topCostDrivers: z.array(z.object({
+        service: z.string(),
+        category: z.string(),
+        monthlyCost: z.number(),
+        percentageOfTotal: z.number(),
+        optimizationPotential: z.number(),
+    })),
+    categoryBreakdown: z.record(z.number()),
+    benchmarkComparison: z.object({
+        totalBurnPercentile: z.string(),
+        insights: z.array(z.string()),
+    }),
+    insights: z.array(InsightSchema),
+    recommendations: z.array(z.string()),
+});
+
 export const SuggestOptimalPlanSchema = z.object({
     serviceName: z.enum(['vercel', 'supabase', 'mongodb', 'cloudflare', 'railway', 'neon', 'planetscale'])
         .describe('Service to analyze (e.g., vercel, supabase)'),
@@ -33,11 +69,54 @@ export const SuggestOptimalPlanSchema = z.object({
     }).describe('Monthly usage metrics').default({ bandwidth: 50, requests: 1000 }),
 });
 
+export const SuggestOptimalPlanOutputSchema = z.object({
+    service: z.string(),
+    currentPlan: z.object({
+        name: z.string(),
+        cost: z.number(),
+        status: z.string(),
+    }),
+    usageAnalysis: z.array(z.object({
+        metric: z.string(),
+        usage: z.number(),
+        limit: z.union([z.number(), z.string()]),
+        utilization: z.number(),
+        overLimit: z.boolean(),
+    })),
+    recommendation: z.object({
+        plan: z.string(),
+        cost: z.number().nullable(),
+        savings: z.number(),
+        reasoning: z.string(),
+    }),
+    insights: z.array(InsightSchema),
+});
+
 export const ForecastRunwaySchema = z.object({
     monthlyInfraCost: z.number().min(0).describe('Total monthly infrastructure cost in USD (e.g., 5000)').default(2000),
     monthlyRevenue: z.number().min(0).describe('Monthly recurring revenue (MRR) in USD').default(500),
     cashInBank: z.number().min(0).describe('Current cash in bank in USD').default(50000),
     monthlyGrowthRate: z.number().min(-1).max(10).default(0.1).describe('Monthly cost growth rate (0.1 = 10% monthly growth)'),
+});
+
+export const ForecastRunwayOutputSchema = z.object({
+    runwayMonths: z.number(),
+    burnRate: z.object({
+        current: z.number(),
+        projected: z.number(),
+    }),
+    trajectory: z.enum(['increasing', 'decreasing', 'stable']),
+    decisionPoints: z.array(z.object({
+        month: z.number(),
+        event: z.string(),
+        action: z.string(),
+    })),
+    investorMetrics: z.object({
+        burnMultiple: z.number(),
+        efficiency: z.string(),
+        benchmark: z.string(),
+    }),
+    insights: z.array(InsightSchema),
 });
 
 export const CostBreakdownByServiceSchema = z.object({
@@ -52,6 +131,23 @@ export const CostBreakdownByServiceSchema = z.object({
     stage: z.enum(['pre-seed', 'seed', 'series-a', 'scaling']).describe('Startup stage (e.g., seed, scaling)').default('seed'),
 });
 
+export const CostBreakdownByServiceOutputSchema = z.object({
+    stage: z.string(),
+    totalMonthlyCost: z.number(),
+    recommendedMaxForStage: z.number(),
+    isOverBudget: z.boolean(),
+    overBudgetBy: z.number(),
+    categoryBreakdown: z.array(z.object({
+        category: z.string(),
+        services: z.array(z.any()),
+        totalCost: z.number(),
+        percentOfBurn: z.number(),
+    })),
+    stageRecommendations: z.array(z.string()),
+    warnings: z.array(z.string()),
+    insights: z.array(InsightSchema),
+});
+
 export const RecommendCostReductionSchema = z.object({
     services: z.array(z.object({
         name: z.string().describe('Service name'),
@@ -62,6 +158,20 @@ export const RecommendCostReductionSchema = z.object({
         { name: 'Premium DB', cost: 1000, category: 'database' }
     ]),
     targetReduction: z.number().min(0).max(1).default(0.2).describe('Target reduction percentage (e.g., 0.2 = 20% reduction)'),
+});
+
+export const RecommendCostReductionOutputSchema = z.object({
+    strategies: z.array(z.object({
+        strategy: z.string(),
+        annualSavings: z.number(),
+        implementationEffort: z.string(),
+        timeToImplement: z.string(),
+        risks: z.array(z.string()),
+        priority: z.number(),
+    })),
+    totalPotentialSavings: z.number(),
+    quickWins: z.array(z.any()),
+    insights: z.array(InsightSchema),
 });
 
 // ============== Tool Handlers ==============
@@ -353,30 +463,35 @@ export const saasBurnTools = [
         name: 'calculateSaaSBurn',
         description: 'Analyze total SaaS and infrastructure burn with category breakdown. Returns top cost drivers, industry benchmarks, and optimization opportunities.',
         inputSchema: CalculateSaaSBurnSchema,
+        outputSchema: CalculateSaaSBurnOutputSchema,
         handler: handleCalculateSaaSBurn,
     },
     {
         name: 'suggestOptimalPlan',
         description: 'Recommend the best pricing plan for a specific service based on usage. Analyzes current utilization and identifies potential savings or upgrade needs.',
         inputSchema: SuggestOptimalPlanSchema,
+        outputSchema: SuggestOptimalPlanOutputSchema,
         handler: handleSuggestOptimalPlan,
     },
     {
         name: 'forecastRunway',
         description: 'Project startup runway with burn trajectory analysis. Returns runway months, decision points for fundraising, and investor-ready metrics like burn multiple.',
         inputSchema: ForecastRunwaySchema,
+        outputSchema: ForecastRunwayOutputSchema,
         handler: handleForecastRunway,
     },
     {
         name: 'costBreakdownByService',
         description: 'Break down infrastructure costs by category with stage-appropriate recommendations. Compares spending against benchmarks for your startup stage.',
         inputSchema: CostBreakdownByServiceSchema,
+        outputSchema: CostBreakdownByServiceOutputSchema,
         handler: handleCostBreakdownByService,
     },
     {
         name: 'recommendCostReductionStrategies',
         description: 'Generate prioritized cost reduction strategies with implementation effort and savings estimates. Returns quick wins and strategic optimizations.',
         inputSchema: RecommendCostReductionSchema,
+        outputSchema: RecommendCostReductionOutputSchema,
         handler: handleRecommendCostReduction,
     },
 ];

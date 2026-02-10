@@ -9,17 +9,54 @@ import {
     calculateBandwidthCost,
     forecastCost,
 } from '../engine/formulas.js';
-import type { Provider } from '../engine/types.js';
+import type { Provider, Insight, Recommendation, CreditProgram, HiddenCost, MonthlyProjection, CostCliffWarning } from '../engine/types.js';
+
+// ============== Common Output Schemas ==============
+
+const InsightSchema = z.object({
+    type: z.enum(['warning', 'opportunity', 'prediction', 'benchmark', 'action']),
+    message: z.string(),
+    impact: z.number().optional(),
+});
+
+const RecommendationSchema = z.object({
+    action: z.string(),
+    reasoning: z.string(),
+    confidence: z.enum(['high', 'medium', 'low']),
+    savingsEstimate: z.number(),
+    implementationEffort: z.enum(['trivial', 'moderate', 'significant']),
+    tradeoffs: z.array(z.string()),
+});
 
 // ============== Schema Definitions ==============
 
 export const CompareCloudCostSchema = z.object({
-    serviceType: z.enum(['compute', 'storage', 'database']).describe('Type of cloud service'),
+    serviceType: z.enum(['compute', 'storage', 'database']).describe('Service type to compare (e.g., compute, database)').default('compute'),
     usageProfile: z.object({
-        instanceType: z.string().optional().describe('Instance type (e.g., t3.medium, m6i.large)'),
-        hours: z.number().optional().describe('Hours of usage per month'),
+        instanceType: z.string().optional().describe('Instance type (e.g., t3.medium)'),
+        hours: z.number().optional().describe('Hours per month'),
         gb: z.number().optional().describe('Storage in GB'),
-    }).optional().default({}).describe('Usage profile for cost estimation (optional - uses sensible defaults)'),
+    }).describe('Usage pattern for comparison').default({ hours: 730, gb: 100 }),
+});
+
+export const ComparisonOutputSchema = z.object({
+    winner: z.string(),
+    monthlyCost: z.record(z.number()),
+    reasoning: z.string(),
+    hiddenCosts: z.array(z.object({
+        provider: z.string(),
+        item: z.string(),
+        monthlyCost: z.number(),
+        description: z.string(),
+    })),
+    creditPrograms: z.array(z.object({
+        provider: z.string(),
+        program: z.string(),
+        value: z.string(),
+        eligibility: z.string(),
+    })),
+    totalCostOfOwnership: z.record(z.number()),
+    insights: z.array(InsightSchema),
 });
 
 export const EstimateComputeCostSchema = z.object({
@@ -29,11 +66,39 @@ export const EstimateComputeCostSchema = z.object({
     region: z.string().optional().describe('Optional region for pricing adjustment (e.g., us-east-1)').default('us-east-1'),
 });
 
+export const ComputeCostResultOutputSchema = z.object({
+    provider: z.string(),
+    instanceType: z.string(),
+    hourlyCost: z.number(),
+    monthlyCost: z.number(),
+    yearlyCost: z.number(),
+    specs: z.object({
+        vcpu: z.number(),
+        memoryGb: z.number(),
+    }),
+    insights: z.array(InsightSchema),
+    recommendations: z.array(RecommendationSchema),
+    reservedSavings: z.object({
+        oneYear: z.number(),
+        threeYear: z.number(),
+    }),
+});
+
 export const EstimateStorageCostSchema = z.object({
     provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider (e.g., aws, azure)').default('aws'),
     storageType: z.enum(['standard', 'ssd', 'archive']).describe('Storage tier (e.g., standard, ssd)').default('standard'),
     gb: z.number().min(0).describe('Storage amount in GB (e.g., 100)').default(100),
     durationMonths: z.number().min(1).default(1).describe('Duration in months (e.g., 12)'),
+});
+
+export const StorageCostResultOutputSchema = z.object({
+    provider: z.string(),
+    storageType: z.string(),
+    totalCost: z.number(),
+    costPerGb: z.number(),
+    tierRecommendation: z.string(),
+    lifeCycleSavings: z.number(),
+    insights: z.array(InsightSchema),
 });
 
 export const EstimateBandwidthCostSchema = z.object({
@@ -42,11 +107,38 @@ export const EstimateBandwidthCostSchema = z.object({
     direction: z.enum(['egress', 'ingress', 'inter-region']).default('egress').describe('Transfer direction'),
 });
 
+export const BandwidthCostResultOutputSchema = z.object({
+    provider: z.string(),
+    transferCost: z.number(),
+    gbTransferred: z.number(),
+    optimizationStrategies: z.array(z.string()),
+    cdnRecommendation: z.string(),
+    potentialSavings: z.number(),
+    insights: z.array(InsightSchema),
+});
+
 export const ForecastScalingCostSchema = z.object({
     provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider (e.g., aws)').default('aws'),
     currentMonthlyCost: z.number().min(0).describe('Current monthly infrastructure cost in USD (e.g., 1000)').default(1000),
     growthRate: z.number().min(-1).max(10).describe('Monthly growth rate (e.g., 0.1 for 10% monthly growth)').default(0.1),
     months: z.number().min(1).max(36).describe('Forecast duration in months (e.g., 12)').default(12),
+});
+
+export const ScalingForecastOutputSchema = z.object({
+    provider: z.string(),
+    currentMonthlyCost: z.number(),
+    projectedCosts: z.array(z.object({
+        month: z.number(),
+        cost: z.number(),
+        growthFromBase: z.number(),
+    })),
+    costCliffWarnings: z.array(z.object({
+        month: z.number(),
+        threshold: z.string(),
+        action: z.string(),
+    })),
+    renegotiationPoint: z.string(),
+    insights: z.array(InsightSchema),
 });
 
 // ============== Tool Handlers ==============
@@ -233,32 +325,37 @@ export function handleForecastScalingCost(args: z.infer<typeof ForecastScalingCo
 export const cloudInfraTools = [
     {
         name: 'compareCloudCost',
-        description: 'Compare costs across AWS, Azure, and GCP with intelligent analysis. Returns winner with reasoning, hidden costs (NAT, load balancer fees), and available startup credit programs.',
+        description: 'Compare infrastructure costs across major cloud providers (AWS, Azure, GCP). Helps identify the most cost-effective provider for your specific usage profile and service types.',
         inputSchema: CompareCloudCostSchema,
+        outputSchema: ComparisonOutputSchema,
         handler: handleCompareCloudCost,
     },
     {
         name: 'estimateComputeCost',
-        description: 'Calculate cloud compute costs with optimization insights. Returns hourly/monthly/yearly costs, specs, reserved instance savings, and right-sizing recommendations.',
+        description: 'Get detailed monthly cost estimates for cloud compute instances. Supports AWS, Azure, and GCP with insight into reserved instance savings and regional pricing variations.',
         inputSchema: EstimateComputeCostSchema,
+        outputSchema: ComputeCostResultOutputSchema,
         handler: handleEstimateComputeCost,
     },
     {
         name: 'estimateStorageCost',
-        description: 'Estimate cloud storage costs with tiering recommendations. Returns cost breakdown, lifecycle policy savings, and compression opportunities.',
+        description: 'Estimate monthly costs for cloud storage services (S3, Blob Storage, GCS). Includes tier recommendations and potential lifecycle policy savings based on your data volume.',
         inputSchema: EstimateStorageCostSchema,
+        outputSchema: StorageCostResultOutputSchema,
         handler: handleEstimateStorageCost,
     },
     {
         name: 'estimateBandwidthCost',
-        description: 'Calculate data transfer costs with egress optimization strategies. Returns tiered breakdown, CDN recommendations, and potential savings from traffic optimization.',
+        description: 'Estimate egress and ingress bandwidth costs. Returns optimization strategies, CDN recommendations, and potential savings for high-traffic applications.',
         inputSchema: EstimateBandwidthCostSchema,
+        outputSchema: BandwidthCostResultOutputSchema,
         handler: handleEstimateBandwidthCost,
     },
     {
         name: 'forecastScalingCost',
-        description: 'Project future infrastructure costs based on growth rate. Returns monthly projections, cost cliff warnings, and recommendations for when to lock in reserved instances.',
+        description: 'Forecast infrastructure costs as your startup scales. Identifies "cost cliffs" where pricing models change and suggests the best time to renegotiate contracts.',
         inputSchema: ForecastScalingCostSchema,
+        outputSchema: ScalingForecastOutputSchema,
         handler: handleForecastScalingCost,
     },
 ];

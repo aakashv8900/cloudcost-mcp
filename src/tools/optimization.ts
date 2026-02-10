@@ -7,7 +7,21 @@ import {
 } from '../engine/formulas.js';
 import { compareProviders } from '../engine/intelligence.js';
 import { getSaaSPricing, getAllAIModels } from '../engine/pricing-engine.js';
-import type { Provider, WorkloadType } from '../engine/types.js';
+import type { Provider, WorkloadType, Insight, Alternative, WorkloadAllocation, MigrationStep, Risk } from '../engine/types.js';
+
+// ============== Common Output Schemas ==============
+
+const InsightSchema = z.object({
+    type: z.enum(['warning', 'opportunity', 'prediction', 'benchmark', 'action']),
+    message: z.string(),
+    impact: z.number().optional(),
+});
+
+const AlternativeSchema = z.object({
+    option: z.string(),
+    whyNot: z.string(),
+    costDifference: z.number().optional(),
+});
 
 // ============== Schema Definitions ==============
 
@@ -25,6 +39,28 @@ export const MultiCloudOptimizationSchema = z.object({
     }).describe('Current costs per provider').default({ aws: 1000, gcp: 500 }),
 });
 
+export const MultiCloudOptimizationOutputSchema = z.object({
+    optimalDistribution: z.record(z.object({
+        workloads: z.array(z.string()),
+        percentageOfSpend: z.number(),
+        reasoning: z.string(),
+    })),
+    migrationRoadmap: z.array(z.object({
+        phase: z.number(),
+        action: z.string(),
+        timeframe: z.string(),
+        savings: z.number(),
+    })),
+    totalSavings: z.number(),
+    riskAssessment: z.array(z.object({
+        category: z.string(),
+        description: z.string(),
+        mitigation: z.string(),
+        severity: z.enum(['low', 'medium', 'high']),
+    })),
+    insights: z.array(InsightSchema),
+});
+
 export const DatabaseTierRecommendationSchema = z.object({
     provider: z.enum(['supabase', 'mongodb', 'neon', 'planetscale']).describe('Database provider').default('supabase'),
     currentUsage: z.object({
@@ -37,6 +73,17 @@ export const DatabaseTierRecommendationSchema = z.object({
     expectedGrowth: z.number().min(0).max(10).default(0.2).describe('Expected monthly growth rate (e.g., 0.2 for 20%)'),
 });
 
+export const DatabaseTierResultOutputSchema = z.object({
+    recommendedTier: z.string(),
+    provider: z.string(),
+    monthlyCost: z.number(),
+    reasoning: z.string(),
+    growthBuffer: z.string(),
+    nextScalePoint: z.string(),
+    alternatives: z.array(AlternativeSchema),
+    insights: z.array(InsightSchema),
+});
+
 export const ModelSwitchSavingsSchema = z.object({
     currentModel: z.string().describe('Current AI model in use (e.g., gpt-4o)').default('gpt-4o'),
     currentProvider: z.enum(['openai', 'anthropic']).describe('Current provider').default('openai'),
@@ -44,11 +91,45 @@ export const ModelSwitchSavingsSchema = z.object({
     qualityRequirement: z.enum(['highest', 'high', 'medium', 'acceptable']).describe('Minimum quality level').default('high'),
 });
 
+export const ModelSwitchResultOutputSchema = z.object({
+    currentCost: z.number(),
+    newCost: z.number(),
+    monthlySavings: z.number(),
+    annualSavings: z.number(),
+    qualityImpact: z.string(),
+    abTestPlan: z.array(z.string()),
+    implementationSteps: z.array(z.string()),
+    insights: z.array(InsightSchema),
+});
+
 export const ReservedInstanceSavingsSchema = z.object({
     provider: z.enum(['aws', 'azure', 'gcp']).describe('Cloud provider').default('aws'),
     instanceType: z.string().describe('Instance type (e.g., t3.medium)').default('t3.large'),
     currentMonthlySpend: z.number().min(0).describe('Current monthly on-demand spend in USD').default(500),
     usagePattern: z.enum(['steady', 'variable', 'spiky']).describe('Usage pattern (e.g., steady)').default('steady'),
+});
+
+export const ReservedInstanceResultOutputSchema = z.object({
+    currentMonthly: z.number(),
+    withReserved: z.object({
+        oneYear: z.number(),
+        threeYear: z.number(),
+    }),
+    savingsPercent: z.object({
+        oneYear: z.number(),
+        threeYear: z.number(),
+    }),
+    recommendation: z.string(),
+    reasoning: z.string(),
+    breakEven: z.object({
+        oneYear: z.string(),
+        threeYear: z.string(),
+    }),
+    riskAnalysis: z.object({
+        downsideScenario: z.string(),
+        upsideScenario: z.string(),
+    }),
+    insights: z.array(InsightSchema),
 });
 
 export const BreakEvenAnalysisSchema = z.object({
@@ -63,6 +144,30 @@ export const BreakEvenAnalysisSchema = z.object({
         monthlyCost: z.number().min(0).describe('Monthly cost in USD'),
     }).describe('Second option to compare').default({ name: 'Reserved', upfrontCost: 3000, monthlyCost: 200 }),
     timeHorizon: z.number().min(1).max(60).default(24).describe('Analysis period in months'),
+});
+
+export const BreakEvenResultOutputSchema = z.object({
+    breakEvenPoint: z.number(),
+    optionA: z.object({
+        name: z.string(),
+        upfrontCost: z.number(),
+        monthlyCost: z.number(),
+        totalCostAtBreakEven: z.number(),
+    }),
+    optionB: z.object({
+        name: z.string(),
+        upfrontCost: z.number(),
+        monthlyCost: z.number(),
+        totalCostAtBreakEven: z.number(),
+    }),
+    recommendation: z.string(),
+    reasoning: z.string(),
+    sensitivityAnalysis: z.array(z.object({
+        variable: z.string(),
+        changePercent: z.number(),
+        newBreakEven: z.number(),
+    })),
+    insights: z.array(InsightSchema),
 });
 
 // ============== Tool Handlers ==============
@@ -452,32 +557,37 @@ export function handleBreakEvenAnalysis(args: z.infer<typeof BreakEvenAnalysisSc
 export const optimizationTools = [
     {
         name: 'multiCloudOptimization',
-        description: 'Analyze multi-cloud strategy with optimal workload distribution. Returns migration roadmap, risk assessment, and projected savings from cloud arbitrage.',
+        description: 'Analyze and optimize workloads across multiple cloud providers. Returns an optimal distribution strategy, migration roadmap, and risk assessment to minimize costs while maintaining reliability.',
         inputSchema: MultiCloudOptimizationSchema,
+        outputSchema: MultiCloudOptimizationOutputSchema,
         handler: handleMultiCloudOptimization,
     },
     {
         name: 'databaseTierRecommendation',
-        description: 'Recommend optimal database tier based on current usage and projected growth. Returns tier recommendation, growth buffer analysis, and upgrade timeline.',
+        description: 'Get intelligent tier recommendations for various database providers (Supabase, MongoDB, Neon, PlanetScale). Analyzes current usage and projects growth to find the most cost-effective tier.',
         inputSchema: DatabaseTierRecommendationSchema,
+        outputSchema: DatabaseTierResultOutputSchema,
         handler: handleDatabaseTierRecommendation,
     },
     {
         name: 'modelSwitchSavings',
-        description: 'Calculate savings from switching AI models while maintaining quality requirements. Returns best alternatives, A/B test plan, and implementation steps.',
+        description: 'Calculate potential savings from switching AI models or providers. Analyzes token usage and quality requirements to identify cost-saving migration opportunities.',
         inputSchema: ModelSwitchSavingsSchema,
+        outputSchema: ModelSwitchResultOutputSchema,
         handler: handleModelSwitchSavings,
     },
     {
         name: 'reservedInstanceSavings',
-        description: 'Analyze reserved instance vs on-demand savings with risk assessment. Returns commitment recommendations, break-even analysis, and upside/downside scenarios.',
+        description: 'Calculate potential savings from Reserved Instances or Savings Plans. Returns a detailed comparison between on-demand and reserved pricing with break-even analysis.',
         inputSchema: ReservedInstanceSavingsSchema,
+        outputSchema: ReservedInstanceResultOutputSchema,
         handler: handleReservedInstanceSavings,
     },
     {
         name: 'breakEvenAnalysis',
-        description: 'Compare two pricing options with break-even analysis. Returns break-even point, sensitivity analysis, and clear decision framework.',
+        description: 'Perform a detailed break-even analysis between two cost options (e.g., On-demand vs. Reserved). Returns the break-even point in months and sensitivity analysis for various factors.',
         inputSchema: BreakEvenAnalysisSchema,
+        outputSchema: BreakEvenResultOutputSchema,
         handler: handleBreakEvenAnalysis,
     },
 ];
