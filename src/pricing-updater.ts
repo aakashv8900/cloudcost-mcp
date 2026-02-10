@@ -16,6 +16,8 @@ import * as path from 'path';
 const PRICING_DIR = path.join(process.cwd(), 'pricing');
 const UPDATE_PORT = parseInt(process.env.UPDATE_PORT || '3001', 10);
 const UPDATE_INTERVAL_HOURS = parseInt(process.env.UPDATE_INTERVAL || '6', 10);
+const RUN_ONCE = process.argv.includes('--once') || process.env.RUN_ONCE === 'true';
+const RUN_ONCE = process.argv.includes('--once') || process.env.RUN_ONCE === 'true';
 
 interface PriceUpdate {
     source: string;
@@ -311,110 +313,165 @@ async function fetchAnthropicPricing(): Promise<PriceUpdate> {
 async function fetchAWSBulkPricing(): Promise<PriceUpdate> {
     const details: string[] = [];
     try {
-        // AWS Price List Index - get URLs for each service
-        const indexUrl = 'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json';
-        const indexResponse = await fetch(indexUrl, { signal: AbortSignal.timeout(10000) });
+        // AWS Price List Indexasync function main() {
+        console.log(`[${new Date().toISOString()}] Pricing Updater starting...`);
+        console.log(`[${new Date().toISOString()}] Mode: ${RUN_ONCE ? 'One-time update' : 'Continuous service'}`);
 
-        if (!indexResponse.ok) {
-            return {
-                source: 'AWS Bulk',
-                lastUpdate: new Date().toISOString(),
-                itemsUpdated: 0,
-                status: 'failed',
-                message: `Index API returned ${indexResponse.status}`,
-            };
-        }
-
-        const indexData: any = await indexResponse.json();
-
-        // Get EC2 savings plans pricing (smaller than full EC2 pricing)
-        const savingsPlansUrl = indexData.offers?.AmazonEC2?.currentSavingsPlanIndexUrl;
-
-        if (savingsPlansUrl) {
-            details.push('Found AWS savings plans pricing URL');
-        }
-
-        // Fetch specific instance types from smaller region files
-        const regionPriceUrl = 'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/us-east-1/index.json';
-
-        // Note: This file is ~100MB, so we use HEAD to check last-modified
-        const headResponse = await fetch(regionPriceUrl, {
-            method: 'HEAD',
-            signal: AbortSignal.timeout(5000),
-        });
-
-        const lastModified = headResponse.headers.get('last-modified');
-        if (lastModified) {
-            details.push(`AWS EC2 pricing last modified: ${lastModified}`);
-        }
-
-        // For now, use curated pricing for common instance types
-        const awsInstancePricing: Record<string, Record<string, any>> = {
-            t3: {
-                micro: { hourly_rate: 0.0104, vcpu: 2, memory_gb: 1 },
-                small: { hourly_rate: 0.0208, vcpu: 2, memory_gb: 2 },
-                medium: { hourly_rate: 0.0416, vcpu: 2, memory_gb: 4 },
-                large: { hourly_rate: 0.0832, vcpu: 2, memory_gb: 8 },
-                xlarge: { hourly_rate: 0.1664, vcpu: 4, memory_gb: 16 },
-                '2xlarge': { hourly_rate: 0.3328, vcpu: 8, memory_gb: 32 },
-            },
-            m6i: {
-                large: { hourly_rate: 0.096, vcpu: 2, memory_gb: 8 },
-                xlarge: { hourly_rate: 0.192, vcpu: 4, memory_gb: 16 },
-                '2xlarge': { hourly_rate: 0.384, vcpu: 8, memory_gb: 32 },
-                '4xlarge': { hourly_rate: 0.768, vcpu: 16, memory_gb: 64 },
-            },
-            c6i: {
-                large: { hourly_rate: 0.085, vcpu: 2, memory_gb: 4 },
-                xlarge: { hourly_rate: 0.17, vcpu: 4, memory_gb: 8 },
-                '2xlarge': { hourly_rate: 0.34, vcpu: 8, memory_gb: 16 },
-            },
-            r6i: {
-                large: { hourly_rate: 0.126, vcpu: 2, memory_gb: 16 },
-                xlarge: { hourly_rate: 0.252, vcpu: 4, memory_gb: 32 },
-                '2xlarge': { hourly_rate: 0.504, vcpu: 8, memory_gb: 64 },
-            },
-        };
-
-        const filePath = path.join(PRICING_DIR, 'aws_compute.json');
-        const existing = safeReadJson(filePath) || {};
-
-        let updated = 0;
-        for (const [family, sizes] of Object.entries(awsInstancePricing)) {
-            if (!existing[family]) existing[family] = {};
-
-            for (const [size, specs] of Object.entries(sizes)) {
-                const current = existing[family][size] || {};
-                if (current.hourly_rate !== specs.hourly_rate ||
-                    current.vcpu !== specs.vcpu ||
-                    current.memory_gb !== specs.memory_gb) {
-                    existing[family][size] = { ...current, ...specs, category: 'general-purpose' };
-                    updated++;
-                }
+        if (RUN_ONCE) {
+            try {
+                await updateAllPricing();
+                console.log(`[${new Date().toISOString()}] One-time update completed successfully.`);
+                process.exit(0);
+            } catch (error) {
+                console.error(`[${new Date().toISOString()}] One-time update failed:`, error);
+                process.exit(1);
             }
-        }
+        } else {
+            // Start HTTP Server for health checks/manual updates
+            const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+                // ... (existing server logic)
+            });
 
-        if (updated > 0) {
-            safeWriteJson(filePath, existing);
-            details.push(`Updated ${updated} AWS instance types`);
-        }
+            server.listen(UPDATE_PORT, '0.0.0.0', () => {
+                console.log(`Pricing updater status server running on port ${UPDATE_PORT}`);
+            });
 
-        return {
-            source: 'AWS EC2 (bulk + specs)',
-            lastUpdate: new Date().toISOString(),
-            itemsUpdated: updated,
-            status: updated > 0 ? 'success' : 'no_change',
-            details,
-        };
-    } catch (error) {
+            // Run initial update
+            await updateAllPricing();
+
+            // Schedule periodic updates
+            setInterval(async () => {
+                console.log(`[${new Date().toISOString()}] Starting scheduled update...`);
+                await updateAllPricing();
+            }, UPDATE_INTERVAL_HOURS * 60 * 60 * 1000);
+        }
+    }
+
+// Helper to run all updates
+async function updateAllPricing() {
+        const results = await Promise.all([
+            fetchOpenAIPricing(),
+            fetchAnthropicPricing(),
+            fetchAWSBulkPricing(),
+            fetchAzurePricing(),
+            fetchSupabasePricing(),
+            fetchVercelPricing(),
+            fetchMongoDBPricing(),
+            fetchCloudflarePricing()
+        ]);
+
+        const totalUpdated = results.reduce((sum, r) => sum + r.itemsUpdated, 0);
+        console.log(`[${new Date().toISOString()}] Update cycle complete. Total items updated: ${totalUpdated}`);
+        return results;
+    }
+
+    main().catch(err => {
+        console.error('Fatal error in pricing updater:', err);
+        process.exit(1);
+    });
+    const indexUrl = 'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json';
+    const indexResponse = await fetch(indexUrl, { signal: AbortSignal.timeout(10000) });
+
+    if (!indexResponse.ok) {
         return {
             source: 'AWS Bulk',
             lastUpdate: new Date().toISOString(),
             itemsUpdated: 0,
             status: 'failed',
-            message: error instanceof Error ? error.message : 'Unknown error',
+            message: `Index API returned ${indexResponse.status}`,
         };
     }
+
+    const indexData: any = await indexResponse.json();
+
+    // Get EC2 savings plans pricing (smaller than full EC2 pricing)
+    const savingsPlansUrl = indexData.offers?.AmazonEC2?.currentSavingsPlanIndexUrl;
+
+    if (savingsPlansUrl) {
+        details.push('Found AWS savings plans pricing URL');
+    }
+
+    // Fetch specific instance types from smaller region files
+    const regionPriceUrl = 'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/us-east-1/index.json';
+
+    // Note: This file is ~100MB, so we use HEAD to check last-modified
+    const headResponse = await fetch(regionPriceUrl, {
+        method: 'HEAD',
+        signal: AbortSignal.timeout(5000),
+    });
+
+    const lastModified = headResponse.headers.get('last-modified');
+    if (lastModified) {
+        details.push(`AWS EC2 pricing last modified: ${lastModified}`);
+    }
+
+    // For now, use curated pricing for common instance types
+    const awsInstancePricing: Record<string, Record<string, any>> = {
+        t3: {
+            micro: { hourly_rate: 0.0104, vcpu: 2, memory_gb: 1 },
+            small: { hourly_rate: 0.0208, vcpu: 2, memory_gb: 2 },
+            medium: { hourly_rate: 0.0416, vcpu: 2, memory_gb: 4 },
+            large: { hourly_rate: 0.0832, vcpu: 2, memory_gb: 8 },
+            xlarge: { hourly_rate: 0.1664, vcpu: 4, memory_gb: 16 },
+            '2xlarge': { hourly_rate: 0.3328, vcpu: 8, memory_gb: 32 },
+        },
+        m6i: {
+            large: { hourly_rate: 0.096, vcpu: 2, memory_gb: 8 },
+            xlarge: { hourly_rate: 0.192, vcpu: 4, memory_gb: 16 },
+            '2xlarge': { hourly_rate: 0.384, vcpu: 8, memory_gb: 32 },
+            '4xlarge': { hourly_rate: 0.768, vcpu: 16, memory_gb: 64 },
+        },
+        c6i: {
+            large: { hourly_rate: 0.085, vcpu: 2, memory_gb: 4 },
+            xlarge: { hourly_rate: 0.17, vcpu: 4, memory_gb: 8 },
+            '2xlarge': { hourly_rate: 0.34, vcpu: 8, memory_gb: 16 },
+        },
+        r6i: {
+            large: { hourly_rate: 0.126, vcpu: 2, memory_gb: 16 },
+            xlarge: { hourly_rate: 0.252, vcpu: 4, memory_gb: 32 },
+            '2xlarge': { hourly_rate: 0.504, vcpu: 8, memory_gb: 64 },
+        },
+    };
+
+    const filePath = path.join(PRICING_DIR, 'aws_compute.json');
+    const existing = safeReadJson(filePath) || {};
+
+    let updated = 0;
+    for (const [family, sizes] of Object.entries(awsInstancePricing)) {
+        if (!existing[family]) existing[family] = {};
+
+        for (const [size, specs] of Object.entries(sizes)) {
+            const current = existing[family][size] || {};
+            if (current.hourly_rate !== specs.hourly_rate ||
+                current.vcpu !== specs.vcpu ||
+                current.memory_gb !== specs.memory_gb) {
+                existing[family][size] = { ...current, ...specs, category: 'general-purpose' };
+                updated++;
+            }
+        }
+    }
+
+    if (updated > 0) {
+        safeWriteJson(filePath, existing);
+        details.push(`Updated ${updated} AWS instance types`);
+    }
+
+    return {
+        source: 'AWS EC2 (bulk + specs)',
+        lastUpdate: new Date().toISOString(),
+        itemsUpdated: updated,
+        status: updated > 0 ? 'success' : 'no_change',
+        details,
+    };
+} catch (error) {
+    return {
+        source: 'AWS Bulk',
+        lastUpdate: new Date().toISOString(),
+        itemsUpdated: 0,
+        status: 'failed',
+        message: error instanceof Error ? error.message : 'Unknown error',
+    };
+}
 }
 
 // ============== Azure Retail Prices API ==============
@@ -1014,21 +1071,26 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse) {
 // ============== Main ==============
 
 async function main() {
+    if (RUN_ONCE) {
+        console.log(`[${new Date().toISOString()}] Running one-time pricing update for build...`);
+        try {
+            await runPricingUpdate();
+            console.log(`[${new Date().toISOString()}] build-time update completed.`);
+            process.exit(0);
+        } catch (error) {
+            console.error(`[${new Date().toISOString()}] build-time update failed:`, error);
+            process.exit(1);
+        }
+        return;
+    }
+
     const server = createServer(handleRequest);
 
     server.listen(UPDATE_PORT, () => {
         console.log(`\n🔄 CloudCost Pricing Updater v2.0.0`);
         console.log(`📊 Update interval: Every ${UPDATE_INTERVAL_HOURS} hours`);
         console.log(`🌐 Running on port ${UPDATE_PORT}`);
-        console.log(`\n📦 Data Sources:`);
-        console.log(`  • AI Models: OpenAI, Anthropic (pricing + specs)`);
-        console.log(`  • Cloud: AWS Bulk, Azure API, GCP`);
-        console.log(`  • SaaS: Supabase, Vercel, MongoDB, Cloudflare`);
-        console.log(`\n🔗 Endpoints:`);
-        console.log(`  GET  /         - Service info`);
-        console.log(`  GET  /health   - Health check`);
-        console.log(`  GET  /status   - Update status`);
-        console.log(`  POST /trigger  - Manual update trigger\n`);
+        // ... (rest of logging)
     });
 
     // Run initial update
